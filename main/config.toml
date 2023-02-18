@@ -1,0 +1,45 @@
+[AzureBatch]
+BatchAccountName = 'batchbrmyers'
+BatchAccountKey = 'tPI6i/HR2aEXoU6xwhH0bl3tyU4QzmBRkST+YMRzVc6U5j+yv62ZpLDRHKpzHgIaZaRg0sfxcuwn+ABaPsFnEg=='
+BatchServiceUrl = 'https://batchbrmyers.eastus2.batch.azure.com'
+PoolNameBase = 'pool' #namming convention is {PoolNameBase}-{PoolVMSku}-{PoolVMSpotInstanceCount + PoolVMDedicatedInstanceCount}-{TaskSlotsPerTask}
+TaskSlotsPerTask = 1 #Should I take out??
+PoolVMSku = 'STANDARD_A2_V2' # https://azure.microsoft.com/en-us/pricing/details/batch/
+ThroughputMessagesPerSec = 1000
+EventHubConnection = 'Endpoint=sb://eventhubnamespacebam.servicebus.windows.net/;SharedAccessKeyName=policyManage;SharedAccessKey=r0MWD563SwTrRijfETLf2BttZD4eQItiq+AEhKSh/Lc='
+EventHubName = 'myvehiclehub'
+RunDurationMin = 10
+
+[PythonCommands]
+VMSetup.commands = ['echo "sudo apt update && sudo apt upgrade -y"'
+            ,'sudo apt update && sudo apt upgrade -y'
+            ,'sudo apt install unzip'
+            #,'sleep 120' #wait 2 minutes
+            
+            #Install python 3.11
+            ,'sudo add-apt-repository ppa:deadsnakes/ppa -y'
+            ,'echo "sudo apt install python3.11 -y"'
+            ,'sudo apt install python3.11 -y'
+            ,'sudo apt update'
+
+            #Install pip for python 3.11
+            ,'echo "sudo apt-get install -y python3-pip"'
+            ,'sudo apt-get install -y python3-pip'
+            ,'curl -sS https://bootstrap.pypa.io/get-pip.py | python3.11'
+
+            #Download code artifacts from github
+            ,'curl -H "Authorization: token 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" -H "Accept: application/octet-stream" https://github.com/bretamyers/StockAPIParser/archive/master.zip -L -o /mnt/batch/tasks/shared/StockAPIParser.zip'
+            ,'unzip -o /mnt/batch/tasks/shared/StockAPIParser.zip -d /mnt/batch/tasks/shared/StockAPIParser'
+            
+            #Install requirement python packages
+            ,'python3.11 -m pip install -r /mnt/batch/tasks/shared/StockAPIParser/StockAPIParser-main/requirements.txt'
+        ] 
+CodeSetup.commands = ['curl -H "Authorization: token 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" -H "Accept: application/octet-stream" https://github.com/bretamyers/StockAPIParser/archive/master.zip -L -o /mnt/batch/tasks/shared/StockAPIParser.zip'
+            ,'rm -r /mnt/batch/tasks/shared/StockAPIParser'
+            ,'unzip /mnt/batch/tasks/shared/StockAPIParser.zip -d /mnt/batch/tasks/shared/StockAPIParser'
+            ,'cd /mnt/batch/tasks/shared/StockAPIParser/StockAPIParser-main/'
+        ]
+
+PythonRunFilePath = 'main/GenerateData.py'
+
+

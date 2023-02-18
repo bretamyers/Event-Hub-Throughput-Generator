@@ -1,0 +1,19 @@
+{
+    "ID": "guid"
+    ,"Name": "string"
+    ,"SalesAmount": "float"
+    ,"Quantity": "integer"
+    ,"LocationObj": 
+        {
+            "Coordinates": 
+                {
+                    "Latitude": "float"
+                    ,"Longitude": "float"
+                }
+            ,"Altitude": "float"
+        }
+    ,"InvoiceDate": "date"
+    ,"TransactionDateTime": "datetime"
+    ,"ProductType": "string"
+    ,"Department": "string"
+}
