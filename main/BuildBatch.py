@@ -138,7 +138,7 @@ def batch_add_app_tasks(batch_client, job_id, pool_vm_count, task_slots_per_task
         tasks.append(batchmodels.TaskAddParameter(
             id=f'Task-{str(nodeSpec["NodeNum"]).zfill(4)}',
             # command_line=f"/bin/bash -c \'set -e; set -o pipefail; echo \"test-{str(idx).zfill(2)}\"; wait\'"
-            command_line=f"""/bin/bash -c 'PYTHONPATH=/mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main python3.11 /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/{python_run_file_path} \'{json.dumps(nodeSpec)}\''"""
+            command_line=f"""/bin/bash -c 'PYTHONPATH=/mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main python3.11 /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/{python_run_file_path} {json.dumps(nodeSpec)}'"""
             # ,constraints=batchmodels.TaskConstraints(max_task_retry_count=3)
             )
         )
