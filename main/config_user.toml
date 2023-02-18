@@ -1,7 +1,7 @@
 [AzureBatch]
-BatchAccountName = 'batchbrmyers'
-BatchAccountKey = 'tPI6i/HR2aEXoU6xwhH0bl3tyU4QzmBRkST+YMRzVc6U5j+yv62ZpLDRHKpzHgIaZaRg0sfxcuwn+ABaPsFnEg=='
-BatchServiceUrl = 'https://batchbrmyers.eastus2.batch.azure.com'
+BatchAccountName = 'batchbam'
+BatchAccountKey = 'gUsh/iFf+imtxVCbgGHbCCte0pUyoEH75M3sVDPsfIXQ3go0GhMadBJiDNZHyGWs3AME4HCaZVLh+ABaDwzw2g=='
+BatchServiceUrl = 'https://batchbam.eastus2.batch.azure.com'
 
 [AzureEventHub]
 EventHubConnection = 'Endpoint=sb://eventhubnamespacebam.servicebus.windows.net/;SharedAccessKeyName=policyManage;SharedAccessKey=r0MWD563SwTrRijfETLf2BttZD4eQItiq+AEhKSh/Lc='

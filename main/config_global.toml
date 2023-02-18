@@ -28,16 +28,16 @@ VMSetup.commands = ['echo "sudo apt update && sudo apt upgrade -y"'
             ,'curl -sS https://bootstrap.pypa.io/get-pip.py | python3.11'
 
             #Download code artifacts from github
-            ,'curl -H "Authorization: token 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" -H "Accept: application/octet-stream" https://github.com/bretamyers/StockAPIParser/archive/master.zip -L -o /mnt/batch/tasks/shared/StockAPIParser.zip'
-            ,'unzip -o /mnt/batch/tasks/shared/StockAPIParser.zip -d /mnt/batch/tasks/shared/StockAPIParser'
+            ,'curl -H "Authorization: token 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" -H "Accept: application/octet-stream" https://github.com/bretamyers/EventHub-Throughput-Generator/archive/master.zip -L -o /mnt/batch/tasks/shared/EventHub-Throughput-Generator.zip'
+            ,'unzip -o /mnt/batch/tasks/shared/EventHub-Throughput-Generator.zip -d /mnt/batch/tasks/shared/EventHub-Throughput-Generator'
             
             #Install requirement python packages
-            ,'python3.11 -m pip install -r /mnt/batch/tasks/shared/StockAPIParser/StockAPIParser-main/requirements.txt'
+            ,'python3.11 -m pip install -r /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/requirements.txt'
         ] 
-CodeSetup.commands = ['curl -H "Authorization: token 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" -H "Accept: application/octet-stream" https://github.com/bretamyers/StockAPIParser/archive/master.zip -L -o /mnt/batch/tasks/shared/StockAPIParser.zip'
-            ,'rm -r /mnt/batch/tasks/shared/StockAPIParser'
-            ,'unzip /mnt/batch/tasks/shared/StockAPIParser.zip -d /mnt/batch/tasks/shared/StockAPIParser'
-            ,'cd /mnt/batch/tasks/shared/StockAPIParser/StockAPIParser-main/'
+CodeSetup.commands = ['curl -H "Authorization: token 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" -H "Accept: application/octet-stream" https://github.com/bretamyers/EventHub-Throughput-Generator/archive/master.zip -L -o /mnt/batch/tasks/shared/EventHub-Throughput-Generator.zip'
+            ,'rm -r /mnt/batch/tasks/shared/EventHub-Throughput-Generator'
+            ,'unzip /mnt/batch/tasks/shared/EventHub-Throughput-Generator.zip -d /mnt/batch/tasks/shared/EventHub-Throughput-Generator'
+            ,'cd /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/'
         ]
 
 PythonRunFilePath = 'main/GenerateData.py'
