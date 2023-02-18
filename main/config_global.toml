@@ -2,7 +2,7 @@
 BatchAccountName = 'batchbrmyers'
 BatchAccountKey = 'tPI6i/HR2aEXoU6xwhH0bl3tyU4QzmBRkST+YMRzVc6U5j+yv62ZpLDRHKpzHgIaZaRg0sfxcuwn+ABaPsFnEg=='
 BatchServiceUrl = 'https://batchbrmyers.eastus2.batch.azure.com'
-PoolNameBase = 'pool' #namming convention is {PoolNameBase}-{PoolVMSku}-{PoolVMSpotInstanceCount + PoolVMDedicatedInstanceCount}-{TaskSlotsPerTask}
+PoolNameBase = 'pools' #namming convention is {PoolNameBase}-{PoolVMSku}-{PoolVMSpotInstanceCount + PoolVMDedicatedInstanceCount}-{TaskSlotsPerTask}
 TaskSlotsPerTask = 1 #Should I take out??
 PoolVMSku = 'STANDARD_A2_V2' # https://azure.microsoft.com/en-us/pricing/details/batch/
 ThroughputMessagesPerSec = 1000

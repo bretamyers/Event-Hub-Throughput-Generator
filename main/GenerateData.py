@@ -63,7 +63,7 @@ def regression_test():
         
 if __name__ == '__main__':
 
-
+    print(sys.argv[1])
     NodeSpecDict = json.loads(sys.argv[1])
     # NodeSpecDict = {
     #     'RunDurationMin': config['GeneratorInput']['RunDurationMin']
