@@ -63,8 +63,12 @@ def regression_test():
         
 if __name__ == '__main__':
 
-    print(sys.argv[1])
-    NodeSpecDict = json.loads(sys.argv[1])
+    # print(sys.argv[1])
+    # NodeSpecDict = json.loads(sys.argv[1])
+    NodeSpecDict = dict()
+    NodeSpecDict['NodeNum'] = sys.argv[1]
+    NodeSpecDict['NodeSec'] = sys.argv[2]
+    NodeSpecDict['NodeThroughput'] = sys.argv[3]
     # NodeSpecDict = {
     #     'RunDurationMin': config['GeneratorInput']['RunDurationMin']
     #     ,'EventHubConnection': config['AzureEventHub']['EventHubConnection']
