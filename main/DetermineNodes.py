@@ -1,5 +1,3 @@
-
-
 import sys
 import math
 import json
@@ -108,7 +106,7 @@ def gen_payload(jsonAttributePathList, seed=0, maxValueFlag=False) -> list:
     
     return str(masterDict)
 
-def get_batch_specs(TargetThroughput) -> dict:
+def get_batch_specs(TargetThroughput:int) -> dict:
     print(f'Parameter - Target Throughput - {TargetThroughput}')
     payloadDefinitionList = get_payload_definition()
 
@@ -142,24 +140,24 @@ def get_batch_specs(TargetThroughput) -> dict:
     MaxNodeThroughput = math.ceil(int(TargetThroughput) / (NumberOfNodes/4))
     for node in range(NumberOfNodes):
         if node%(NumberOfNodes/4) < NodesAboveAverage:
-            NodeMessageSpecList.append({'NodeNum': node+1, 'NodeSec': math.floor(node/(NumberOfNodes/4)), 'Throughput': (NodeThroughput)+1})
+            NodeMessageSpecList.append({'NodeNum': node+1, 'NodeSec': math.floor(node/(NumberOfNodes/4)), 'NodeThroughput': (NodeThroughput)+1})
         else:
-            NodeMessageSpecList.append({'NodeNum': node+1, 'NodeSec': math.floor(node/(NumberOfNodes/4)), 'Throughput': (NodeThroughput)})
+            NodeMessageSpecList.append({'NodeNum': node+1, 'NodeSec': math.floor(node/(NumberOfNodes/4)), 'NodeThroughput': (NodeThroughput)})
 
 
     myDict = dict()
     for nodespec in NodeMessageSpecList:
         if nodespec['NodeSec'] in myDict.keys():
-            myDict[nodespec['NodeSec']] += nodespec['Throughput']
+            myDict[nodespec['NodeSec']] += nodespec['NodeThroughput']
         else:
-            myDict[nodespec['NodeSec']] = nodespec['Throughput']
+            myDict[nodespec['NodeSec']] = nodespec['NodeThroughput']
     print(myDict)
 
     batchSpecDict = {
-                    'NumberOfNodes': NumberOfNodes
+                    'PayloadDefinitionList': payloadDefinitionList
+                    ,'NumberOfNodes': NumberOfNodes
                     ,'MinNodeThroughput': MinNodeThroughput
                     ,'MaxNodeThroughput': MaxNodeThroughput
-                    ,'PayloadDefinitionList': payloadDefinitionList
                     ,'NodeMessageSpecList': NodeMessageSpecList
                     }
                     

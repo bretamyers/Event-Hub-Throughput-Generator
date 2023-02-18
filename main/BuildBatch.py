@@ -1,9 +1,4 @@
-import datetime
-import os
-from random import sample
-import math
-import time 
-import tomllib, json
+import tomllib, json, time
 
 from azure.batch import BatchServiceClient
 from azure.batch.batch_auth import SharedKeyCredentials
@@ -12,30 +7,32 @@ import azure.batch.operations as batchoperations
 import common.helpers
 import DetermineNodes
 
-def execute_sample(global_config: dict):
+
+def execute_sample(config_user:dict, config_global:dict, batchSpecMasterDict:dict) -> None:
     """Executes the sample with the specified configurations.
-    :param global_config: The global configuration to use.
+    :param config_global: The global configuration to use.
     """
     # Set up the configuration
-    batch_account_key = global_config['AzureBatch']['BatchAccountKey']
-    batch_account_name = global_config['AzureBatch']['BatchAccountName']
-    batch_service_url = global_config['AzureBatch']['BatchServiceUrl']
-    pool_name = global_config['AzureBatch']['PoolNameBase']
+    batch_account_key = config_user['AzureBatch']['BatchAccountKey']
+    batch_account_name = config_user['AzureBatch']['BatchAccountName']
+    batch_service_url = config_user['AzureBatch']['BatchServiceUrl']
+    pool_name = config_global['AzureBatch']['PoolNameBase']
 
-    node_spec_dict = DetermineNodes.get_batch_specs(global_config['AzureBatch']['ThroughputMessagesPerSec'])
-    task_slots_per_task = global_config['AzureBatch']['TaskSlotsPerTask']
-    pool_vm_sku = global_config['AzureBatch']['PoolVMSku']
+    run_duration_min = config_user['GeneratorInput']['RunDurationMin']
+    node_spec_dict = DetermineNodes.get_batch_specs(config_user['GeneratorInput']['ThroughputMessagesPerSec'])
+    task_slots_per_task = config_global['AzureBatch']['TaskSlotsPerTask']
+    pool_vm_sku = config_global['AzureBatch']['PoolVMSku']
     pool_vm_spot_count = 0
     pool_vm_dedicated_count = node_spec_dict['NumberOfNodes']
     pool_vm_count = node_spec_dict['NumberOfNodes'] + pool_vm_spot_count
     node_throughput_per_sec = node_spec_dict['NodeThroughput']
-    node_spec_dict['EventHubConnection'] = global_config['AzureBatch']['EventHubConnection']
-    node_spec_dict['EventHubName'] = global_config['AzureBatch']['EventHubName']
+    node_spec_dict['EventHubConnection'] = config_user['AzureEventHub']['EventHubConnection']
+    node_spec_dict['EventHubName'] = config_user['AzureEventHub']['EventHubName']
 
-    python_run_file = global_config['PythonCommands']['PythonRunFilePath']
+    python_run_file = config_global['PythonCommands']['PythonRunFilePath']
 
     # Print the settings we are running with
-    print(json.dumps(global_config, indent=4))
+    # print(json.dumps(config_global, indent=4))
 
     credentials = SharedKeyCredentials(
         batch_account_name,
@@ -79,7 +76,7 @@ def execute_sample(global_config: dict):
                 user_identity=user_admin,
                 max_task_retry_count=2,
                 command_line=common.helpers.wrap_commands_in_shell(
-                    'linux', commands = global_config['PythonCommands']['VMSetup']['commands']
+                    'linux', commands = config_global['PythonCommands']['VMSetup']['commands']
                     ) 
                 )
             )
@@ -121,40 +118,58 @@ def execute_sample(global_config: dict):
             id='JobPreparationTask_DownloadGithubArtifacts'
             ,user_identity=user_admin
             ,command_line=common.helpers.wrap_commands_in_shell(
-                'linux', commands = global_config['PythonCommands']['CodeSetup']['commands']
+                'linux', commands = config_global['PythonCommands']['CodeSetup']['commands']
                 )
         )
     )
     batch_client.job.add(job)
 
-    python_run_file_path = global_config['PythonCommands']['PythonRunFilePath']
-    batch_add_app_tasks(batch_client, job_id, pool_vm_count, task_slots_per_task, python_run_file_path)
+    python_run_file_path = config_global['PythonCommands']['PythonRunFilePath']
+    batch_add_app_tasks(batch_client, job_id, pool_vm_count, task_slots_per_task, python_run_file_path, batchSpecMasterDict)
 
 
-def batch_add_app_tasks(batch_client, job_id, pool_vm_count, task_slots_per_task, python_run_file_path):
+def batch_add_app_tasks(batch_client, job_id, pool_vm_count, task_slots_per_task, python_run_file_path, batchSpecMasterDict):
 
     print(f'Adding Tasks to Job job_id={job_id}')
     tasks = list()
     # https://docs.microsoft.com/en-us/python/api/azure-batch/azure.batch.models?view=azure-python
-    for idx in range(2004, 2023):
+    for nodeSpec in batchSpecMasterDict['NodeMessageSpecList']:
         tasks.append(batchmodels.TaskAddParameter(
-            id=f'Task-{python_run_file_path[:-3]}-{str(idx).zfill(2)}',
+            id=f'Task-{python_run_file_path[:-3]}-{str(nodeSpec["NodeNum"]).zfill(4)}',
             # command_line=f"/bin/bash -c \'set -e; set -o pipefail; echo \"test-{str(idx).zfill(2)}\"; wait\'"
-            command_line=f"""/bin/bash -c 'PYTHONPATH=/mnt/batch/tasks/shared/StockAPIParser/StockAPIParser-main python3.11 /mnt/batch/tasks/shared/StockAPIParser/StockAPIParser-main/{python_run_file_path} {idx}
+            command_line=f"""/bin/bash -c 'PYTHONPATH=/mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main python3.11 /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/{python_run_file_path} {json.dumps(nodeSpec)}
                 '"""
             # ,constraints=batchmodels.TaskConstraints(max_task_retry_count=3)
             )
         )
-        # break
+    
     batch_client.task.add_collection(job_id, tasks)
 
 
 if __name__ == '__main__':
 
-    with open('main/config.toml', 'rb') as f:
-        config = tomllib.load(f)
-        print(json.dumps(config, indent=4))
-    
-    execute_sample(config)
+    with open('main/config_user.toml', 'rb') as f:
+        config_user = tomllib.load(f)
+        # print(json.dumps(config, indent=4))
 
+    with open('main/config_batch.toml', 'rb') as f:
+        config_batch = tomllib.load(f)
+        # print(json.dumps(config, indent=4))
+    
+    batchSpecMasterDict = DetermineNodes.get_batch_specs(TargetThroughput=config_user['GeneratorInput']['ThroughputMessagesPerSec'])
+
+    execute_sample(config_user=config_user, config_batch=config_batch, batchSpecMasterDict=batchSpecMasterDict)
+
+    """
+    Order of execution:
+    BuildBatch -> DetermineNodes -> GenerateData
+
+    GenerateData
+        1. EventHubConnection
+        2. EventHubName
+        3. RunDuration
+        4. NodeSec
+        5. NodeThroughput
+
+    """
     

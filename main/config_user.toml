@@ -1,0 +1,13 @@
+[AzureBatch]
+BatchAccountName = 'batchbrmyers'
+BatchAccountKey = 'tPI6i/HR2aEXoU6xwhH0bl3tyU4QzmBRkST+YMRzVc6U5j+yv62ZpLDRHKpzHgIaZaRg0sfxcuwn+ABaPsFnEg=='
+BatchServiceUrl = 'https://batchbrmyers.eastus2.batch.azure.com'
+
+[AzureEventHub]
+EventHubConnection = 'Endpoint=sb://eventhubnamespacebam.servicebus.windows.net/;SharedAccessKeyName=policyManage;SharedAccessKey=r0MWD563SwTrRijfETLf2BttZD4eQItiq+AEhKSh/Lc='
+EventHubName = 'myvehiclehub'
+
+[GeneratorInput]
+ThroughputMessagesPerSec = 100
+RunDurationMin = 10
+SampleJsonTemplate = 'SampleJSON.json' #Is this needed? Currently not used.
