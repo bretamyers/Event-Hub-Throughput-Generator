@@ -140,9 +140,9 @@ def get_batch_specs(TargetThroughput:int) -> dict:
     MaxNodeThroughput = math.ceil(int(TargetThroughput) / (NumberOfNodes/4))
     for node in range(NumberOfNodes):
         if node%(NumberOfNodes/4) < NodesAboveAverage:
-            NodeMessageSpecList.append({'NodeNum': node+1, 'NodeSec': math.floor(node/(NumberOfNodes/4)), 'NodeThroughput': (NodeThroughput)+1})
+            NodeMessageSpecList.append({'NodeNum': str(node+1), 'NodeSec': math.floor(node/(NumberOfNodes/4)), 'NodeThroughput': str(NodeThroughput)+1})
         else:
-            NodeMessageSpecList.append({'NodeNum': node+1, 'NodeSec': math.floor(node/(NumberOfNodes/4)), 'NodeThroughput': (NodeThroughput)})
+            NodeMessageSpecList.append({'NodeNum': str(node+1), 'NodeSec': math.floor(node/(NumberOfNodes/4)), 'NodeThroughput': str(NodeThroughput)})
 
 
     myDict = dict()
