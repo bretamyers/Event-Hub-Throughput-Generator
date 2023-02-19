@@ -65,7 +65,7 @@ if __name__ == '__main__':
 
     myNodeNum = sys.argv[1] #NodeNum
     # myNodeNum = 1
-    with open('main/config_user.toml', 'rb') as f:
+    with open('config_user.toml', 'rb') as f:
         config = tomllib.load(f)
     baseMetrics = DetermineNodes.get_batch_specs(TargetThroughput=config['GeneratorInput']['ThroughputMessagesPerSec'])
     
