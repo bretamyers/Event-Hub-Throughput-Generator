@@ -4,7 +4,7 @@ import DetermineNodes
 from azure.eventhub import EventHubProducerClient, EventData
 import tomllib
 import json
-import sys
+import sys, os
 
 def sync_time():
     time.sleep(1-(time.time()%1)) #time.time() = epoch time
@@ -65,7 +65,7 @@ if __name__ == '__main__':
 
     myNodeNum = sys.argv[1] #NodeNum
     # myNodeNum = 1
-    with open('config_user.toml', 'rb') as f:
+    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config_user.toml'), 'rb') as f:
         config = tomllib.load(f)
     baseMetrics = DetermineNodes.get_batch_specs(TargetThroughput=config['GeneratorInput']['ThroughputMessagesPerSec'])
     
@@ -82,13 +82,7 @@ if __name__ == '__main__':
             else:
                 NodeSpecDict[key] = value
     print(f'{json.dumps(NodeSpecDict, indent=4)}')
-
-
-    # NodeSpecDict['EventHubConnection'] = sys.argv[3]
-    # NodeSpecDict['EventHubName'] = sys.argv[3]
-    # NodeSpecDict['RunDurationMin'] = sys.argv[3]
-    # NodeSpecDict['PayloadDefinitionList'] = ''
-    # NodeSpecDict['NumberOfNodes'] = ''
+    
 
     # NodeSpecDict = {
     #     'RunDurationMin': config['GeneratorInput']['RunDurationMin']
@@ -101,6 +95,6 @@ if __name__ == '__main__':
     # }
 
     # print(f'Running Node Num {NodeSpecDict["NodeNum"]}')
-    gen_data(NodeSpecDict)
+    # gen_data(NodeSpecDict)
         
     
