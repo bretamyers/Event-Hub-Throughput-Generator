@@ -1,4 +1,4 @@
-import tomllib, json, time
+import toml, json, time
 
 from azure.batch import BatchServiceClient
 from azure.batch.batch_auth import SharedKeyCredentials
@@ -147,11 +147,11 @@ def batch_add_app_tasks(batch_client, job_id, pool_vm_count, task_slots_per_task
 if __name__ == '__main__':
 
     with open('main/config_user.toml', 'rb') as f:
-        config_user = tomllib.load(f)
+        config_user = toml.load(f)
         # print(json.dumps(config, indent=4))
 
     with open('main/config_global.toml', 'rb') as f:
-        config_global = tomllib.load(f)
+        config_global = toml.load(f)
         # print(json.dumps(config, indent=4))
     
     node_spec_dict = DetermineNodes.get_batch_specs(config_user['GeneratorInput']['ThroughputMessagesPerSec'])

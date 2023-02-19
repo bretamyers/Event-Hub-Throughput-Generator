@@ -2,7 +2,7 @@
 import time, datetime
 import DetermineNodes
 from azure.eventhub import EventHubProducerClient, EventData
-import tomllib
+import toml
 import json
 import sys, os
 
@@ -39,7 +39,7 @@ def gen_data(NodeSpecDict:dict) -> None:
 
 def regression_test():
     with open('main/config_user.toml', 'rb') as f:
-        config = tomllib.load(f)
+        config = toml.load(f)
         print(json.dumps(config, indent=4))
 
     import DetermineNodes
@@ -66,7 +66,7 @@ if __name__ == '__main__':
     myNodeNum = sys.argv[1] #NodeNum
     # myNodeNum = 1
     with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config_user.toml'), 'rb') as f:
-        config = tomllib.load(f)
+        config = toml.load(f)
     baseMetrics = DetermineNodes.get_batch_specs(TargetThroughput=config['GeneratorInput']['ThroughputMessagesPerSec'])
     
     NodeSpecDict = {'EventHubConnection': config['AzureEventHub']['EventHubConnection']
