@@ -95,6 +95,6 @@ if __name__ == '__main__':
     # }
 
     # print(f'Running Node Num {NodeSpecDict["NodeNum"]}')
-    # gen_data(NodeSpecDict)
+    gen_data(NodeSpecDict)
         
     
