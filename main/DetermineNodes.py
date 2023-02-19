@@ -5,6 +5,7 @@ import string
 import random
 import uuid
 import datetime
+import os
 
 def gen_string(low=5, high=100, maxValueFlag=False) -> string:
     value = ''
@@ -71,7 +72,7 @@ def deep_set(d, keylist, value) -> dict:
      
 def get_payload_definition() -> list:
 
-    with open('main/sampleJSON.json') as file:
+    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sampleJSON.json')) as file:
         samplePayloadDict = json.load(file)
 
     jsonAttributePathList = list()
