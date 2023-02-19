@@ -38,6 +38,8 @@ CodeSetup.commands = ['curl -H "Authorization: token ghp_sSyREweQMa2TT1DMY5ZGAvA
             ,'rm -r /mnt/batch/tasks/shared/EventHub-Throughput-Generator'
             ,'unzip /mnt/batch/tasks/shared/EventHub-Throughput-Generator.zip -d /mnt/batch/tasks/shared/EventHub-Throughput-Generator'
             ,'cd /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/'
+            #Install requirement python packages
+            ,'python3.11 -m pip install -r /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/requirements.txt'
         ]
 
 PythonRunFilePath = 'main/GenerateData.py'
