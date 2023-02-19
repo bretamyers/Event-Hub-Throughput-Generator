@@ -35,6 +35,7 @@ def gen_data(NodeSpecDict:dict) -> None:
             producer.send_batch(event_data_batch)
             print(f"Batch Count {len(event_data_batch)} - Total Sent {event_data_batch} messagess in {str(round(time.time() - start_time, 2))} seconds - {time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime())}")
             event_data_batch = producer.create_batch()
+        sync_time()
         
 
 def regression_test():
