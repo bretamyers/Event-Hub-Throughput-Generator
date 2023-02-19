@@ -29,12 +29,12 @@ def gen_data(NodeSpecDict:dict) -> None:
                 event_data = EventData(eventString)
                 event_data_batch.add(event_data)
 
-            sync_time()
-            # if int(time.time())%NodeSpecDict['NumberOfNodes'] == NodeSpecDict['NodeNum']:
-            if int(time.time())%NodeSpecDict['NumberOfNodes'] == int(NodeSpecDict['NodeSec']):
-                producer.send_batch(event_data_batch)
-                print(f"Batch Count {len(event_data_batch)} - Total Sent {event_data_batch} messagess in {str(round(time.time() - start_time, 2))} seconds - {time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime())}")
-                event_data_batch = producer.create_batch()
+            while int(time.time())%NodeSpecDict['NumberOfNodes'] != int(NodeSpecDict['NodeSec']):
+                sync_time()
+
+            producer.send_batch(event_data_batch)
+            print(f"Batch Count {len(event_data_batch)} - Total Sent {event_data_batch} messagess in {str(round(time.time() - start_time, 2))} seconds - {time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime())}")
+            event_data_batch = producer.create_batch()
         
 
 def regression_test():
