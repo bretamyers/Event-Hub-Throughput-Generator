@@ -132,13 +132,11 @@ def batch_add_app_tasks(batch_client, job_id, pool_vm_count, task_slots_per_task
     tasks = list()
     # https://docs.microsoft.com/en-us/python/api/azure-batch/azure.batch.models?view=azure-python
     for nodeSpec in node_spec_dict['NodeMessageSpecList']:
-        print(f"""/bin/bash -c 'PYTHONPATH=/mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main python3.11 /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/{python_run_file_path} {json.dumps(nodeSpec)}
-                '""")
-        print(f'Task-{python_run_file_path[:-3]}-{str(nodeSpec["NodeNum"]).zfill(4)}')
         tasks.append(batchmodels.TaskAddParameter(
             id=f'Task-{str(nodeSpec["NodeNum"]).zfill(4)}',
             # command_line=f"/bin/bash -c \'set -e; set -o pipefail; echo \"test-{str(idx).zfill(2)}\"; wait\'"
-            command_line=f"""/bin/bash -c 'PYTHONPATH=/mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main python3.11 /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/{python_run_file_path} {nodeSpec['NodeNum']} {nodeSpec['NodeSec']} {nodeSpec['NodeThroughput']}'"""
+            command_line=f"""/bin/bash -c 'PYTHONPATH=/mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main python3.11 /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/{python_run_file_path} {nodeSpec['NodeNum']}
+                '"""
             # ,constraints=batchmodels.TaskConstraints(max_task_retry_count=3)
             )
         )

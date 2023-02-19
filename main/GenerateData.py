@@ -18,20 +18,20 @@ def gen_data(NodeSpecDict:dict) -> None:
     sync_time()
     gen_start_time = time.time()
     while int(time.time() - gen_start_time) < NodeSpecDict['RunDurationMin']*60:
-        # print(int(time.time() - gen_start_time))
+        print(int(time.time() - gen_start_time))
 
         with producer:
             event_data_batch = producer.create_batch()
 
             start_time = time.time()
-            for _ in range(NodeSpecDict['NodeThroughput']):
+            for _ in range(int(NodeSpecDict['NodeThroughput'])):
                 eventString = DetermineNodes.gen_payload(jsonAttributePathList=[_ for _ in NodeSpecDict['PayloadDefinitionList']], maxValueFlag=False)
                 event_data = EventData(eventString)
                 event_data_batch.add(event_data)
 
             sync_time()
             # if int(time.time())%NodeSpecDict['NumberOfNodes'] == NodeSpecDict['NodeNum']:
-            if int(time.time())%NodeSpecDict['NumberOfNodes'] == NodeSpecDict['NodeSec']:
+            if int(time.time())%NodeSpecDict['NumberOfNodes'] == int(NodeSpecDict['NodeSec']):
                 producer.send_batch(event_data_batch)
                 print(f"Batch Count {len(event_data_batch)} - Total Sent {event_data_batch} messagess in {str(round(time.time() - start_time, 2))} seconds - {time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime())}")
                 event_data_batch = producer.create_batch()
@@ -63,12 +63,33 @@ def regression_test():
         
 if __name__ == '__main__':
 
-    print(sys.argv[1:])
-    # NodeSpecDict = json.loads(sys.argv[1])
-    NodeSpecDict = dict()
-    NodeSpecDict['NodeNum'] = sys.argv[1]
-    NodeSpecDict['NodeSec'] = sys.argv[2]
-    NodeSpecDict['NodeThroughput'] = sys.argv[3]
+    myNodeNum = sys.argv[1] #NodeNum
+    # myNodeNum = 1
+    with open('main/config_user.toml', 'rb') as f:
+        config = tomllib.load(f)
+    baseMetrics = DetermineNodes.get_batch_specs(TargetThroughput=config['GeneratorInput']['ThroughputMessagesPerSec'])
+    
+    NodeSpecDict = {'EventHubConnection': config['AzureEventHub']['EventHubConnection']
+                ,'EventHubName': config['AzureEventHub']['EventHubName']
+                ,'RunDurationMin': config['GeneratorInput']['RunDurationMin']
+                }
+    for key, value in baseMetrics.items():
+        if key in ['NodeMessageSpecList', 'PayloadDefinitionList', 'NumberOfNodes']:
+            if key == 'NodeMessageSpecList':
+                for nodeSpec in value:
+                    if nodeSpec['NodeNum'] == str(myNodeNum):
+                        NodeSpecDict.update(nodeSpec)
+            else:
+                NodeSpecDict[key] = value
+    print(f'{json.dumps(NodeSpecDict, indent=4)}')
+
+
+    # NodeSpecDict['EventHubConnection'] = sys.argv[3]
+    # NodeSpecDict['EventHubName'] = sys.argv[3]
+    # NodeSpecDict['RunDurationMin'] = sys.argv[3]
+    # NodeSpecDict['PayloadDefinitionList'] = ''
+    # NodeSpecDict['NumberOfNodes'] = ''
+
     # NodeSpecDict = {
     #     'RunDurationMin': config['GeneratorInput']['RunDurationMin']
     #     ,'EventHubConnection': config['AzureEventHub']['EventHubConnection']
@@ -79,7 +100,7 @@ if __name__ == '__main__':
     #     ,'NodeThroughput': nodeSpec['NodeThroughput']
     # }
 
-    print(f'Running Node Num {NodeSpecDict["NodeNum"]}')
+    # print(f'Running Node Num {NodeSpecDict["NodeNum"]}')
     gen_data(NodeSpecDict)
         
     
