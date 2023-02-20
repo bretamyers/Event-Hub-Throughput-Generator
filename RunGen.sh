@@ -14,6 +14,6 @@ python -m pip install -r EventHub-Throughput-Generator/EventHub-Throughput-Gener
 
 python EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/main/BuildBatch.py
 
-rm -r EventHub-Throughput-Generator.zip
+# rm -r EventHub-Throughput-Generator.zip
 
 rm -r .genvenv
