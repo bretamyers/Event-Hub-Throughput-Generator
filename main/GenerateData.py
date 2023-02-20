@@ -66,8 +66,8 @@ def regression_test():
         
 if __name__ == '__main__':
 
-    # myNodeNum = sys.argv[1] #NodeNum
-    myNodeNum = 1
+    myNodeNum = sys.argv[1] #NodeNum
+    # myNodeNum = 1
 
     config = TomlHelper.read_toml_file(FileName=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config_user.toml'))
 
