@@ -19,24 +19,26 @@ def gen_data(NodeSpecDict:dict) -> None:
     sync_time()
     gen_start_time = time.time()
     while int(time.time() - gen_start_time) < NodeSpecDict['RunDurationMin']*60:
-        print(int(time.time() - gen_start_time))
+        print(f'Running for {int(time.time() - gen_start_time)} sec')
 
+        start_message_time = time.time()
         with producer:
             event_data_batch = producer.create_batch()
 
-            start_time = time.time()
             for _ in range(int(NodeSpecDict['NodeThroughput'])):
                 eventString = DetermineNodes.gen_payload(jsonAttributePathList=[_ for _ in NodeSpecDict['PayloadDefinitionList']], maxValueFlag=False)
                 event_data = EventData(eventString)
                 event_data_batch.add(event_data)
 
             while int(time.time())%NodeSpecDict['NumberOfNodes'] != int(NodeSpecDict['NodeSec']):
+                # print(f"{int(time.time())%NodeSpecDict['NumberOfNodes']} - {int(NodeSpecDict['NodeSec'])}")
                 sync_time()
 
+            start_send_time = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime())
             producer.send_batch(event_data_batch)
-            print(f"Batch Count {len(event_data_batch)} - Total Sent {event_data_batch} messagess in {str(round(time.time() - start_time, 2))} seconds - {time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime())}")
+            print(f"Batch Count {len(event_data_batch)} - Start {start_send_time} - End {time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime())} - Message Details {event_data_batch} messagess - Duration {str(round(time.time() - start_message_time, 2))}")
             event_data_batch = producer.create_batch()
-        # sync_time()
+            sync_time() #sync time to the next nearest sec to avoid double sending
         
 
 def regression_test():
@@ -64,8 +66,8 @@ def regression_test():
         
 if __name__ == '__main__':
 
-    myNodeNum = sys.argv[1] #NodeNum
-    # myNodeNum = 1
+    # myNodeNum = sys.argv[1] #NodeNum
+    myNodeNum = 1
 
     config = TomlHelper.read_toml_file(FileName=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config_user.toml'))
 

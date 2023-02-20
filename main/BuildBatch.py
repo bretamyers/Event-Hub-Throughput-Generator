@@ -145,7 +145,7 @@ def execute_sample(config_user:dict, config_global:dict, node_spec_dict:dict) ->
     batch_client.job.add(job)
     task = batchmodels.TaskAddParameter(
             id=f'Task-Delete-Pool-{my_pool_id}',
-            command_line=f"""/bin/bash -c 'PYTHONPATH=/mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main python3.11 /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/BatchDropPool {my_pool_id}
+            command_line=f"""/bin/bash -c 'PYTHONPATH=/mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main python3.11 /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/main/BatchDropPool.py \"{my_pool_id}\"
                 '"""
             )
     batch_client.task.add(job_id=job_id, task=task)
