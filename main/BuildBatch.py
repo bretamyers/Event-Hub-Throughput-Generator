@@ -1,4 +1,4 @@
-import json, time
+import json, time, os
 from azure.batch import BatchServiceClient
 from azure.batch.batch_auth import SharedKeyCredentials
 import azure.batch.models as batchmodels
@@ -171,9 +171,9 @@ def batch_add_app_tasks(batch_client, job_id, task_slots_per_task, python_run_fi
 
 if __name__ == '__main__':
 
-    config_user = TomlHelper.read_toml_file('main/config_user.toml')
+    config_user = TomlHelper.read_toml_file(FileName=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config_user.toml'))
 
-    config_global = TomlHelper.read_toml_file('main/config_global.toml')
+    config_global = TomlHelper.read_toml_file(FileName=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config_global.toml'))
 
     node_spec_dict = DetermineNodes.get_batch_specs(config_user['GeneratorInput']['ThroughputMessagesPerSec'])
     
