@@ -10,9 +10,9 @@ source .venv/bin/activate
 
 # unzip -o EventHub-Throughput-Generator.zip -d EventHub-Throughput-Generator
 
-python -m pip install -r EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/requirements.txt
+python -m pip install -r requirements.txt
 
-python EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/main/BuildBatch.py
+python main/BuildBatch.py
 
 # rm -r EventHub-Throughput-Generator.zip
 
