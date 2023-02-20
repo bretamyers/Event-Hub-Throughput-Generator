@@ -9,5 +9,5 @@ EventHubName = 'myvehiclehub'
 
 [GeneratorInput]
 ThroughputMessagesPerSec = 100
-RunDurationMin = 10
+RunDurationMin = 1
 SampleJsonTemplate = 'SampleJSON.json' #Is this needed? Currently not used.

@@ -1,12 +1,11 @@
-import tomli, json, time
-
+import json, time
 from azure.batch import BatchServiceClient
 from azure.batch.batch_auth import SharedKeyCredentials
 import azure.batch.models as batchmodels
 import azure.batch.operations as batchoperations
 import common.helpers
 import DetermineNodes
-
+import TomlHelper
 
 def execute_sample(config_user:dict, config_global:dict, node_spec_dict:dict) -> None:
     """Executes the sample with the specified configurations.
@@ -126,24 +125,24 @@ def execute_sample(config_user:dict, config_global:dict, node_spec_dict:dict) ->
     python_run_file_path = config_global['PythonCommands']['PythonRunFilePath']
     batch_add_app_tasks(batch_client, job_id, pool_vm_count, task_slots_per_task, python_run_file_path, node_spec_dict)
 
+    #Add job to delete the pool
+    job_id = common.helpers.generate_unique_resource_name(f"Delete - {my_pool_id}-{python_run_file.split('/')[-1].split('.py')[0]}")[:64]
+    print(f'Adding Job job_id={job_id}')
+    job = batchmodels.JobAddParameter(
+        id=job_id
+        ,pool_info=pool_info
+        # A task that runs before other tasks that downloads the github artifacts
+        ,job_preparation_task=batchmodels.JobPreparationTask( 
+            id='JobPreparationTask_DeletePool'
+            ,user_identity=user_admin
+            ,command_line=f"""/bin/bash -c 'PYTHONPATH=/mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main python3.11 -c /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/BatchDropPool.py {my_pool_id}
+                '"""
+        )
+    )
+    batch_client.job.add(job)
+    
 
-    # #Add job to delete the pool
-    # job_id = common.helpers.generate_unique_resource_name(f"{my_pool_id}-{python_run_file.split('/')[-1].split('.py')[0]}")[:64]
-    # print(f'Adding Job job_id={job_id}')
-    # job = batchmodels.JobAddParameter(
-    #     id=job_id
-    #     ,pool_info=pool_info
-    #     # A task that runs before other tasks that downloads the github artifacts
-    #     ,job_preparation_task=batchmodels.JobPreparationTask( 
-    #         id='JobPreparationTask_DownloadGithubArtifacts'
-    #         ,user_identity=user_admin
-    #         ,command_line=f"""/bin/bash -c 'PYTHONPATH=/mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main python3.11 /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/DropPool.py {my_pool_id}
-    #             '"""
-    #     )
-    # )
-    # batch_client.job.add(job)
-
-def batch_add_app_tasks(batch_client, job_id, pool_vm_count, task_slots_per_task, python_run_file_path, node_spec_dict):
+def batch_add_app_tasks(batch_client, job_id, task_slots_per_task, python_run_file_path, node_spec_dict):
 
     print(f'Adding Tasks to Job job_id={job_id}')
     tasks = list()
@@ -163,14 +162,10 @@ def batch_add_app_tasks(batch_client, job_id, pool_vm_count, task_slots_per_task
 
 if __name__ == '__main__':
 
-    with open('main/config_user.toml', 'rb') as f:
-        config_user = tomli.load(f)
-        # print(json.dumps(config, indent=4))
+    config_user = TomlHelper.read_toml_file('main/config_user.toml')
 
-    with open('main/config_global.toml', 'rb') as f:
-        config_global = tomli.load(f)
-        # print(json.dumps(config, indent=4))
-    
+    config_global = TomlHelper.read_toml_file('main/config_global.toml')
+
     node_spec_dict = DetermineNodes.get_batch_specs(config_user['GeneratorInput']['ThroughputMessagesPerSec'])
     
     print(json.dumps(node_spec_dict, indent=4))

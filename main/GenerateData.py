@@ -2,11 +2,12 @@
 import time, datetime
 import DetermineNodes
 from azure.eventhub import EventHubProducerClient, EventData
-import tomli
 import json
+import TomlHelper
 import sys, os
 
 def sync_time():
+    #sleep to the until the nearest second.
     time.sleep(1-(time.time()%1)) #time.time() = epoch time
 
 def gen_data(NodeSpecDict:dict) -> None:
@@ -35,13 +36,12 @@ def gen_data(NodeSpecDict:dict) -> None:
             producer.send_batch(event_data_batch)
             print(f"Batch Count {len(event_data_batch)} - Total Sent {event_data_batch} messagess in {str(round(time.time() - start_time, 2))} seconds - {time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime())}")
             event_data_batch = producer.create_batch()
-        sync_time()
+        # sync_time()
         
 
 def regression_test():
-    with open('main/config_user.toml', 'rb') as f:
-        config = tomli.load(f)
-        print(json.dumps(config, indent=4))
+    config = TomlHelper.read_toml_file('main/config_uers.toml')
+    print(json.dumps(config, indent=4))
 
     import DetermineNodes
 
@@ -66,8 +66,9 @@ if __name__ == '__main__':
 
     myNodeNum = sys.argv[1] #NodeNum
     # myNodeNum = 1
-    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config_user.toml'), 'rb') as f:
-        config = tomli.load(f)
+
+    config = TomlHelper.read_toml_file(FileName=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config_user.toml'))
+
     baseMetrics = DetermineNodes.get_batch_specs(TargetThroughput=config['GeneratorInput']['ThroughputMessagesPerSec'])
     
     NodeSpecDict = {'EventHubConnection': config['AzureEventHub']['EventHubConnection']
