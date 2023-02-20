@@ -19,16 +19,18 @@ def gen_data(NodeSpecDict:dict) -> None:
     sync_time()
     gen_start_time = time.time()
     while int(time.time() - gen_start_time) < NodeSpecDict['RunDurationMin']*60:
-        print(f'Running for {int(time.time() - gen_start_time)} sec')
+        # print(f'Running for {int(time.time() - gen_start_time)} sec')
 
         start_message_time = time.time()
         with producer:
             event_data_batch = producer.create_batch()
 
+            start_datagen_time = time.time()
             for _ in range(int(NodeSpecDict['NodeThroughput'])):
                 eventString = DetermineNodes.gen_payload(jsonAttributePathList=[_ for _ in NodeSpecDict['PayloadDefinitionList']], maxValueFlag=False)
                 event_data = EventData(eventString)
                 event_data_batch.add(event_data)
+            end_datagen_time = time.time()
 
             while int(time.time())%NodeSpecDict['NumberOfNodes'] != int(NodeSpecDict['NodeSec']):
                 # print(f"{int(time.time())%NodeSpecDict['NumberOfNodes']} - {int(NodeSpecDict['NodeSec'])}")
@@ -36,7 +38,7 @@ def gen_data(NodeSpecDict:dict) -> None:
 
             start_send_time = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime())
             producer.send_batch(event_data_batch)
-            print(f"Batch Count {len(event_data_batch)} - Start {start_send_time} - End {time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime())} - Message Details {event_data_batch} messagess - Duration {str(round(time.time() - start_message_time, 2))}")
+            print(f"Batch Count {len(event_data_batch)} - Start {start_send_time} - End {time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime())} - Message Details {event_data_batch} messagess - Data Gen Duration - {str(round(end_datagen_time - start_datagen_time, 4))} - Total Duration {str(round(time.time() - start_message_time, 2))}")
             event_data_batch = producer.create_batch()
             sync_time() #sync time to the next nearest sec to avoid double sending
         
