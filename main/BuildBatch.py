@@ -126,7 +126,7 @@ def execute_sample(config_user:dict, config_global:dict, node_spec_dict:dict) ->
     batch_add_app_tasks(batch_client, job_id, task_slots_per_task, python_run_file_path, node_spec_dict)
 
     #Add job to delete the pool
-    job_id = common.helpers.generate_unique_resource_name(f"Delete - {my_pool_id}-{python_run_file.split('/')[-1].split('.py')[0]}")[:64]
+    job_id = common.helpers.generate_unique_resource_name(f"Delete-{my_pool_id}-{python_run_file.split('/')[-1].split('.py')[0]}")[:64]
     print(f'Adding Job job_id={job_id}')
     job = batchmodels.JobAddParameter(
         id=job_id
