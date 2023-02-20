@@ -118,6 +118,7 @@ def execute_sample(config_user:dict, config_global:dict, node_spec_dict:dict) ->
                 'linux', commands = config_global['PythonCommands']['CodeSetup']['commands']
                 )
         )
+        ,on_all_tasks_complete=batchmodels.OnAllTasksComplete.terminate_job
     )
     batch_client.job.add(job)
 
@@ -125,8 +126,10 @@ def execute_sample(config_user:dict, config_global:dict, node_spec_dict:dict) ->
     python_run_file_path = config_global['PythonCommands']['PythonRunFilePath']
     batch_add_app_tasks(batch_client, job_id, task_slots_per_task, python_run_file_path, node_spec_dict)
 
+    time.sleep(1)
+
     #Add job to delete the pool
-    job_id = common.helpers.generate_unique_resource_name(f"Delete-{my_pool_id}-{python_run_file.split('/')[-1].split('.py')[0]}")[:64]
+    job_id = common.helpers.generate_unique_resource_name(f"{my_pool_id}-DROP-{python_run_file.split('/')[-1].split('.py')[0]}")[:64]
     print(f'Adding Job job_id={job_id}')
     job = batchmodels.JobAddParameter(
         id=job_id
@@ -135,9 +138,9 @@ def execute_sample(config_user:dict, config_global:dict, node_spec_dict:dict) ->
         ,job_preparation_task=batchmodels.JobPreparationTask( 
             id='JobPreparationTask_DeletePool'
             ,user_identity=user_admin
-            # ,command_line=f"""/bin/bash -c 'PYTHONPATH=/mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main python3.11 -c /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/BatchDropPool.py {my_pool_id}
-            #     '"""
+            ,command_line=f"""/bin/bash echo 'Delete Job'"""
         )
+        ,on_all_tasks_complete=batchmodels.OnAllTasksComplete.terminate_job
     )
     batch_client.job.add(job)
     task = batchmodels.TaskAddParameter(
