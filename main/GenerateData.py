@@ -42,28 +42,28 @@ def gen_data(NodeSpecDict:dict) -> None:
             sync_time() #sync time to the next nearest sec to avoid double sending
         
 
-def regression_test():
-    config = TomlHelper.read_toml_file('main/config_uers.toml')
-    print(json.dumps(config, indent=4))
+# def regression_test():
+#     config = TomlHelper.read_toml_file('main/config_uers.toml')
+#     print(json.dumps(config, indent=4))
 
-    import DetermineNodes
+#     import DetermineNodes
 
-    batchSpecMasterDict = DetermineNodes.get_batch_specs(TargetThroughput=config['GeneratorInput']['ThroughputMessagesPerSec'])
+#     batchSpecMasterDict = DetermineNodes.get_batch_specs(TargetThroughput=config['GeneratorInput']['ThroughputMessagesPerSec'])
 
-    #Create a job on the pool and use this loop to create tasks within the job
-    for nodeSpec in batchSpecMasterDict['NodeMessageSpecList']:
-        NodeSpecDict = {
-            'RunDurationMin': config['GeneratorInput']['RunDurationMin']
-            ,'EventHubConnection': config['AzureEventHub']['EventHubConnection']
-            ,'EventHubName': config['AzureEventHub']['EventHubName']
-            ,'NumberOfNodes': batchSpecMasterDict['NumberOfNodes']
-            ,'PayloadDefinitionList': batchSpecMasterDict['PayloadDefinitionList']
-            ,'NodeSec': nodeSpec['NodeSec']
-            ,'NodeThroughput': nodeSpec['NodeThroughput']
-        }
+#     #Create a job on the pool and use this loop to create tasks within the job
+#     for nodeSpec in batchSpecMasterDict['NodeMessageSpecList']:
+#         NodeSpecDict = {
+#             'RunDurationMin': config['GeneratorInput']['RunDurationMin']
+#             ,'EventHubConnection': config['AzureEventHub']['EventHubConnection']
+#             ,'EventHubName': config['AzureEventHub']['EventHubName']
+#             ,'NumberOfNodes': batchSpecMasterDict['NumberOfNodes']
+#             ,'PayloadDefinitionList': batchSpecMasterDict['PayloadDefinitionList']
+#             ,'NodeSec': nodeSpec['NodeSec']
+#             ,'NodeThroughput': nodeSpec['NodeThroughput']
+#         }
 
-        print(f'Running Node Num {nodeSpec["NodeNum"]}')
-        gen_data(NodeSpecDict)
+#         print(f'Running Node Num {nodeSpec["NodeNum"]}')
+#         gen_data(NodeSpecDict)
         
 if __name__ == '__main__':
 
