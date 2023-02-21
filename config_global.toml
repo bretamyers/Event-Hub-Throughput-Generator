@@ -3,6 +3,9 @@ PoolNameBase = 'pools' #namming convention is {PoolNameBase}-{PoolVMSku}-{PoolVM
 TaskSlotsPerTask = 1 
 PoolVMSku = 'STANDARD_A2_V2' # https://azure.microsoft.com/en-us/pricing/details/batch/
 DropPoolOnCompletionFlag = 'true'
+Publisher="microsoft-azure-batch"
+Offer="ubuntu-server-container"
+Sku="20-04-lts"
 
 
 [DataGeneration]
@@ -11,7 +14,7 @@ ConfigFilePath = 'config_user_local.toml'
 
 
 [PythonCommands]
-VMSetup.commands = ['echo "sudo apt update && sudo apt upgrade -y"'
+NodeSetup.commands = ['echo "sudo apt update && sudo apt upgrade -y"'
             ,'sudo apt update && sudo apt upgrade -y'
             ,'sudo apt install unzip'
             

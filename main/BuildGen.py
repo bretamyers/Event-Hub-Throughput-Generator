@@ -17,6 +17,9 @@ def execute_sample(config_user:dict, config_global:dict, node_spec_dict:dict) ->
     batch_service_url = config_user['AzureBatch']['BatchServiceUrl']
     pool_name = config_global['AzureBatch']['PoolNameBase']
     drop_pool_on_completion_flag = config_global['AzureBatch']['DropPoolOnCompletionFlag']
+    pool_os_publisher = config_global['AzureBatch']['Publisher']
+    pool_os_offer = config_global['AzureBatch']['Offer']
+    pool_os_sku = config_global['AzureBatch']['Sku']
 
 
     node_spec_dict = DetermineNodes.get_batch_specs(config_user['GeneratorInput']['ThroughputMessagesPerSec'])
@@ -46,9 +49,9 @@ def execute_sample(config_user:dict, config_global:dict, node_spec_dict:dict) ->
 
     vm_config = batchmodels.VirtualMachineConfiguration(
         image_reference=batchmodels.ImageReference(
-            publisher="microsoft-azure-batch",
-            offer="ubuntu-server-container",
-            sku="20-04-lts"
+            publisher=pool_os_publisher,
+            offer=pool_os_offer,
+            sku=pool_os_sku
         ),
         node_agent_sku_id="batch.node.ubuntu 20.04"
     )
@@ -75,7 +78,7 @@ def execute_sample(config_user:dict, config_global:dict, node_spec_dict:dict) ->
                 user_identity=user_admin,
                 max_task_retry_count=2,
                 command_line=Batch.common.helpers.wrap_commands_in_shell(
-                    'linux', commands = config_global['PythonCommands']['VMSetup']['commands']
+                    'linux', commands = config_global['PythonCommands']['NodeSetup']['commands']
                     ) 
                 )
             )
@@ -173,8 +176,6 @@ def batch_add_app_tasks(batch_client, job_id, task_slots_per_task, python_run_fi
             ,'NodeThroughput': nodeSpec['NodeThroughput']
             ,'PayloadDefinitionList': node_spec_dict['PayloadDefinitionList']
             }
-        # print(json.dumps(NodeSpecDict))
-        # print('/n')
         tasks.append(batchmodels.TaskAddParameter(
             id=f'Task-{str(nodeSpec["NodeNum"]).zfill(4)}',
             command_line=f"""python3.11 /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/{python_run_file_path} '{json.dumps(NodeSpecDict)}' """
@@ -200,16 +201,5 @@ if __name__ == '__main__':
 
     execute_sample(config_user=config_user, config_global=config_global, node_spec_dict=node_spec_dict)
 
-    """
-    Order of execution:
-    BuildBatch -> DetermineNodes -> GenerateData
 
-    GenerateData
-        1. EventHubConnection
-        2. EventHubName
-        3. RunDuration
-        4. NodeSec
-        5. NodeThroughput
-
-    """
     
