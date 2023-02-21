@@ -124,16 +124,16 @@ def execute_sample(config_user:dict, config_global:dict, node_spec_dict:dict) ->
         ,job_release_task=batchmodels.JobReleaseTask(
             id=f'JobReleaseTask-DeletePool-{my_pool_id}'
             ,command_line=f"""/bin/bash -c 'PYTHONPATH=/mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main python3.11 /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/main/BatchDropPool.py \"{my_pool_id}\"
-                '""" if drop_pool_on_completion_flag == 'true' else ''
+                '""" if drop_pool_on_completion_flag == 'true' else f"""/bin/bash echo ''"""
          ) 
     )
     batch_client.job.add(job)
 
     #Add tasks to job to generate the data
     python_run_file_path = config_global['PythonCommands']['PythonRunFilePath']
-    batch_add_app_tasks(batch_client, job_id, task_slots_per_task, python_run_file_path, node_spec_dict)
+    batch_add_app_tasks(batch_client, job_id, task_slots_per_task, python_run_file_path, config_global, config_user, node_spec_dict)
 
-    # time.sleep(1)
+    # # time.sleep(1)
 
     # #Add job to delete the pool
     # job_id = Batch.common.helpers.generate_unique_resource_name(f"{my_pool_id}-DROP-{python_run_file.split('/')[-1].split('.py')[0]}")[:64]
@@ -158,28 +158,33 @@ def execute_sample(config_user:dict, config_global:dict, node_spec_dict:dict) ->
     # batch_client.task.add(job_id=job_id, task=task)
 
     
-def batch_add_app_tasks(batch_client, job_id, task_slots_per_task, python_run_file_path, node_spec_dict):
+def batch_add_app_tasks(batch_client, job_id, task_slots_per_task, python_run_file_path, config_global, config_user, node_spec_dict):
 
     print(f'Adding Tasks to Job job_id={job_id}')
     tasks = list()
     # https://docs.microsoft.com/en-us/python/api/azure-batch/azure.batch.models?view=azure-python
     for nodeSpec in node_spec_dict['NodeMessageSpecList']:
+        NodeSpecDict = {'EventHubConnection': config_user['AzureEventHub']['EventHubConnection']
+            ,'EventHubName': config_user['AzureEventHub']['EventHubName']
+            ,'NodeMessageSpecList': nodeSpec
+            ,'PayloadDefinitionList': node_spec_dict['PayloadDefinitionList']
+            ,'NumberOfNodes': node_spec_dict['NumberOfNodes']
+            }
+        # print(json.dumps(NodeSpecDict))
+        # print('/n')
         tasks.append(batchmodels.TaskAddParameter(
             id=f'Task-{str(nodeSpec["NodeNum"]).zfill(4)}',
-            # command_line=f"/bin/bash -c \'set -e; set -o pipefail; echo \"test-{str(idx).zfill(2)}\"; wait\'"
-            command_line=f"""/bin/bash -c 'PYTHONPATH=/mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main python3.11 /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/{python_run_file_path} {nodeSpec['NodeNum']}
+            command_line=f"""/bin/bash -c 'PYTHONPATH=/mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main python3.11 /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/{python_run_file_path} '{json.dumps(NodeSpecDict)}' 
                 '"""
-            # ,constraints=batchmodels.TaskConstraints(max_task_retry_count=3)
             )
         )
-    
     batch_client.task.add_collection(job_id, tasks)
 
 
 if __name__ == '__main__':
 
     os_path_base = os.path.split(os.path.join(os.path.dirname(os.path.abspath(__file__))))[0]
-    
+
     config_global = TomlHelper.read_toml_file(FileName=os.path.join(os_path_base, 'config_global.toml'))
 
     config_user = TomlHelper.read_toml_file(FileName=os.path.join(os_path_base, config_global['DataGeneration']['ConfigFilePath']))

@@ -1,10 +1,9 @@
-
 import time
 import DetermineNodes
 from azure.eventhub import EventHubProducerClient, EventData
 import json
-import TomlHelper
-import os
+import os, sys
+
 
 def sync_time():
     #sleep to the until the nearest second.
@@ -68,16 +67,18 @@ def regression_test():
         
 if __name__ == '__main__':
 
-    # myNodeNum = sys.argv[1] #NodeNum
-    myNodeNum = 1
-
-    config = TomlHelper.read_toml_file(FileName=os.path.join(os.path.split(os.path.join(os.path.dirname(os.path.abspath(__file__))))[0], 'config_user.toml'))
-
-    baseMetrics = DetermineNodes.get_batch_specs(TargetThroughput=config['GeneratorInput']['ThroughputMessagesPerSec'])
+    nodeSpec = json.loads(sys.argv[1])
     
-    NodeSpecDict = {'EventHubConnection': config['AzureEventHub']['EventHubConnection']
-                ,'EventHubName': config['AzureEventHub']['EventHubName']
-                ,'RunDurationMin': config['GeneratorInput']['RunDurationMin']
+    myNodeNum = nodeSpec['NodeMessageSpecList']['NodeNum'] 
+    # myNodeNum = 1
+
+    # config = TomlHelper.read_toml_file(FileName=os.path.join(os.path.split(os.path.join(os.path.dirname(os.path.abspath(__file__))))[0], 'config_user.toml'))
+
+    baseMetrics = DetermineNodes.get_batch_specs(TargetThroughput=config_user['GeneratorInput']['ThroughputMessagesPerSec'])
+    
+    NodeSpecDict = {'EventHubConnection': config_user['AzureEventHub']['EventHubConnection']
+                ,'EventHubName': config_user['AzureEventHub']['EventHubName']
+                ,'RunDurationMin': config_user['GeneratorInput']['RunDurationMin']
                 }
     for key, value in baseMetrics.items():
         if key in ['NodeMessageSpecList', 'PayloadDefinitionList', 'NumberOfNodes']:
