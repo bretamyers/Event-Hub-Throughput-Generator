@@ -2,18 +2,17 @@
 PoolNameBase = 'pool' #namming convention is {PoolNameBase}-{PoolVMSku}-{PoolVMSpotInstanceCount + PoolVMDedicatedInstanceCount}-{TaskSlotsPerTask}
 TaskSlotsPerTask = 1 
 PoolVMSku = 'STANDARD_A2_V2' # https://azure.microsoft.com/en-us/pricing/details/batch/
+DropPoolOnCompletionFlag = 'true'
 
 
 [DataGeneration]
 SampleJsonFilePath = 'SampleJSON.json'
-PythonRunFilePath = 'main/GenerateData.py'
-ConfigFilePath = 'config_user.toml'
+ConfigFilePath = 'config_user_local.toml'
 
 
 [PythonCommands]
 VMSetup.commands = ['echo "sudo apt update && sudo apt upgrade -y"'
             ,'sudo apt update && sudo apt upgrade -y'
-            ,'sudo apt install unzip'
             
             #Install python 3.11
             ,'sudo add-apt-repository ppa:deadsnakes/ppa -y'
@@ -27,20 +26,19 @@ VMSetup.commands = ['echo "sudo apt update && sudo apt upgrade -y"'
             ,'curl -sS https://bootstrap.pypa.io/get-pip.py | python3.11'
 
             #Download code artifacts from github
-            ,'curl -H "Accept: application/octet-stream" https://github.com/bretamyers/EventHub-Throughput-Generator/archive/master.zip -L -o /mnt/batch/tasks/shared/EventHub-Throughput-Generator.zip'
-            ,'unzip -o /mnt/batch/tasks/shared/EventHub-Throughput-Generator.zip -d /mnt/batch/tasks/shared/EventHub-Throughput-Generator'
+            ,'sudo rm -rf /mnt/batch/tasks/shared/EventHub-Throughput-Generator'
+            ,'git clone https://github.com/bretamyers/EventHub-Throughput-Generator /mnt/batch/tasks/shared/EventHub-Throughput-Generator'
             
             #Install requirement python packages
-            ,'python3.11 -m pip install -r /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/requirements.txt'
+            ,'python3.11 -m pip install -r /mnt/batch/tasks/shared/EventHub-Throughput-Generator/requirements.txt'
         ] 
-CodeSetup.commands = ['curl -H "Accept: application/octet-stream" https://github.com/bretamyers/EventHub-Throughput-Generator/archive/master.zip -L -o /mnt/batch/tasks/shared/EventHub-Throughput-Generator.zip'
-            ,'rm -r /mnt/batch/tasks/shared/EventHub-Throughput-Generator'
-            ,'unzip /mnt/batch/tasks/shared/EventHub-Throughput-Generator.zip -d /mnt/batch/tasks/shared/EventHub-Throughput-Generator'
+CodeSetup.commands = ['rm -rf /mnt/batch/tasks/shared/EventHub-Throughput-Generator'
+            ,'git clone https://github.com/bretamyers/EventHub-Throughput-Generator /mnt/batch/tasks/shared/EventHub-Throughput-Generator'
             ,'cd /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/'
             #Install requirement python packages
             ,'python3.11 -m pip install -r /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/requirements.txt'
         ]
-
+PythonRunFilePath = 'main/GenerateData.py'
 
 
 

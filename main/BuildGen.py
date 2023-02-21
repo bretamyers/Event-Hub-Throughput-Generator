@@ -16,6 +16,8 @@ def execute_sample(config_user:dict, config_global:dict, node_spec_dict:dict) ->
     batch_account_name = config_user['AzureBatch']['BatchAccountName']
     batch_service_url = config_user['AzureBatch']['BatchServiceUrl']
     pool_name = config_global['AzureBatch']['PoolNameBase']
+    drop_pool_on_completion_flag = config_global['AzureBatch']['DropPoolOnCompletionFlag']
+
 
     node_spec_dict = DetermineNodes.get_batch_specs(config_user['GeneratorInput']['ThroughputMessagesPerSec'])
     task_slots_per_task = config_global['AzureBatch']['TaskSlotsPerTask']
@@ -112,13 +114,18 @@ def execute_sample(config_user:dict, config_global:dict, node_spec_dict:dict) ->
         ,pool_info=pool_info
         # A task that runs before other tasks that downloads the github artifacts
         ,job_preparation_task=batchmodels.JobPreparationTask( 
-            id='JobPreparationTask_DownloadGithubArtifacts'
+            id='JobPreparationTask-NodePreparation'
             ,user_identity=user_admin
             ,command_line=Batch.common.helpers.wrap_commands_in_shell(
                 'linux', commands = config_global['PythonCommands']['CodeSetup']['commands']
                 )
         )
         ,on_all_tasks_complete=batchmodels.OnAllTasksComplete.terminate_job
+        ,job_release_task=batchmodels.JobReleaseTask(
+            id=f'JobReleaseTask-DeletePool-{my_pool_id}'
+            ,command_line=f"""/bin/bash -c 'PYTHONPATH=/mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main python3.11 /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/main/BatchDropPool.py \"{my_pool_id}\"
+                '""" if drop_pool_on_completion_flag == 'true' else ''
+         ) 
     )
     batch_client.job.add(job)
 
@@ -126,29 +133,29 @@ def execute_sample(config_user:dict, config_global:dict, node_spec_dict:dict) ->
     python_run_file_path = config_global['PythonCommands']['PythonRunFilePath']
     batch_add_app_tasks(batch_client, job_id, task_slots_per_task, python_run_file_path, node_spec_dict)
 
-    time.sleep(1)
+    # time.sleep(1)
 
-    #Add job to delete the pool
-    job_id = Batch.common.helpers.generate_unique_resource_name(f"{my_pool_id}-DROP-{python_run_file.split('/')[-1].split('.py')[0]}")[:64]
-    print(f'Adding Job job_id={job_id}')
-    job = batchmodels.JobAddParameter(
-        id=job_id
-        ,pool_info=pool_info
-        # A task that runs before other tasks that downloads the github artifacts
-        ,job_preparation_task=batchmodels.JobPreparationTask( 
-            id='JobPreparationTask_DeletePool'
-            ,user_identity=user_admin
-            ,command_line=f"""/bin/bash echo 'Delete Job'"""
-        )
-        ,on_all_tasks_complete=batchmodels.OnAllTasksComplete.terminate_job
-    )
-    batch_client.job.add(job)
-    task = batchmodels.TaskAddParameter(
-            id=f'Task-Delete-Pool-{my_pool_id}',
-            command_line=f"""/bin/bash -c 'PYTHONPATH=/mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main python3.11 /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/main/BatchDropPool.py \"{my_pool_id}\"
-                '"""
-            )
-    batch_client.task.add(job_id=job_id, task=task)
+    # #Add job to delete the pool
+    # job_id = Batch.common.helpers.generate_unique_resource_name(f"{my_pool_id}-DROP-{python_run_file.split('/')[-1].split('.py')[0]}")[:64]
+    # print(f'Adding Job job_id={job_id}')
+    # job = batchmodels.JobAddParameter(
+    #     id=job_id
+    #     ,pool_info=pool_info
+    #     # A task that runs before other tasks that downloads the github artifacts
+    #     ,job_preparation_task=batchmodels.JobPreparationTask( 
+    #         id='JobPreparationTask_DeletePool'
+    #         ,user_identity=user_admin
+    #         ,command_line=f"""/bin/bash echo 'Delete Job'"""
+    #     )
+    #     ,on_all_tasks_complete=batchmodels.OnAllTasksComplete.terminate_job
+    # )
+    # batch_client.job.add(job)
+    # task = batchmodels.TaskAddParameter(
+    #         id=f'Task-Delete-Pool-{my_pool_id}',
+    #         command_line=f"""/bin/bash -c 'PYTHONPATH=/mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main python3.11 /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/main/BatchDropPool.py \"{my_pool_id}\"
+    #             '"""
+    #         )
+    # batch_client.task.add(job_id=job_id, task=task)
 
     
 def batch_add_app_tasks(batch_client, job_id, task_slots_per_task, python_run_file_path, node_spec_dict):
@@ -171,9 +178,10 @@ def batch_add_app_tasks(batch_client, job_id, task_slots_per_task, python_run_fi
 
 if __name__ == '__main__':
 
-    config_user = TomlHelper.read_toml_file(FileName=os.path.join(os.path.split(os.path.join(os.path.dirname(os.path.abspath(__file__))))[0], 'config_user.toml'))
+    os_path_base = os.path.split(os.path.join(os.path.dirname(os.path.abspath(__file__))))[0]
+    config_global = TomlHelper.read_toml_file(FileName=os.path.join(os_path_base, 'config_global.toml'))
 
-    config_global = TomlHelper.read_toml_file(FileName=os.path.join(os.path.split(os.path.join(os.path.dirname(os.path.abspath(__file__))))[0], 'config_global.toml'))
+    config_user = TomlHelper.read_toml_file(FileName=os.path.join(os_path_base, config_global['DataGeneration']['ConfigFilePath']))
 
     node_spec_dict = DetermineNodes.get_batch_specs(config_user['GeneratorInput']['ThroughputMessagesPerSec'])
     

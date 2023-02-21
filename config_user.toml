@@ -3,9 +3,11 @@ BatchAccountName = 'BATCH_ACCOUNT_NAME'
 BatchAccountKey = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX=='
 BatchServiceUrl = 'https://BATCH_ACCOUNT_NAME.REGION.batch.azure.com'
 
+
 [AzureEventHub]
 EventHubConnection = 'Endpoint=sb://EVENTHUB_NAMESPACE_NAME.servicebus.windows.net/;SharedAccessKeyName=POLICY_NAME;SharedAccessKey=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX='
 EventHubName = 'EVENT_HUB_NAME'
+
 
 [GeneratorInput]
 ThroughputMessagesPerSec = 100
