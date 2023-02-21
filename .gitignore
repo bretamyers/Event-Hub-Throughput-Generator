@@ -1,7 +1,9 @@
 Scratch
 .venv
 venv311
-main/__pycache__/DetermineNodes.cpython-311.pyc
+main/__pycache__
+Batch/__pycache__
+Batch/common/__pycache__
 .venv311
 .vscode
 config_global.toml
