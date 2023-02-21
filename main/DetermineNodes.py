@@ -154,7 +154,7 @@ def get_batch_specs(TargetThroughput:int) -> dict:
             nodeBuckets[nodespec['NodeSec']] += nodespec['NodeThroughput']
         else:
             nodeBuckets[nodespec['NodeSec']] = nodespec['NodeThroughput']
-    print(f'Node Buckets (sec, throughput) - {nodeBuckets}')
+    print(f'Node Buckets (Node, Throughput) - {nodeBuckets}')
 
     batchSpecDict = {
                     'PayloadDefinitionList': payloadDefinitionList
