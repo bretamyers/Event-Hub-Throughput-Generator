@@ -166,9 +166,11 @@ def batch_add_app_tasks(batch_client, job_id, task_slots_per_task, python_run_fi
     for nodeSpec in node_spec_dict['NodeMessageSpecList']:
         NodeSpecDict = {'EventHubConnection': config_user['AzureEventHub']['EventHubConnection']
             ,'EventHubName': config_user['AzureEventHub']['EventHubName']
-            ,'NodeMessageSpecList': nodeSpec
-            ,'PayloadDefinitionList': node_spec_dict['PayloadDefinitionList']
             ,'NumberOfNodes': node_spec_dict['NumberOfNodes']
+            ,'NodeNum': nodeSpec['NodeNum']
+            ,'NodeSec': nodeSpec['NodeSec']
+            ,'NodeThroughput': nodeSpec['NodeThroughput']
+            ,'PayloadDefinitionList': node_spec_dict['PayloadDefinitionList']
             }
         # print(json.dumps(NodeSpecDict))
         # print('/n')
@@ -178,7 +180,7 @@ def batch_add_app_tasks(batch_client, job_id, task_slots_per_task, python_run_fi
                 '"""
             )
         )
-    batch_client.task.add_collection(job_id, tasks)
+    # batch_client.task.add_collection(job_id, tasks)
 
 
 if __name__ == '__main__':
@@ -191,6 +193,9 @@ if __name__ == '__main__':
 
     node_spec_dict = DetermineNodes.get_batch_specs(config_user['GeneratorInput']['ThroughputMessagesPerSec'])
     
+    
+    print(json.dumps(config_global, indent=4))
+    print(json.dumps(config_user, indent=4))
     print(json.dumps(node_spec_dict, indent=4))
 
     execute_sample(config_user=config_user, config_global=config_global, node_spec_dict=node_spec_dict)

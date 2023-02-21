@@ -67,28 +67,28 @@ def regression_test():
         
 if __name__ == '__main__':
 
-    nodeSpec = json.loads(sys.argv[1])
-    
-    myNodeNum = nodeSpec['NodeMessageSpecList']['NodeNum'] 
+    NodeSpecDict = json.loads(sys.argv[1])
+
+    # myNodeNum = nodeSpec['NodeMessageSpecList']['NodeNum'] 
     # myNodeNum = 1
 
     # config = TomlHelper.read_toml_file(FileName=os.path.join(os.path.split(os.path.join(os.path.dirname(os.path.abspath(__file__))))[0], 'config_user.toml'))
 
-    baseMetrics = DetermineNodes.get_batch_specs(TargetThroughput=config_user['GeneratorInput']['ThroughputMessagesPerSec'])
+    # baseMetrics = DetermineNodes.get_batch_specs(TargetThroughput=config_user['GeneratorInput']['ThroughputMessagesPerSec'])
     
-    NodeSpecDict = {'EventHubConnection': config_user['AzureEventHub']['EventHubConnection']
-                ,'EventHubName': config_user['AzureEventHub']['EventHubName']
-                ,'RunDurationMin': config_user['GeneratorInput']['RunDurationMin']
-                }
-    for key, value in baseMetrics.items():
-        if key in ['NodeMessageSpecList', 'PayloadDefinitionList', 'NumberOfNodes']:
-            if key == 'NodeMessageSpecList':
-                for nodeSpec in value:
-                    if nodeSpec['NodeNum'] == str(myNodeNum):
-                        NodeSpecDict.update(nodeSpec)
-            else:
-                NodeSpecDict[key] = value
-    print(f'{json.dumps(NodeSpecDict, indent=4)}')
+    # NodeSpecDict = {'EventHubConnection': nodeSpec['EventHubConnection']
+    #             ,'EventHubName': nodeSpec['EventHubName']
+    #             ,'RunDurationMin': nodeSpec['RunDurationMin']
+    #             }
+    # for key, value in baseMetrics.items():
+    #     if key in ['NodeMessageSpecList', 'PayloadDefinitionList', 'NumberOfNodes']:
+    #         if key == 'NodeMessageSpecList':
+    #             for nodeSpec in value:
+    #                 if nodeSpec['NodeNum'] == str(myNodeNum):
+    #                     NodeSpecDict.update(nodeSpec)
+    #         else:
+    #             NodeSpecDict[key] = value
+    # print(f'{json.dumps(NodeSpecDict, indent=4)}')
     
 
     # NodeSpecDict = {
@@ -101,7 +101,7 @@ if __name__ == '__main__':
     #     ,'NodeThroughput': nodeSpec['NodeThroughput']
     # }
 
-    # print(f'Running Node Num {NodeSpecDict["NodeNum"]}')
+    print(NodeSpecDict)
     gen_data(NodeSpecDict)
         
     
