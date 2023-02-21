@@ -127,7 +127,7 @@ def get_batch_specs(TargetThroughput:int) -> dict:
         NodeThroughput = math.floor(TargetThroughput/(math.ceil(TargetThroughput/MaxThroughputPerNode)))
 
     print(f'Max Node Throughput - {MaxThroughputPerNode}')
-    print(f'Ideal Node Throughput - {NodeThroughput}')
+    # print(f'Ideal Node Throughput - {NodeThroughput}')
     NumberOfNodes = 4 if math.floor(TargetThroughput/NodeThroughput) < 2 else 4 * math.floor(TargetThroughput/NodeThroughput) #default the number of nodes to 4
     # NodeThroughput = math.floor(NodeThroughput/4)
     print(f'Number of nodes - {NumberOfNodes}')
