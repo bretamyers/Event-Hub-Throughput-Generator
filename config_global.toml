@@ -35,7 +35,8 @@ VMSetup.commands = ['echo "sudo apt update && sudo apt upgrade -y"'
             #Install requirement python packages
             ,'python3.11 -m pip install -r /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/requirements.txt'
         ] 
-CodeSetup.commands = ['rm -rf /mnt/batch/tasks/shared/EventHub-Throughput-Generator'
+CodeSetup.commands = ['sudo rm -rf /mnt/batch/tasks/shared/EventHub-Throughput-Generator.zip'
+            ,'sudo rm -rf /mnt/batch/tasks/shared/EventHub-Throughput-Generator'
             ,'unzip -o /mnt/batch/tasks/shared/EventHub-Throughput-Generator.zip -d /mnt/batch/tasks/shared/EventHub-Throughput-Generator'
             ,'cd /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/'
             #Install requirement python packages
