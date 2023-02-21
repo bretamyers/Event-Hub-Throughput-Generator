@@ -10,3 +10,4 @@ config_global.toml
 config_user.toml
 config_user_local.toml
 main/Batch/common/__pycache__
+main/Batch/BatchDropPool.py
