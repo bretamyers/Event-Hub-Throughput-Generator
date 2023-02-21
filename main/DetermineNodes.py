@@ -101,6 +101,8 @@ def gen_payload(jsonAttributePathList, seed=0, maxValueFlag=False) -> list:
             # value = datetime.datetime.strftime(datetime.datetime(random.randint(2020, 2023), random.randint(1, 12), random.randint(1, 28), random.randint(1, 23), random.randint(0, 59), random.randint(0, 60))
             #     , '%Y-%m-%d %H:%M:%S')
             value = gen_datetime(min_year=2020)
+        else:
+            value = item
         deep_set(masterDict, jsonAttributePath[0][:], str(value))
 
     # print(json.dumps(masterDict, indent=4))
@@ -113,7 +115,7 @@ def get_batch_specs(TargetThroughput:int) -> dict:
 
     eventString = gen_payload(jsonAttributePathList=payloadDefinitionList, maxValueFlag=True)
 
-    print(f'EventString with max values - {eventString}')
+    # print(f'EventString with max values - {eventString}')
     print(f'Message size (bytes) - {sys.getsizeof(eventString)}')
     MaxMessageSizeBytes = sys.getsizeof(eventString)
 
