@@ -14,5 +14,8 @@ python -m pip install -r requirements.txt
 # Run the throughput generator
 python main/BuildGen.py
 
+# Deactivate virtual environment
+deactivate .genvenv
+
 # Remove the virtual environment
 rm -r .genvenv
