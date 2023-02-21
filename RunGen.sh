@@ -3,7 +3,7 @@
 python -m venv .genvenv
 
 # Activate virtual enviornment
-source .venv/bin/activate
+source .genvenv/bin/activate
 
 # Upgrade pip
 python -m pip install --upgrade pip 
