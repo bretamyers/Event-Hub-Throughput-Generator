@@ -148,13 +148,13 @@ def get_batch_specs(TargetThroughput:int) -> dict:
             NodeMessageSpecList.append({'NodeNum': str(node+1), 'NodeSec': str(math.floor(node/(NumberOfNodes/4))), 'NodeThroughput': str(NodeThroughput)})
 
 
-    myDict = dict()
+    nodeBuckets = dict()
     for nodespec in NodeMessageSpecList:
-        if nodespec['NodeSec'] in myDict.keys():
-            myDict[nodespec['NodeSec']] += nodespec['NodeThroughput']
+        if nodespec['NodeSec'] in nodeBuckets.keys():
+            nodeBuckets[nodespec['NodeSec']] += nodespec['NodeThroughput']
         else:
-            myDict[nodespec['NodeSec']] = nodespec['NodeThroughput']
-    print(myDict)
+            nodeBuckets[nodespec['NodeSec']] = nodespec['NodeThroughput']
+    print(f'Node Buckets (sec, throughput) - {nodeBuckets}')
 
     batchSpecDict = {
                     'PayloadDefinitionList': payloadDefinitionList
