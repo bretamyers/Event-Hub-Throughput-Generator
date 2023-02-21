@@ -6,3 +6,4 @@ main/__pycache__/DetermineNodes.cpython-311.pyc
 .vscode
 config_global.toml
 config_user.toml
+config_user_local.toml

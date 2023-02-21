@@ -1,11 +1,11 @@
 [AzureBatch]
-BatchAccountName = 'batchbam'
-BatchAccountKey = 'gUsh/iFf+imtxVCbgGHbCCte0pUyoEH75M3sVDPsfIXQ3go0GhMadBJiDNZHyGWs3AME4HCaZVLh+ABaDwzw2g=='
-BatchServiceUrl = 'https://batchbam.eastus2.batch.azure.com'
+BatchAccountName = 'BATCH_ACCOUNT_NAME'
+BatchAccountKey = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX=='
+BatchServiceUrl = 'https://BATCH_ACCOUNT_NAME.REGION.batch.azure.com'
 
 [AzureEventHub]
-EventHubConnection = 'Endpoint=sb://eventhubnamespacebam.servicebus.windows.net/;SharedAccessKeyName=policyManage;SharedAccessKey=r0MWD563SwTrRijfETLf2BttZD4eQItiq+AEhKSh/Lc='
-EventHubName = 'myvehiclehub'
+EventHubConnection = 'Endpoint=sb://EVENTHUB_NAMESPACE_NAME.servicebus.windows.net/;SharedAccessKeyName=POLICY_NAME;SharedAccessKey=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX='
+EventHubName = 'EVENT_HUB_NAME'
 
 [GeneratorInput]
 ThroughputMessagesPerSec = 100

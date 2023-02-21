@@ -1,14 +1,7 @@
 [AzureBatch]
-BatchAccountName = 'batchbrmyers'
-BatchAccountKey = 'tPI6i/HR2aEXoU6xwhH0bl3tyU4QzmBRkST+YMRzVc6U5j+yv62ZpLDRHKpzHgIaZaRg0sfxcuwn+ABaPsFnEg=='
-BatchServiceUrl = 'https://batchbrmyers.eastus2.batch.azure.com'
 PoolNameBase = 'pools' #namming convention is {PoolNameBase}-{PoolVMSku}-{PoolVMSpotInstanceCount + PoolVMDedicatedInstanceCount}-{TaskSlotsPerTask}
 TaskSlotsPerTask = 1 #Should I take out??
 PoolVMSku = 'STANDARD_A2_V2' # https://azure.microsoft.com/en-us/pricing/details/batch/
-ThroughputMessagesPerSec = 1000
-EventHubConnection = 'Endpoint=sb://eventhubnamespacebam.servicebus.windows.net/;SharedAccessKeyName=policyManage;SharedAccessKey=r0MWD563SwTrRijfETLf2BttZD4eQItiq+AEhKSh/Lc='
-EventHubName = 'myvehiclehub'
-RunDurationMin = 10
 
 [PythonCommands]
 VMSetup.commands = ['echo "sudo apt update && sudo apt upgrade -y"'
