@@ -180,7 +180,7 @@ def batch_add_app_tasks(batch_client, job_id, task_slots_per_task, python_run_fi
                 '"""
             )
         )
-    # batch_client.task.add_collection(job_id, tasks)
+    batch_client.task.add_collection(job_id, tasks)
 
 
 if __name__ == '__main__':
