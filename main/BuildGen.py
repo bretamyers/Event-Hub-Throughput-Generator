@@ -3,8 +3,8 @@ from azure.batch import BatchServiceClient
 from azure.batch.batch_auth import SharedKeyCredentials
 import azure.batch.models as batchmodels
 import azure.batch.operations as batchoperations
-import common.helpers
-import DetermineNodes
+import Batch.common.helpers
+import DetermineNodes as DetermineNodes
 import TomlHelper
 
 def execute_sample(config_user:dict, config_global:dict, node_spec_dict:dict) -> None:
@@ -72,7 +72,7 @@ def execute_sample(config_user:dict, config_global:dict, node_spec_dict:dict) ->
             start_task=batchmodels.StartTask(
                 user_identity=user_admin,
                 max_task_retry_count=2,
-                command_line=common.helpers.wrap_commands_in_shell(
+                command_line=Batch.common.helpers.wrap_commands_in_shell(
                     'linux', commands = config_global['PythonCommands']['VMSetup']['commands']
                     ) 
                 )
@@ -105,7 +105,7 @@ def execute_sample(config_user:dict, config_global:dict, node_spec_dict:dict) ->
         
     pool_info = batchmodels.PoolInformation(pool_id=my_pool_id)
 
-    job_id = common.helpers.generate_unique_resource_name(f"{my_pool_id}-{python_run_file.split('/')[-1].split('.py')[0]}")[:64]
+    job_id = Batch.common.helpers.generate_unique_resource_name(f"{my_pool_id}-{python_run_file.split('/')[-1].split('.py')[0]}")[:64]
     print(f'Adding Job job_id={job_id}')
     job = batchmodels.JobAddParameter(
         id=job_id
@@ -114,7 +114,7 @@ def execute_sample(config_user:dict, config_global:dict, node_spec_dict:dict) ->
         ,job_preparation_task=batchmodels.JobPreparationTask( 
             id='JobPreparationTask_DownloadGithubArtifacts'
             ,user_identity=user_admin
-            ,command_line=common.helpers.wrap_commands_in_shell(
+            ,command_line=Batch.common.helpers.wrap_commands_in_shell(
                 'linux', commands = config_global['PythonCommands']['CodeSetup']['commands']
                 )
         )
@@ -129,7 +129,7 @@ def execute_sample(config_user:dict, config_global:dict, node_spec_dict:dict) ->
     time.sleep(1)
 
     #Add job to delete the pool
-    job_id = common.helpers.generate_unique_resource_name(f"{my_pool_id}-DROP-{python_run_file.split('/')[-1].split('.py')[0]}")[:64]
+    job_id = Batch.common.helpers.generate_unique_resource_name(f"{my_pool_id}-DROP-{python_run_file.split('/')[-1].split('.py')[0]}")[:64]
     print(f'Adding Job job_id={job_id}')
     job = batchmodels.JobAddParameter(
         id=job_id
@@ -171,9 +171,9 @@ def batch_add_app_tasks(batch_client, job_id, task_slots_per_task, python_run_fi
 
 if __name__ == '__main__':
 
-    config_user = TomlHelper.read_toml_file(FileName=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config_user.toml'))
+    config_user = TomlHelper.read_toml_file(FileName=os.path.join(os.path.split(os.path.join(os.path.dirname(os.path.abspath(__file__))))[0], 'config_user.toml'))
 
-    config_global = TomlHelper.read_toml_file(FileName=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config_global.toml'))
+    config_global = TomlHelper.read_toml_file(FileName=os.path.join(os.path.split(os.path.join(os.path.dirname(os.path.abspath(__file__))))[0], 'config_global.toml'))
 
     node_spec_dict = DetermineNodes.get_batch_specs(config_user['GeneratorInput']['ThroughputMessagesPerSec'])
     

@@ -3,8 +3,8 @@ from azure.batch import BatchServiceClient
 from azure.batch.batch_auth import SharedKeyCredentials
 import azure.batch.models as batchmodels
 import azure.batch.operations as batchoperations
-import common.helpers
-import TomlHelper
+import Batch.common.helpers
+import main.TomlHelper as TomlHelper
 import sys, os, json
 
 

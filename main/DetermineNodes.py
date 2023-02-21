@@ -72,7 +72,7 @@ def deep_set(d, keylist, value) -> dict:
      
 def get_payload_definition() -> list:
 
-    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sampleJSON.json')) as file:
+    with open(os.path.join(os.path.split(os.path.join(os.path.dirname(os.path.abspath(__file__))))[0], 'sampleJSON.json')) as file:
         samplePayloadDict = json.load(file)
 
     jsonAttributePathList = list()

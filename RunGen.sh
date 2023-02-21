@@ -1,19 +1,18 @@
 
-
+# Create a virtual environment
 python -m venv .genvenv
 
-python -m pip install --upgrade pip 
-
+# Activate virtual enviornment
 source .venv/bin/activate
 
-# curl -H "Authorization: token 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" -H "Accept: application/octet-stream" https://github.com/bretamyers/EventHub-Throughput-Generator/archive/master.zip -L -o EventHub-Throughput-Generator.zip
+# Upgrade pip
+python -m pip install --upgrade pip 
 
-# unzip -o EventHub-Throughput-Generator.zip -d EventHub-Throughput-Generator
-
+# Install the required packages
 python -m pip install -r requirements.txt
 
-python main/BuildBatch.py
+# Run the throughput generator
+python main/BuildGen.py
 
-# rm -r EventHub-Throughput-Generator.zip
-
+# Remove the virtual environment
 rm -r .genvenv

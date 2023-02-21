@@ -1,10 +1,10 @@
 
-import time, datetime
+import time
 import DetermineNodes
 from azure.eventhub import EventHubProducerClient, EventData
 import json
 import TomlHelper
-import sys, os
+import os
 
 def sync_time():
     #sleep to the until the nearest second.
@@ -68,10 +68,10 @@ def regression_test():
         
 if __name__ == '__main__':
 
-    myNodeNum = sys.argv[1] #NodeNum
-    # myNodeNum = 1
+    # myNodeNum = sys.argv[1] #NodeNum
+    myNodeNum = 1
 
-    config = TomlHelper.read_toml_file(FileName=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config_user.toml'))
+    config = TomlHelper.read_toml_file(FileName=os.path.join(os.path.split(os.path.join(os.path.dirname(os.path.abspath(__file__))))[0], 'config_user.toml'))
 
     baseMetrics = DetermineNodes.get_batch_specs(TargetThroughput=config['GeneratorInput']['ThroughputMessagesPerSec'])
     

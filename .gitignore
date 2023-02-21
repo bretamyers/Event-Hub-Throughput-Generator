@@ -1,4 +1,6 @@
-scratch
+Scratch
 .venv
 venv311
 main/__pycache__/DetermineNodes.cpython-311.pyc
+.venv311
+.vscode
