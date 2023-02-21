@@ -1,13 +1,18 @@
 [AzureBatch]
-PoolNameBase = 'pools' #namming convention is {PoolNameBase}-{PoolVMSku}-{PoolVMSpotInstanceCount + PoolVMDedicatedInstanceCount}-{TaskSlotsPerTask}
-TaskSlotsPerTask = 1 #Should I take out??
+PoolNameBase = 'pool' #namming convention is {PoolNameBase}-{PoolVMSku}-{PoolVMSpotInstanceCount + PoolVMDedicatedInstanceCount}-{TaskSlotsPerTask}
+TaskSlotsPerTask = 1 
 PoolVMSku = 'STANDARD_A2_V2' # https://azure.microsoft.com/en-us/pricing/details/batch/
+
+
+[DataGeneration]
+SampleJsonFilePath = 'SampleJSON.json'
+PythonRunFilePath = 'main/GenerateData.py'
+
 
 [PythonCommands]
 VMSetup.commands = ['echo "sudo apt update && sudo apt upgrade -y"'
             ,'sudo apt update && sudo apt upgrade -y'
             ,'sudo apt install unzip'
-            #,'sleep 120' #wait 2 minutes
             
             #Install python 3.11
             ,'sudo add-apt-repository ppa:deadsnakes/ppa -y'
@@ -35,6 +40,6 @@ CodeSetup.commands = ['curl -H "Authorization: token ghp_sSyREweQMa2TT1DMY5ZGAvA
             ,'python3.11 -m pip install -r /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/requirements.txt'
         ]
 
-PythonRunFilePath = 'main/GenerateData.py'
+
 
 

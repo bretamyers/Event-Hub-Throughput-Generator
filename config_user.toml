@@ -10,4 +10,3 @@ EventHubName = 'EVENT_HUB_NAME'
 [GeneratorInput]
 ThroughputMessagesPerSec = 100
 RunDurationMin = 10
-SampleJsonTemplate = 'SampleJSON.json' #Is this needed? Currently not used.
