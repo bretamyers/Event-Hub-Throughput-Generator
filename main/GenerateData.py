@@ -67,6 +67,7 @@ def gen_data(NodeSpecDict:dict) -> None:
         
 if __name__ == '__main__':
 
+    print(sys.argv[1])
     NodeSpecDict = json.loads(sys.argv[1])
 
     # myNodeNum = nodeSpec['NodeMessageSpecList']['NodeNum'] 
