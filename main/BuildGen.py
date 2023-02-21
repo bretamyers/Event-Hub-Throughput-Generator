@@ -166,6 +166,7 @@ def batch_add_app_tasks(batch_client, job_id, task_slots_per_task, python_run_fi
     for nodeSpec in node_spec_dict['NodeMessageSpecList']:
         NodeSpecDict = {'EventHubConnection': config_user['AzureEventHub']['EventHubConnection']
             ,'EventHubName': config_user['AzureEventHub']['EventHubName']
+            ,'RunDurationMin': config_user['GeneratorInput']['RunDurationMin']
             ,'NumberOfNodes': node_spec_dict['NumberOfNodes']
             ,'NodeNum': nodeSpec['NodeNum']
             ,'NodeSec': nodeSpec['NodeSec']
@@ -176,8 +177,7 @@ def batch_add_app_tasks(batch_client, job_id, task_slots_per_task, python_run_fi
         # print('/n')
         tasks.append(batchmodels.TaskAddParameter(
             id=f'Task-{str(nodeSpec["NodeNum"]).zfill(4)}',
-            command_line=f"""/bin/bash -c 'PYTHONPATH=/mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main python3.11 /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/{python_run_file_path} '{json.dumps(NodeSpecDict)}' 
-                '"""
+            command_line=f"""python3.11 /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/{python_run_file_path} '{json.dumps(NodeSpecDict)}' """
             )
         )
     batch_client.task.add_collection(job_id, tasks)

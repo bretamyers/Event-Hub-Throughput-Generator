@@ -1,5 +1,5 @@
 [AzureBatch]
-PoolNameBase = 'pool' #namming convention is {PoolNameBase}-{PoolVMSku}-{PoolVMSpotInstanceCount + PoolVMDedicatedInstanceCount}-{TaskSlotsPerTask}
+PoolNameBase = 'pools' #namming convention is {PoolNameBase}-{PoolVMSku}-{PoolVMSpotInstanceCount + PoolVMDedicatedInstanceCount}-{TaskSlotsPerTask}
 TaskSlotsPerTask = 1 
 PoolVMSku = 'STANDARD_A2_V2' # https://azure.microsoft.com/en-us/pricing/details/batch/
 DropPoolOnCompletionFlag = 'true'
@@ -35,8 +35,9 @@ VMSetup.commands = ['echo "sudo apt update && sudo apt upgrade -y"'
             #Install requirement python packages
             ,'python3.11 -m pip install -r /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/requirements.txt'
         ] 
-CodeSetup.commands = ['sudo rm -rf /mnt/batch/tasks/shared/EventHub-Throughput-Generator.zip'
-            ,'sudo rm -rf /mnt/batch/tasks/shared/EventHub-Throughput-Generator'
+CodeSetup.commands = ['rm -rf /mnt/batch/tasks/shared/EventHub-Throughput-Generator.zip'
+            ,'rm -rf /mnt/batch/tasks/shared/EventHub-Throughput-Generator'
+            ,'curl -H "Accept: application/octet-stream" https://github.com/bretamyers/EventHub-Throughput-Generator/archive/master.zip -L -o /mnt/batch/tasks/shared/EventHub-Throughput-Generator.zip'
             ,'unzip -o /mnt/batch/tasks/shared/EventHub-Throughput-Generator.zip -d /mnt/batch/tasks/shared/EventHub-Throughput-Generator'
             ,'cd /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/'
             #Install requirement python packages
