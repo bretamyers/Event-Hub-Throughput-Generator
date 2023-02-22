@@ -31,7 +31,7 @@ def execute_sample(config_user:dict, config_global:dict, node_spec_dict:dict) ->
     node_spec_dict['EventHubConnection'] = config_user['AzureEventHub']['EventHubConnection']
     node_spec_dict['EventHubName'] = config_user['AzureEventHub']['EventHubName']
 
-    python_run_file = config_global['PythonCommands']['PythonRunFilePath']
+    python_run_file = config_global['PythonCommands']['PythonProgramFilePath']
 
     # Print the settings we are running with
     # print(json.dumps(config_global, indent=4))
@@ -126,14 +126,14 @@ def execute_sample(config_user:dict, config_global:dict, node_spec_dict:dict) ->
         ,on_all_tasks_complete=batchmodels.OnAllTasksComplete.terminate_job
         ,job_release_task=batchmodels.JobReleaseTask(
             id=f'JobReleaseTask-DeletePool-{my_pool_id}'
-            ,command_line=f"""/bin/bash -c 'PYTHONPATH=/mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main python3.11 /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/main/BatchDropPool.py \"{my_pool_id}\"
+            ,command_line=f"""/bin/bash -c 'PYTHONPATH={config_global['PythonCommands']['PythonRepoPath']} python3.11 {config_global['PythonCommands']['PythonRepoPath']}/main/BatchDropPool.py \"{my_pool_id}\"
                 '""" if drop_pool_on_completion_flag == 'true' else f"""/bin/bash echo ''"""
          ) 
     )
     batch_client.job.add(job)
 
     #Add tasks to job to generate the data
-    python_run_file_path = config_global['PythonCommands']['PythonRunFilePath']
+    python_run_file_path = config_global['PythonCommands']['PythonProgramFilePath']
     batch_add_app_tasks(batch_client, job_id, task_slots_per_task, python_run_file_path, config_global, config_user, node_spec_dict)
 
     # # time.sleep(1)
@@ -178,7 +178,7 @@ def batch_add_app_tasks(batch_client, job_id, task_slots_per_task, python_run_fi
             }
         tasks.append(batchmodels.TaskAddParameter(
             id=f'Task-{str(nodeSpec["NodeNum"]).zfill(4)}',
-            command_line=f"""python3.11 /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/{python_run_file_path} '{json.dumps(NodeSpecDict)}' """
+            command_line=f"""python3.11 {config_global['PythonCommands']['PythonRepoPath']}/{python_run_file_path} '{json.dumps(NodeSpecDict)}' """
             )
         )
     batch_client.task.add_collection(job_id, tasks)

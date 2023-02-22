@@ -1,11 +1,11 @@
 [AzureBatch]
-PoolNameBase = 'pools' #namming convention is {PoolNameBase}-{PoolVMSku}-{PoolVMSpotInstanceCount + PoolVMDedicatedInstanceCount}-{TaskSlotsPerTask}
+PoolNameBase = 'pool' #namming convention is {PoolNameBase}-{PoolVMSku}-{PoolVMSpotInstanceCount + PoolVMDedicatedInstanceCount}-{TaskSlotsPerTask}
 TaskSlotsPerTask = 1 
 PoolVMSku = 'STANDARD_A2_V2' # https://azure.microsoft.com/en-us/pricing/details/batch/
-DropPoolOnCompletionFlag = 'true'
 Publisher="microsoft-azure-batch"
 Offer="ubuntu-server-container"
 Sku="20-04-lts"
+DropPoolOnCompletionFlag = 'false'
 
 
 [DataGeneration]
@@ -73,7 +73,8 @@ CodeSetup.commands = ['rm -rf /mnt/batch/tasks/shared/EventHub-Throughput-Genera
 #             #Install requirement python packages
 #             ,'python3.11 -m pip install -r /mnt/batch/tasks/shared/EventHub-Throughput-Generator/requirements.txt'
 #         ]
-PythonRunFilePath = 'main/GenerateData.py'
+PythonRepoPath = '/mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main'
+PythonProgramFilePath = 'main/GenerateData.py'
 
 
 
