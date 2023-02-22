@@ -42,6 +42,6 @@ if __name__ == '__main__':
         credentials,
         batch_url=batch_service_url)
 
-    # batch_drop_pool(batch_client=batch_client, pool_id=pool_id)
+    batch_drop_pool(batch_client=batch_client, pool_id=pool_id)
     # batch_list_jobs(batch_client=batch_client, pool_id=pool_id)
     # batch_delete_pool_jobs(batch_client=batch_client, pool_id=pool_id)
