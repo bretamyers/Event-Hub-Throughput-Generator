@@ -16,4 +16,5 @@
     ,"TransactionDateTime": "datetime"
     ,"ProductType": "string"
     ,"Department": "string"
+    ,"Color": "string"
 }
