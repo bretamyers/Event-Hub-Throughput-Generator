@@ -20,7 +20,7 @@ You can modify the json payload by editing the <i><b>SampleJSON.json</b></i>. Ad
 After the config_user.toml has been updated and the SampleJSON.json file altered to match the desired payload definition, run the following command to start the data gen process.
 
 ```
-@Azure:~$ bash runGen.sh 
+@Azure:~$ bash RunGen.sh 
 ```
 
 ## Data Generation Steps
