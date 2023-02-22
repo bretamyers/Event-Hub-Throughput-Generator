@@ -22,8 +22,8 @@ def batch_delete_pool_jobs(batch_client:BatchServiceClient, pool_id) -> None:
 
 if __name__ == '__main__':
 
-    # pool_id = sys.argv[1]
-    # print(f'{pool_id}')
+    pool_id = sys.argv[1]
+    print(f'{pool_id}')
 
     os_path_base = os.path.split(os.path.join(os.path.dirname(os.path.abspath(__file__))))[0]
     config_global = TomlHelper.read_toml_file(FileName=os.path.join(os_path_base, 'config_global.toml'))
