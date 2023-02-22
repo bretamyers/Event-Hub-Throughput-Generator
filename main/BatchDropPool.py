@@ -23,16 +23,20 @@ def batch_delete_pool_jobs(batch_client:BatchServiceClient, pool_id) -> None:
 if __name__ == '__main__':
 
     pool_id = sys.argv[1]
-    print(f'{pool_id}')
+    batch_account_key = sys.argv[2]
+    batch_account_name = sys.argv[3]
+    batch_service_url = sys.argv[4]
 
-    os_path_base = os.path.split(os.path.join(os.path.dirname(os.path.abspath(__file__))))[0]
-    config_global = TomlHelper.read_toml_file(FileName=os.path.join(os_path_base, 'config_global.toml'))
-    config_user = TomlHelper.read_toml_file(FileName=os.path.join(os_path_base, config_global['DataGeneration']['ConfigFilePath']))
-    print(json.dumps(config_user, indent=4))
+    print(f'{pool_id=}\n{batch_account_key=}\n{batch_account_name=}\n{batch_service_url=}')
 
-    batch_account_key = config_user['AzureBatch']['BatchAccountKey']
-    batch_account_name = config_user['AzureBatch']['BatchAccountName']
-    batch_service_url = config_user['AzureBatch']['BatchServiceUrl']
+    # os_path_base = os.path.split(os.path.join(os.path.dirname(os.path.abspath(__file__))))[0]
+    # config_global = TomlHelper.read_toml_file(FileName=os.path.join(os_path_base, 'config_global.toml'))
+    # config_user = TomlHelper.read_toml_file(FileName=os.path.join(os_path_base, config_global['DataGeneration']['ConfigFilePath']))
+    # print(json.dumps(config_user, indent=4))
+
+    # batch_account_key = config_user['AzureBatch']['BatchAccountKey']
+    # batch_account_name = config_user['AzureBatch']['BatchAccountName']
+    # batch_service_url = config_user['AzureBatch']['BatchServiceUrl']
     
     credentials = SharedKeyCredentials(
         batch_account_name,

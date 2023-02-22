@@ -126,7 +126,7 @@ def execute_batch_build(config_user:dict, config_global:dict, node_spec_dict:dic
         ,on_all_tasks_complete=batchmodels.OnAllTasksComplete.terminate_job
         ,job_release_task=batchmodels.JobReleaseTask(
             id=f'JobReleaseTask-DeletePool-{my_pool_id}'
-            ,command_line=f"""/bin/bash -c 'PYTHONPATH={config_global['PythonCommands']['PythonRepoPath']} python3.11 {config_global['PythonCommands']['PythonRepoPath']}/main/BatchDropPool.py \"{my_pool_id}\"
+            ,command_line=f"""/bin/bash -c 'PYTHONPATH={config_global['PythonCommands']['PythonRepoPath']} python3.11 {config_global['PythonCommands']['PythonRepoPath']}/main/BatchDropPool.py \"{my_pool_id}\" \"{batch_account_key}\" \"{batch_account_name}\" \"{batch_service_url}\"
                 '""" if drop_pool_on_completion_flag == 'true' else f"""/bin/bash echo ''"""
          ) 
     )
