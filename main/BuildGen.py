@@ -7,9 +7,11 @@ import Batch.common.helpers
 import DetermineNodes as DetermineNodes
 import TomlHelper
 
-def execute_sample(config_user:dict, config_global:dict, node_spec_dict:dict) -> None:
+def execute_batch_build(config_user:dict, config_global:dict, node_spec_dict:dict) -> None:
     """Executes the sample with the specified configurations.
+    :param config_user: The user configuration to use.
     :param config_global: The global configuration to use.
+    :param node_spec_dict: The node spec dictionary that contains the info on the request like on how many nodes need to be created.
     """
     # Set up the configuration
     batch_account_key = config_user['AzureBatch']['BatchAccountKey']
@@ -33,8 +35,6 @@ def execute_sample(config_user:dict, config_global:dict, node_spec_dict:dict) ->
 
     python_run_file = config_global['PythonCommands']['PythonProgramFilePath']
 
-    # Print the settings we are running with
-    # print(json.dumps(config_global, indent=4))
 
     credentials = SharedKeyCredentials(
         batch_account_name,
@@ -199,7 +199,7 @@ if __name__ == '__main__':
     print(json.dumps(config_user, indent=4))
     print(json.dumps(node_spec_dict, indent=4))
 
-    execute_sample(config_user=config_user, config_global=config_global, node_spec_dict=node_spec_dict)
+    execute_batch_build(config_user=config_user, config_global=config_global, node_spec_dict=node_spec_dict)
 
 
     
