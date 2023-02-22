@@ -17,4 +17,5 @@
     ,"ProductType": "string"
     ,"Department": "string"
     ,"Color": "string"
+    ,"LastName": "float"
 }

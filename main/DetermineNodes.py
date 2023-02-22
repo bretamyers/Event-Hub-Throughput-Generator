@@ -10,14 +10,14 @@ import os
 def gen_string(low=5, high=100, maxValueFlag=False) -> string:
     value = ''
     if maxValueFlag:
-        value = ''.join(random.choices(string.ascii_letters + string.digits, k=random.randint(low, high)))
-    else:
         value = ''.join(random.choices(string.ascii_letters + string.digits, k=100))
+    else:
+        value = ''.join(random.choices(string.ascii_letters + string.digits, k=random.randint(low, high)))
 
     return value
 
 def gen_float(maxValueFlag=False) -> float:
-    if maxValueFlag:
+    if not maxValueFlag:
         value = round(random.uniform(100.0, 100.0), 2)
     else:
         value = round(random.uniform(0, 100.0), 2)
