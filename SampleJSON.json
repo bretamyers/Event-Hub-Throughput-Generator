@@ -1,21 +1,22 @@
 {
-    "ID": "guid"
-    ,"Name": "string"
-    ,"SalesAmount": "float"
-    ,"Quantity": "integer"
+    "ID": "{guid}"
+    ,"Sales": [
+        {"name": "{string}"
+            ,"a": 
+                {
+                    "b": "{string}"
+                }
+        }
+        ,{"name": "{string}"}
+    ]
+    ,"Quantity": "{integer}"
     ,"LocationObj": 
         {
             "Coordinates": 
                 {
-                    "Latitude": "float"
-                    ,"Longitude": "float"
+                    "Latitude": "{float}"
+                    ,"Longitude": "{float}"
                 }
-            ,"Altitude": "float"
+            ,"Altitude": "{float}"
         }
-    ,"InvoiceDate": "date"
-    ,"TransactionDateTime": "datetime"
-    ,"ProductType": "string"
-    ,"Department": "string"
-    ,"Color": "string"
-    ,"LastName": "float"
 }

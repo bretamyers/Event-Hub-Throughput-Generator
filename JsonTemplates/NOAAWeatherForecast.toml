@@ -1,0 +1,54 @@
+
+## https://www.weather.gov/documentation/services-web-api#/default/gridpoint_forecast_hourly
+NOAAWeatherForecast = '''{
+    "id": "string",
+    "type": "Feature",
+    "properties": {
+      "geometry": "{string}",
+      "units": "us",
+      "forecastGenerator": "string",
+      "generatedAt": "datetime",
+      "updateTime": "datetime",
+      "elevation": {
+        "value": 0,
+        "maxValue": "int",
+        "minValue": "int",
+        "unitCode": "string",
+        "qualityControl": "Z"
+      },
+      "periods": [
+        {
+          "number": "int",
+          "name": "Tuesday Night",
+          "startTime": "datetime",
+          "endTime": "datetime",
+          "isDaytime": "bool",
+          "temperatureTrend": "[rising, falling, steady]",
+          "probabilityOfPrecipitation": {
+            "value": "int",
+            "maxValue": "int",
+            "minValue": "int",
+            "unitCode": "string",
+            "qualityControl": "Z"
+          },
+          "dewpoint": {
+            "value": "int",
+            "maxValue": "int",
+            "minValue": "int",
+            "unitCode": "string",
+            "qualityControl": "Z"
+          },
+          "relativeHumidity": {
+            "value": "int",
+            "maxValue": "int",
+            "minValue": "int",
+            "unitCode": "string",
+            "qualityControl": "Z"
+          },
+          "windDirection": "N",
+          "shortForecast": "string",
+          "detailedForecast": "string"
+        }
+      ]
+    }
+  }'''

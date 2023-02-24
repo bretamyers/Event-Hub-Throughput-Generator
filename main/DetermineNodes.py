@@ -55,6 +55,87 @@ def recursive_iter(obj, keys=()) -> tuple[set, str]:
     else:
         yield keys, obj
 
+
+#https://stackoverflow.com/questions/6027558/flatten-nested-dictionaries-compressing-keys
+def flatten_dict(dd, separator='||', prefix=''):
+    return { prefix + separator + k if prefix else k : v
+             for kk, vv in dd.items()
+             for k, v in flatten_dict(vv, separator, kk).items()
+             } if isinstance(dd, dict) else { prefix : dd }
+
+
+#https://stackoverflow.com/questions/6037503/python-unflatten-dict
+def build_json_from_blueprint(field_dict):
+    field_dict = dict(field_dict)
+    new_field_dict = dict()
+    field_keys = list(field_dict)
+    field_keys.sort()
+
+    for each_key in field_keys:
+        field_value = field_dict[each_key]
+        processed_key = str(each_key)
+        current_key = None
+        current_subkey = None
+        for i in range(len(processed_key)):
+            if processed_key[i] == "[":
+                current_key = processed_key[:i]
+                start_subscript_index = i + 1
+                end_subscript_index = processed_key.index("]")
+                current_subkey = int(processed_key[start_subscript_index : end_subscript_index])
+
+                # reserve the remainder descendant keys to be processed later in a recursive call
+                if len(processed_key[end_subscript_index:]) > 1:
+                    current_subkey = "{}||{}".format(current_subkey, processed_key[end_subscript_index + 3:]) #update 2 -> 3
+                break
+            # next child key is a dictionary
+            elif processed_key[i:i+2] == "||": #updated i -> i:i+2 and "." -> "||"
+                split_work = processed_key.split("||", 1) #updated "." -> "||"
+                if len(split_work) > 1:
+                    current_key, current_subkey = split_work
+                else:
+                    current_key = split_work[0]
+                break
+
+        if current_subkey is not None:
+            if current_key.isdigit():
+                current_key = int(current_key)
+            if current_key not in new_field_dict:
+                new_field_dict[current_key] = dict()
+            new_field_dict[current_key][current_subkey] = field_value
+        else:
+            new_field_dict[each_key] = field_value
+
+    # Recursively unflatten each dictionary on each depth before returning back to the caller.
+    all_digits = True
+    highest_digit = -1
+    for each_key, each_item in new_field_dict.items():
+        if isinstance(each_item, dict):
+            new_field_dict[each_key] = build_json_from_blueprint(each_item)
+
+        # validate the keys can safely converted to a sequential list.
+        all_digits &= str(each_key).isdigit()
+        if all_digits:
+            next_digit = int(each_key)
+            if next_digit > highest_digit:
+                highest_digit = next_digit
+
+    # If all digits and can be sequential order, convert to list.
+    if all_digits and highest_digit == (len(new_field_dict) - 1):
+        digit_keys = list(new_field_dict)
+        digit_keys.sort()
+        new_list = []
+
+        for k in digit_keys:
+            i = int(k)
+            if len(new_list) <= i:
+                # Pre-populate missing list elements if the array index keys are out of order
+                # and the current element is ahead of the current length boundary.
+                while len(new_list) <= i:
+                    new_list.append(None)
+            new_list[i] = new_field_dict[k]
+        new_field_dict = new_list
+    return new_field_dict
+
 #https://stackoverflow.com/questions/30648317/programmatically-accessing-arbitrarily-deeply-nested-values-in-a-dictionary
 def deep_access(d, keylist) -> dict:
      val = d
@@ -82,7 +163,7 @@ def get_payload_definition() -> list:
 
     return jsonAttributePathList
 
-def gen_payload(jsonAttributePathList, seed=0, maxValueFlag=False) -> list:
+def gen_payload(jsonAttributePathList, seed=0, maxValueFlag=False) -> str:
     masterDict = dict()
     for jsonAttributePath in jsonAttributePathList:
         item = jsonAttributePath[1]

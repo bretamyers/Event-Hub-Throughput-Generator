@@ -1,0 +1,32 @@
+# https://polygon.io/docs/stocks/get_v2_aggs_ticker__stocksticker__range__multiplier___timespan___from___to
+StockTickerAggregates = '''{
+  "adjusted": "bool",
+  "next_url": "url",
+  "queryCount": "int",
+  "request_id": "guid",
+  "results": [
+    {
+      "c": "float",
+      "h": "float",
+      "l": "float",
+      "n": "int",
+      "o": "float",
+      "t": "int",
+      "v": "int",
+      "vw": "float"
+    },
+    {
+      "c": "float",
+      "h": "float",
+      "l": "float",
+      "n": "int",
+      "o": "float",
+      "t": "int",
+      "v": "int",
+      "vw": "float"
+    }
+  ],
+  "resultsCount": "int",
+  "status": "OK",
+  "ticker": "string"
+}'''

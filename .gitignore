@@ -12,3 +12,4 @@ config_user_local.toml
 config_user_global.toml
 main/Batch/common/__pycache__
 main/Batch/BatchDropPool.py
+mina/GenerateDataAsync.py
