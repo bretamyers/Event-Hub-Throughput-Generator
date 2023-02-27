@@ -174,7 +174,7 @@ def batch_add_app_tasks(batch_client, job_id, task_slots_per_task, python_run_fi
             ,'NodeNum': nodeSpec['NodeNum']
             ,'NodeSec': nodeSpec['NodeSec']
             ,'NodeThroughput': nodeSpec['NodeThroughput']
-            ,'PayloadDefinitionList': node_spec_dict['PayloadDefinitionList']
+            ,'PayloadDefinitionDict': node_spec_dict['PayloadDefinitionDict']
             }
         tasks.append(batchmodels.TaskAddParameter(
             id=f'Task-{str(nodeSpec["NodeNum"]).zfill(4)}',
