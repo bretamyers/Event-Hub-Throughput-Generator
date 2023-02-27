@@ -16,12 +16,14 @@ def gen_string(low=5, high=100, maxValueFlag=False) -> string:
 
     return value
 
+
 def gen_float(maxValueFlag=False) -> float:
     if not maxValueFlag:
         value = round(random.uniform(100.0, 100.0), 2)
     else:
         value = round(random.uniform(0, 100.0), 2)
     return value
+
 
 def gen_integer(maxValueFlag=False) -> int:
     if maxValueFlag:
@@ -30,6 +32,7 @@ def gen_integer(maxValueFlag=False) -> int:
         value = random.randint(0, 100)
     return value
 
+
 #https://gist.github.com/rg3915/db907d7455a4949dbe69
 def gen_date(min_year=1900, max_year=datetime.datetime.now().year) -> string:
     start = datetime.datetime(min_year, 1, 1, 00, 00, 00)
@@ -37,12 +40,14 @@ def gen_date(min_year=1900, max_year=datetime.datetime.now().year) -> string:
     end = start + datetime.timedelta(days=365 * years)
     return datetime.datetime.strftime(start + (end - start) * random.random(), '%Y-%m-%d')
 
+
 #https://gist.github.com/rg3915/db907d7455a4949dbe69
 def gen_datetime(min_year=1900, max_year=datetime.datetime.now().year) -> string:
     start = datetime.datetime(min_year, 1, 1, 00, 00, 00)
     years = max_year - min_year + 1
     end = start + datetime.timedelta(days=365 * years)
     return datetime.datetime.strftime(start + (end - start) * random.random(), '%Y-%m-%d %H:%M:%S')
+
 
 #https://stackoverflow.com/questions/38397285/iterate-over-all-items-in-json-object
 def recursive_iter(obj, keys=()) -> tuple[set, str]:
@@ -191,12 +196,13 @@ def get_defined_datatype_value(dataType:str, maxValueFlag=False):
         value = dataType
     return value
 
+
 def gen_payload(jsonAttributePathDict, seed=0, maxValueFlag=False) -> dict:
     for key, item in jsonAttributePathDict.items():
         firstCharacter = item[0]
         if firstCharacter == '{':
             dataType = item[1:-1]
-            value = get_defined_datatype_value(dataType)
+            value = get_defined_datatype_value(dataType, maxValueFlag=maxValueFlag)
         elif firstCharacter == '[':
             dataType = None
             value = random.choice([x.strip() for x in item[1:-1].split(',')])

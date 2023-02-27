@@ -30,21 +30,21 @@ NodeSetup.commands = ['echo "sudo apt update && sudo apt upgrade -y"'
             ,'curl -sS https://bootstrap.pypa.io/get-pip.py | python3.11'
 
             #Download code artifacts from github
-            ,'sudo rm -rf /mnt/batch/tasks/shared/EventHub-Throughput-Generator.zip'
-            ,'sudo rm -rf /mnt/batch/tasks/shared/EventHub-Throughput-Generator'
-            ,'curl -H "Accept: application/octet-stream" https://github.com/bretamyers/EventHub-Throughput-Generator/archive/master.zip -L -o /mnt/batch/tasks/shared/EventHub-Throughput-Generator.zip'
-            ,'unzip -o /mnt/batch/tasks/shared/EventHub-Throughput-Generator.zip -d /mnt/batch/tasks/shared/EventHub-Throughput-Generator'
+            ,'sudo rm -rf /mnt/batch/tasks/shared/Event-Hub-Throughput-Generator.zip'
+            ,'sudo rm -rf /mnt/batch/tasks/shared/Event-Hub-Throughput-Generator'
+            ,'curl -H "Accept: application/octet-stream" https://github.com/bretamyers/Event-Hub-Throughput-Generator/archive/master.zip -L -o /mnt/batch/tasks/shared/Event-Hub-Throughput-Generator.zip'
+            ,'unzip -o /mnt/batch/tasks/shared/Event-Hub-Throughput-Generator.zip -d /mnt/batch/tasks/shared/Event-Hub-Throughput-Generator'
 
             #Install requirement python packages
-            ,'python3.11 -m pip install -r /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/requirements.txt'
+            ,'python3.11 -m pip install -r /mnt/batch/tasks/shared/Event-Hub-Throughput-Generator/Event-Hub-Throughput-Generator-main/requirements.txt'
         ] 
-CodeSetup.commands = ['rm -rf /mnt/batch/tasks/shared/EventHub-Throughput-Generator.zip'
-            ,'rm -rf /mnt/batch/tasks/shared/EventHub-Throughput-Generator'
-            ,'curl -H "Accept: application/octet-stream" https://github.com/bretamyers/EventHub-Throughput-Generator/archive/master.zip -L -o /mnt/batch/tasks/shared/EventHub-Throughput-Generator.zip'
-            ,'unzip -o /mnt/batch/tasks/shared/EventHub-Throughput-Generator.zip -d /mnt/batch/tasks/shared/EventHub-Throughput-Generator'
-            ,'cd /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/'
+CodeSetup.commands = ['rm -rf /mnt/batch/tasks/shared/Event-Hub-Throughput-Generator.zip'
+            ,'rm -rf /mnt/batch/tasks/shared/Event-Hub-Throughput-Generator'
+            ,'curl -H "Accept: application/octet-stream" https://github.com/bretamyers/Event-Hub-Throughput-Generator/archive/master.zip -L -o /mnt/batch/tasks/shared/Event-Hub-Throughput-Generator.zip'
+            ,'unzip -o /mnt/batch/tasks/shared/Event-Hub-Throughput-Generator.zip -d /mnt/batch/tasks/shared/Event-Hub-Throughput-Generator'
+            ,'cd /mnt/batch/tasks/shared/Event-Hub-Throughput-Generator/Event-Hub-Throughput-Generator-main/'
             #Install requirement python packages
-            ,'python3.11 -m pip install -r /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/requirements.txt'
+            ,'python3.11 -m pip install -r /mnt/batch/tasks/shared/Event-Hub-Throughput-Generator/Event-Hub-Throughput-Generator-main/requirements.txt'
         ]
 
 VMSetup.commandsGit = ['echo "sudo apt update && sudo apt upgrade -y"'
@@ -62,20 +62,20 @@ VMSetup.commandsGit = ['echo "sudo apt update && sudo apt upgrade -y"'
             ,'curl -sS https://bootstrap.pypa.io/get-pip.py | python3.11'
 
             #Download code artifacts from github
-            ,'sudo rm -rf /mnt/batch/tasks/shared/EventHub-Throughput-Generator'
-            ,'git clone https://github.com/bretamyers/EventHub-Throughput-Generator /mnt/batch/tasks/shared/EventHub-Throughput-Generator'
+            ,'sudo rm -rf /mnt/batch/tasks/shared/Event-Hub-Throughput-Generator'
+            ,'git clone https://github.com/bretamyers/Event-Hub-Throughput-Generator /mnt/batch/tasks/shared/Event-Hub-Throughput-Generator'
             
             #Install requirement python packages
-            ,'python3.11 -m pip install -r /mnt/batch/tasks/shared/EventHub-Throughput-Generator/requirements.txt'
+            ,'python3.11 -m pip install -r /mnt/batch/tasks/shared/Event-Hub-Throughput-Generator/requirements.txt'
         ] 
-CodeSetup.commandsGit = ['rm -rf /mnt/batch/tasks/shared/EventHub-Throughput-Generator'
-            ,'git clone https://github.com/bretamyers/EventHub-Throughput-Generator /mnt/batch/tasks/shared/EventHub-Throughput-Generator'
-            ,'cd /mnt/batch/tasks/shared/EventHub-Throughput-Generator'
+CodeSetup.commandsGit = ['rm -rf /mnt/batch/tasks/shared/Event-Hub-Throughput-Generator'
+            ,'git clone https://github.com/bretamyers/Event-Hub-Throughput-Generator /mnt/batch/tasks/shared/Event-Hub-Throughput-Generator'
+            ,'cd /mnt/batch/tasks/shared/Event-Hub-Throughput-Generator'
             #Install requirement python packages
-            ,'python3.11 -m pip install -r /mnt/batch/tasks/shared/EventHub-Throughput-Generator/requirements.txt'
+            ,'python3.11 -m pip install -r /mnt/batch/tasks/shared/Event-Hub-Throughput-Generator/requirements.txt'
         ]
 
-PythonRepoPath = '/mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main'
+PythonRepoPath = '/mnt/batch/tasks/shared/Event-Hub-Throughput-Generator/Event-Hub-Throughput-Generator-main'
 PythonProgramFilePath = 'main/GenerateData.py'
 
 
