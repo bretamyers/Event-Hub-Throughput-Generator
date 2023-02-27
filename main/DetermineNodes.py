@@ -253,9 +253,9 @@ def get_batch_specs(TargetThroughput:int, JsonFilePath:str=None) -> dict:
     MaxNodeThroughput = math.ceil(int(TargetThroughput) / (NumberOfNodes/4))
     for node in range(NumberOfNodes):
         if node%(NumberOfNodes/4) < NodesAboveAverage:
-            NodeMessageSpecList.append({'NodeNum': str(node+1), 'NodeSec': str(math.floor(node/(NumberOfNodes/4))), 'NodeThroughput': str(NodeThroughput)+1})
+            NodeMessageSpecList.append({'NodeNum': str(int(node)+1), 'NodeSec': str(math.floor(node/(NumberOfNodes/4))), 'NodeThroughput': str(int(NodeThroughput)+1)})
         else:
-            NodeMessageSpecList.append({'NodeNum': str(node+1), 'NodeSec': str(math.floor(node/(NumberOfNodes/4))), 'NodeThroughput': str(NodeThroughput)})
+            NodeMessageSpecList.append({'NodeNum': str(int(node)+1), 'NodeSec': str(math.floor(node/(NumberOfNodes/4))), 'NodeThroughput': str(NodeThroughput)})
 
 
     nodeBuckets = dict()

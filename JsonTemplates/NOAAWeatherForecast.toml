@@ -1,53 +1,53 @@
 
 ## https://www.weather.gov/documentation/services-web-api#/default/gridpoint_forecast_hourly
 NOAAWeatherForecast = '''{
-    "id": "string",
+    "id": "{string}",
     "type": "Feature",
     "properties": {
       "geometry": "{string}",
       "units": "us",
-      "forecastGenerator": "string",
-      "generatedAt": "datetime",
-      "updateTime": "datetime",
+      "forecastGenerator": "{string}",
+      "generatedAt": "{datetime}",
+      "updateTime": "{datetime}",
       "elevation": {
         "value": 0,
-        "maxValue": "int",
-        "minValue": "int",
-        "unitCode": "string",
+        "maxValue": "{int}",
+        "minValue": "{int}",
+        "unitCode": "{string}",
         "qualityControl": "Z"
       },
       "periods": [
         {
-          "number": "int",
+          "number": "{int}",
           "name": "Tuesday Night",
-          "startTime": "datetime",
-          "endTime": "datetime",
+          "startTime": "{datetime}",
+          "endTime": "{datetime}",
           "isDaytime": "bool",
           "temperatureTrend": "[rising, falling, steady]",
           "probabilityOfPrecipitation": {
-            "value": "int",
-            "maxValue": "int",
-            "minValue": "int",
-            "unitCode": "string",
+            "value": "{int}",
+            "maxValue": "{int}",
+            "minValue": "{int}",
+            "unitCode": "{string}",
             "qualityControl": "Z"
           },
           "dewpoint": {
-            "value": "int",
-            "maxValue": "int",
-            "minValue": "int",
-            "unitCode": "string",
+            "value": "{int}",
+            "maxValue": "{int}",
+            "minValue": "{int}",
+            "unitCode": "{string}",
             "qualityControl": "Z"
           },
           "relativeHumidity": {
-            "value": "int",
-            "maxValue": "int",
-            "minValue": "int",
+            "value": "{int}",
+            "maxValue": "{int}",
+            "minValue": "{int}",
             "unitCode": "string",
             "qualityControl": "Z"
           },
           "windDirection": "N",
-          "shortForecast": "string",
-          "detailedForecast": "string"
+          "shortForecast": "{string}",
+          "detailedForecast": "{string}"
         }
       ]
     }

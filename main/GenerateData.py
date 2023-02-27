@@ -33,7 +33,7 @@ def gen_data(NodeSpecDict:dict) -> None:
                 event_data_batch.add(event_data)
             end_datagen_time = time.time()
 
-            while int(time.time())%NodeSpecDict['NumberOfNodes'] != int(NodeSpecDict['NodeSec']):
+            while int(time.time())%4 != int(NodeSpecDict['NodeSec']):
                 # print(f"{int(time.time())%NodeSpecDict['NumberOfNodes']} - {int(NodeSpecDict['NodeSec'])}")
                 sync_time()
 
