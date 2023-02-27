@@ -3,6 +3,7 @@ import DetermineNodes
 from azure.eventhub import EventHubProducerClient, EventData
 import json
 import os, sys
+import copy
 
 
 def sync_time():
@@ -26,7 +27,7 @@ def gen_data(NodeSpecDict:dict) -> None:
 
             start_datagen_time = time.time()
             for _ in range(int(NodeSpecDict['NodeThroughput'])):
-                eventString = DetermineNodes.gen_payload(jsonAttributePathDict=NodeSpecDict['PayloadDefinitionDict'], maxValueFlag=False)
+                eventString = DetermineNodes.gen_payload(jsonAttributePathDict=copy.deepcopy(NodeSpecDict['PayloadDefinitionDict']), maxValueFlag=False)
                 # eventString = DetermineNodes.gen_payload(jsonAttributePathDict=[_ for _ in NodeSpecDict['PayloadDefinitionDict']], maxValueFlag=False)
                 event_data = EventData(eventString)
                 event_data_batch.add(event_data)
@@ -71,6 +72,7 @@ if __name__ == '__main__':
     print(sys.argv[1])
 
     NodeSpecDict = json.loads(sys.argv[1])
+
 
     # myNodeNum = nodeSpec['NodeMessageSpecList']['NodeNum'] 
     # myNodeNum = 1
