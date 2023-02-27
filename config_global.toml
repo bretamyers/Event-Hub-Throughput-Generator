@@ -1,11 +1,11 @@
 [AzureBatch]
-PoolNameBase = 'pool' #namming convention is {PoolNameBase}-{PoolVMSku}-{PoolVMSpotInstanceCount + PoolVMDedicatedInstanceCount}-{TaskSlotsPerTask}
+PoolNameBase = 'pool2' #namming convention is {PoolNameBase}-{PoolVMSku}-{PoolVMSpotInstanceCount + PoolVMDedicatedInstanceCount}-{TaskSlotsPerTask}
 TaskSlotsPerTask = 1 
-PoolVMSku = 'STANDARD_A2_V2' # https://azure.microsoft.com/en-us/pricing/details/batch/
+PoolVMSku = 'STANDARD_A2_V2' #BASIC_A2 https://azure.microsoft.com/en-us/pricing/details/batch/
 Publisher="microsoft-azure-batch"
 Offer="ubuntu-server-container"
 Sku="20-04-lts"
-DropPoolOnCompletionFlag = 'true'
+DropPoolOnCompletionFlag = 'false'
 
 
 [DataGeneration]

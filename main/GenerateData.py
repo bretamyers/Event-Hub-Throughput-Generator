@@ -26,7 +26,7 @@ def gen_data(NodeSpecDict:dict) -> None:
 
             start_datagen_time = time.time()
             for _ in range(int(NodeSpecDict['NodeThroughput'])):
-                eventString = DetermineNodes.gen_payload(jsonAttributePathList=[_ for _ in NodeSpecDict['PayloadDefinitionList']], maxValueFlag=False)
+                eventString = DetermineNodes.gen_payload(jsonAttributePathList=[_ for _ in NodeSpecDict['PayloadDefinitionDict']], maxValueFlag=False)
                 event_data = EventData(eventString)
                 event_data_batch.add(event_data)
             end_datagen_time = time.time()
@@ -57,7 +57,7 @@ def gen_data(NodeSpecDict:dict) -> None:
 #             ,'EventHubConnection': config['AzureEventHub']['EventHubConnection']
 #             ,'EventHubName': config['AzureEventHub']['EventHubName']
 #             ,'NumberOfNodes': batchSpecMasterDict['NumberOfNodes']
-#             ,'PayloadDefinitionList': batchSpecMasterDict['PayloadDefinitionList']
+#             ,'PayloadDefinitionDict': batchSpecMasterDict['PayloadDefinitionDict']
 #             ,'NodeSec': nodeSpec['NodeSec']
 #             ,'NodeThroughput': nodeSpec['NodeThroughput']
 #         }
@@ -83,7 +83,7 @@ if __name__ == '__main__':
     #             ,'RunDurationMin': nodeSpec['RunDurationMin']
     #             }
     # for key, value in baseMetrics.items():
-    #     if key in ['NodeMessageSpecList', 'PayloadDefinitionList', 'NumberOfNodes']:
+    #     if key in ['NodeMessageSpecList', 'PayloadDefinitionDict', 'NumberOfNodes']:
     #         if key == 'NodeMessageSpecList':
     #             for nodeSpec in value:
     #                 if nodeSpec['NodeNum'] == str(myNodeNum):
@@ -98,7 +98,7 @@ if __name__ == '__main__':
     #     ,'EventHubConnection': config['AzureEventHub']['EventHubConnection']
     #     ,'EventHubName': config['AzureEventHub']['EventHubName']
     #     ,'NumberOfNodes': batchSpecMasterDict['NumberOfNodes']
-    #     ,'PayloadDefinitionList': batchSpecMasterDict['PayloadDefinitionList']
+    #     ,'PayloadDefinitionDict': batchSpecMasterDict['PayloadDefinitionDict']
     #     ,'NodeSec': nodeSpec['NodeSec']
     #     ,'NodeThroughput': nodeSpec['NodeThroughput']
     # }
