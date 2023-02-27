@@ -6,6 +6,7 @@ import random
 import uuid
 import datetime
 import os
+import copy
 
 def gen_string(low=5, high=100, maxValueFlag=False) -> string:
     value = ''
@@ -221,7 +222,7 @@ def get_batch_specs(TargetThroughput:int, JsonFilePath:str=None) -> dict:
     print(f'Parameter - Target Throughput - {TargetThroughput}')
     payloadDefinitionDict = get_payload_definition(JsonFilePath)
 
-    eventString = gen_payload(jsonAttributePathDict=payloadDefinitionDict, maxValueFlag=True)
+    eventString = gen_payload(jsonAttributePathDict=copy.deepcopy(payloadDefinitionDict), maxValueFlag=True)
     print(json.dumps(eventString))
 
     # print(f'EventString with max values - {eventString}')
