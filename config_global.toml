@@ -10,7 +10,7 @@ DropPoolOnCompletionFlag = 'false'
 
 [DataGeneration]
 SampleJsonFilePath = 'SampleJSON.json'
-ConfigFilePath = 'config_user_local.toml'
+ConfigFilePath = 'config_user.toml'
 
 
 [PythonCommands]
