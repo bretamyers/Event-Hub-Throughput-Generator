@@ -13,3 +13,5 @@ config_user_global.toml
 main/Batch/common/__pycache__
 main/Batch/BatchDropPool.py
 mina/GenerateDataAsync.py
+main/DetermineNodes_old.py
+main/DetermineNodes_test.py

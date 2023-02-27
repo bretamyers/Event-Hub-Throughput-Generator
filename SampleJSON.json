@@ -19,4 +19,13 @@
                 }
             ,"Altitude": "{float}"
         }
+    ,"test": "static value"
+    ,"testOptions": "[bret, nicole, aiden, jack]"
+    ,"testList": [
+        "pizza"
+        ,"ice cream"
+        ,"cake"
+        ,"cheese"
+        ,"[bret, nicole, aiden, jack]"
+    ]
 }
