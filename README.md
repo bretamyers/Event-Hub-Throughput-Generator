@@ -1,16 +1,16 @@
-# EventHub-Throughput-Generator
+# Event-Hub-Throughput-Generator
 
 ## Description
 
-Eventhub Throughput Generator provides an easy way to send a customized json payload at a specific throughput (events/sec) to an Azure event hub. 
+Event Hub Throughput Generator provides an easy way to send a customized json payload at a specific throughput (events/sec) to an Azure event hub. 
 
 ## How to Run
 
 The following commands should be executed from the Azure Cloud Shell at https://shell.azure.com using Bash. This will deploy the full tutorial environment with no additional configuration needed.
 
 ```
-@Azure:~$ git clone https://github.com/bretamyers/EventHub-Throughput-Generator
-@Azure:~$ cd EventHub-Throughput-Generator
+@Azure:~$ git clone https://github.com/bretamyers/Event-Hub-Throughput-Generator
+@Azure:~$ cd Event-Hub-Throughput-Generator
 ```
 
 Once you clone the repo, you'll need to edit the <i><b>config_user.toml</b></i> file to include the batch account and event hub connection details as well as specifying the desired throughput and run duration.
