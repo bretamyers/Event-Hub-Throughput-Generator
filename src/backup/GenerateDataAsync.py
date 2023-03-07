@@ -1,6 +1,6 @@
 
 import time
-import DetermineNodes
+import Batch.DetermineNodes
 from azure.eventhub.aio import EventHubProducerClient
 from azure.eventhub import EventData
 import tomllib
@@ -33,7 +33,7 @@ async def gen_data(NodeSpecDict:dict) -> None:
             start_time = time.time()
             eventDataList = list()
             for _ in range(NodeSpecDict['NodeThroughput']):
-                eventDataList.append(EventData(DetermineNodes.gen_payload(jsonAttributePathList=[_ for _ in NodeSpecDict['PayloadDefinitionList']], maxValueFlag=False)))
+                eventDataList.append(EventData(Batch.DetermineNodes.gen_payload(jsonAttributePathList=[_ for _ in NodeSpecDict['PayloadDefinitionList']], maxValueFlag=False)))
 
             # send_event_data_batch(producer=producer, eventDataList=eventDataList)
             sync_time()
@@ -48,9 +48,9 @@ if __name__ == '__main__':
         config = tomllib.load(f)
         print(json.dumps(config, indent=4))
 
-    import DetermineNodes
+    import Batch.DetermineNodes
 
-    batchSpecDict = DetermineNodes.get_batch_specs(throughput=config['AzureBatch']['ThroughputMessagesPerSec'])
+    batchSpecDict = Batch.DetermineNodes.get_batch_specs(throughput=config['AzureBatch']['ThroughputMessagesPerSec'])
 
     NodeSpecDict = {
         'RunDurationMin': config['AzureBatch']['RunDurationMin']

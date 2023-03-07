@@ -1,5 +1,5 @@
 import time
-import DetermineNodes
+import Batch.DetermineNodes
 from azure.eventhub import EventHubProducerClient, EventData
 import json
 import os, sys
@@ -27,7 +27,7 @@ def gen_data(NodeSpecDict:dict) -> None:
 
             start_datagen_time = time.time()
             for _ in range(int(NodeSpecDict['NodeThroughput'])):
-                eventString = json.dumps(DetermineNodes.gen_payload(jsonAttributePathDict=copy.deepcopy(NodeSpecDict['PayloadDefinitionDict']), maxValueFlag=False))
+                eventString = json.dumps(Batch.DetermineNodes.gen_payload(jsonAttributePathDict=copy.deepcopy(NodeSpecDict['PayloadDefinitionDict']), maxValueFlag=False))
                 # eventString = DetermineNodes.gen_payload(jsonAttributePathDict=[_ for _ in NodeSpecDict['PayloadDefinitionDict']], maxValueFlag=False)
                 event_data = EventData(eventString)
                 event_data_batch.add(event_data)

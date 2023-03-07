@@ -1,0 +1,26 @@
+## https://iexcloud.io/docs/core/HISTORICAL_PRICES
+IEXIntradayPrices = '''{
+    "close": "{float}",
+    "fclose": "{float}",
+    "fhigh": "{float}",
+    "flow": "{float}",
+    "fopen": "{float}",
+    "fvolume": "{int}",
+    "high": "{int}",
+    "low": "{float}",
+    "open": "{float}",
+    "priceDate": "{datetime}",
+    "symbol": "{stock_ticker}",
+    "uclose": "{float}",
+    "uhigh": "{int}",
+    "ulow": "{float}",
+    "uopen": "{float}",
+    "uvolume": "{int}",
+    "volume": "{int}",
+    "id": "HISTORICAL_PRICES",
+    "key": "{stock_ticker}",
+    "subkey": "",
+    "date": "{epoch}",
+    "updated": "{epoch}"
+  }
+'''

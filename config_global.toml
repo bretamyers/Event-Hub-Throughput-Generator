@@ -1,5 +1,6 @@
 [AzureBatch]
-PoolNameBase = 'pool2' #namming convention is {PoolNameBase}-{PoolVMSku}-{PoolVMSpotInstanceCount + PoolVMDedicatedInstanceCount}-{TaskSlotsPerTask}
+PoolNameBase = 'pl' #namming convention is {PoolNameBase}-{''.join(random.choices(alphabet, k=4))}-{PoolVMSku}-{PoolVMSpotInstanceCount + PoolVMDedicatedInstanceCount}-{TaskSlotsPerTask}
+UniquePoolNameFlag = 'true'
 TaskSlotsPerTask = 1 
 PoolVMSku = 'STANDARD_A2_V2' #BASIC_A2 https://azure.microsoft.com/en-us/pricing/details/batch/
 Publisher="microsoft-azure-batch"
@@ -9,8 +10,7 @@ DropPoolOnCompletionFlag = 'false'
 
 
 [DataGeneration]
-SampleJsonFilePath = 'SampleJSON.json'
-ConfigFilePath = 'config_user.toml'
+ConfigFilePath = 'config_user_local.toml'
 
 
 [PythonCommands]

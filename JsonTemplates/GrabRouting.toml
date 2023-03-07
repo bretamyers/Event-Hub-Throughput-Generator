@@ -1,0 +1,99 @@
+#https://developer.grab.com/docs/route-engine-partner
+GrabRouting = '''{
+    "status": "ok",  
+    "routes": [
+        {
+            "overview_polyline": {      
+                "points": "",            
+                "steps": [               
+                    {
+                        "latitude": 1.234556,
+                        "longitude": 3.456778
+                    },
+                    {
+                        "latitude": 1.234557,
+                        "longitude": 3.456779
+                    },
+                    {
+                        "latitude": 1.234558,
+                        "longitude": 3.456780
+                    },
+                    {
+                        "latitude": 1.234559,
+                        "longitude": 3.456781
+                    },
+                    {
+                        "latitude": 1.234560,
+                        "longitude": 3.456782
+                    },
+                    {
+                        "latitude": 1.234561,
+                        "longitude": 3.456783
+                    },
+                    {
+                        "latitude": 1.234562,
+                        "longitude": 3.456784
+                    },
+                    {
+                        "latitude": 1.234563,
+                        "longitude": 3.456785
+                    },
+                    {
+                        "latitude": 1.234564,
+                        "longitude": 3.456786
+                    },
+                    {
+                        "latitude": 1.234565,
+                        "longitude": 3.456787
+                    },
+                    {
+                        "latitude": 1.234566,
+                        "longitude": 3.456788
+                    },
+                    {
+                        "latitude": 1.234567,
+                        "longitude": 3.456789
+                    }
+                ],
+                "streets": null,  
+                "annotations": null,
+                "osm_node_ids": null,
+                "durations": null, 
+                "turns": null, 
+                "turn_indices": null,
+                "turn_penalties": null,
+                "road_speeds": null,
+                "smoothed_road_speeds": null,
+                "road_types": null,
+                "distances": null,
+                "tag_masks": null 
+            },
+            "legs": [
+                {
+                    "mapInfo": "",
+                    "duration": { 
+                        "text": "",
+                        "value": -1
+                    },
+                    "duration_by_traffic": { 
+                        "text": "",
+                        "value": 0
+                    },
+                    "raw_duration": {
+                        "text": "",
+                        "value": 0
+                    },
+                    "distance": {
+                        "text": "",
+                        "value": 954
+                    },
+                    "raw_distance": {
+                        "text": "",
+                        "value": 0
+                    }
+                }
+            ]
+        }
+    ],
+    "restricted": false
+}'''

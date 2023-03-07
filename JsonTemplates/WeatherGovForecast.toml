@@ -1,6 +1,6 @@
 
-## https://www.ncdc.noaa.gov/cdo-web/webservices/v2
-NOAAWeatherForecast = '''{
+## https://www.weather.gov/documentation/services-web-api#/default/gridpoint_forecast_hourly
+WeatherGovForecast = '''{
     "id": "{string}",
     "type": "Feature",
     "properties": {

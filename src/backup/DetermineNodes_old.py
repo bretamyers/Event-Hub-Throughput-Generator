@@ -6,7 +6,6 @@ import random
 import uuid
 import datetime
 import os
-import copy
 
 def gen_string(low=5, high=100, maxValueFlag=False) -> string:
     value = ''
@@ -17,14 +16,12 @@ def gen_string(low=5, high=100, maxValueFlag=False) -> string:
 
     return value
 
-
 def gen_float(maxValueFlag=False) -> float:
     if not maxValueFlag:
         value = round(random.uniform(100.0, 100.0), 2)
     else:
         value = round(random.uniform(0, 100.0), 2)
     return value
-
 
 def gen_integer(maxValueFlag=False) -> int:
     if maxValueFlag:
@@ -33,7 +30,6 @@ def gen_integer(maxValueFlag=False) -> int:
         value = random.randint(0, 100)
     return value
 
-
 #https://gist.github.com/rg3915/db907d7455a4949dbe69
 def gen_date(min_year=1900, max_year=datetime.datetime.now().year) -> string:
     start = datetime.datetime(min_year, 1, 1, 00, 00, 00)
@@ -41,14 +37,12 @@ def gen_date(min_year=1900, max_year=datetime.datetime.now().year) -> string:
     end = start + datetime.timedelta(days=365 * years)
     return datetime.datetime.strftime(start + (end - start) * random.random(), '%Y-%m-%d')
 
-
 #https://gist.github.com/rg3915/db907d7455a4949dbe69
 def gen_datetime(min_year=1900, max_year=datetime.datetime.now().year) -> string:
     start = datetime.datetime(min_year, 1, 1, 00, 00, 00)
     years = max_year - min_year + 1
     end = start + datetime.timedelta(days=365 * years)
     return datetime.datetime.strftime(start + (end - start) * random.random(), '%Y-%m-%d %H:%M:%S')
-
 
 #https://stackoverflow.com/questions/38397285/iterate-over-all-items-in-json-object
 def recursive_iter(obj, keys=()) -> tuple[set, str]:
@@ -62,13 +56,12 @@ def recursive_iter(obj, keys=()) -> tuple[set, str]:
         yield keys, obj
 
 
-# #https://stackoverflow.com/questions/6027558/flatten-nested-dictionaries-compressing-keys
-# def flatten_dict_string(dd, separator='||', prefix=''):
-#     return { prefix + separator + k if prefix else k : v
-#              for kk, vv in dd.items()
-#              for k, v in flatten_dict_string(vv, separator, kk).items()
-#              } if isinstance(dd, dict) else { prefix : dd }
-
+#https://stackoverflow.com/questions/6027558/flatten-nested-dictionaries-compressing-keys
+def flatten_dict(dd, separator='||', prefix=''):
+    return { prefix + separator + k if prefix else k : v
+             for kk, vv in dd.items()
+             for k, v in flatten_dict(vv, separator, kk).items()
+             } if isinstance(dd, dict) else { prefix : dd }
 
 
 #https://stackoverflow.com/questions/6037503/python-unflatten-dict
@@ -143,87 +136,68 @@ def build_json_from_blueprint(field_dict):
         new_field_dict = new_list
     return new_field_dict
 
+#https://stackoverflow.com/questions/30648317/programmatically-accessing-arbitrarily-deeply-nested-values-in-a-dictionary
+def deep_access(d, keylist) -> dict:
+     val = d
+     for key in keylist:
+         val = val[key]
+     return val
 
-# def get_payload_definition(JsonFilePath:str=None) -> list:
+#https://stackoverflow.com/questions/21297475/set-a-value-deep-in-a-dict-dynamically
+def deep_set(d, keylist, value) -> dict:
+    val = d
+    latest = keylist.pop()
+    for key in keylist:
+        val = val.setdefault(key, {})
+    val.setdefault(latest, value)
+     
+def get_payload_definition() -> list:
 
-#     if JsonFilePath is None:
-#         JsonFilePath = 'SampleJSON.json'
-
-#     with open(os.path.join(os.path.split(os.path.join(os.path.dirname(os.path.abspath(__file__))))[0], JsonFilePath)) as file:
-#         samplePayloadDict = json.load(file)
-
-
-#     jsonAttributePathDict = flatten_json.flatten(samplePayloadDict, separator='||')
-
-#     return jsonAttributePathDict
-
-
-def get_payload_definition(JsonFilePath:str=None) -> list:
-
-    if JsonFilePath is None:
-        JsonFilePath = 'SampleJSON.json'
-
-    with open(os.path.join(os.path.split(os.path.join(os.path.dirname(os.path.abspath(__file__))))[0], JsonFilePath)) as file:
+    with open(os.path.join(os.path.split(os.path.join(os.path.dirname(os.path.abspath(__file__))))[0], 'SampleJSON.json')) as file:
         samplePayloadDict = json.load(file)
 
-    jsonAttributePathDict = dict()
+    jsonAttributePathList = list()
     for keys, item in recursive_iter(samplePayloadDict):
-        keyString = ''
-        for key_value in list(keys):
-            if isinstance(key_value, int):
-                keyString = keyString.rstrip('||') + '[' + str(key_value) + ']||'
-            else:
-                keyString += key_value + '||'
-        keyString = keyString.rstrip('||')
-        jsonAttributePathDict[keyString] = item
+        # print(keys, item)
+        jsonAttributePathList.append([list(keys), item])
 
-    return jsonAttributePathDict
+    return jsonAttributePathList
 
-
-def get_defined_datatype_value(dataType:str, maxValueFlag=False):
-    if dataType == 'string':
-        value = gen_string(maxValueFlag)
-    elif dataType == "guid":
-        value = str(uuid.uuid4())
-    elif dataType == "float":
-        value = gen_float(maxValueFlag)
-    elif dataType == "integer":
-        value = gen_integer(maxValueFlag)
-    elif dataType == "date":
-        value = gen_date(min_year=2020)
-    elif dataType == 'datetime':
-        value = gen_datetime(min_year=2020)
-    else:
-        value = dataType
-    return value
-
-
-def gen_payload(jsonAttributePathDict, seed=0, maxValueFlag=False) -> dict:
-    for key, item in jsonAttributePathDict.items():
-        firstCharacter = item[0]
-        if firstCharacter == '{':
-            dataType = item[1:-1]
-            value = get_defined_datatype_value(dataType, maxValueFlag=maxValueFlag)
-        elif firstCharacter == '[':
-            dataType = None
-            value = random.choice([x.strip() for x in item[1:-1].split(',')])
+def gen_payload(jsonAttributePathList, seed=0, maxValueFlag=False) -> str:
+    masterDict = dict()
+    for jsonAttributePath in jsonAttributePathList:
+        item = jsonAttributePath[1]
+        # item = jsonAttributePath[1].split('}')[0] + '}'
+        if item == 'string':
+            value = gen_string(maxValueFlag)
+        elif item == "guid":
+            value = uuid.uuid4()
+        elif item == "float":
+            value = gen_float(maxValueFlag)
+        elif item == "integer":
+            value = gen_integer(maxValueFlag)
+        elif item == "date":
+            # value = datetime.datetime.strftime(datetime.datetime(random.randint(2020, 2023), random.randint(1, 12), random.randint(1, 28)), '%Y-%m-%d')
+            value = gen_date(min_year=2020)
+        elif item == 'datetime':
+            # value = datetime.datetime.strftime(datetime.datetime(random.randint(2020, 2023), random.randint(1, 12), random.randint(1, 28), random.randint(1, 23), random.randint(0, 59), random.randint(0, 60))
+            #     , '%Y-%m-%d %H:%M:%S')
+            value = gen_datetime(min_year=2020)
         else:
-            dataType = None
             value = item
+        deep_set(masterDict, jsonAttributePath[0][:], str(value))
 
-        jsonAttributePathDict[key] = value
-
-    jsonPayload = build_json_from_blueprint(jsonAttributePathDict)
-    return jsonPayload
-
+    # print(json.dumps(masterDict, indent=4))
+    
+    return str(masterDict)
 
 
-def get_batch_specs(TargetThroughput:int, JsonFilePath:str=None) -> dict:
+
+def get_batch_specs(TargetThroughput:int) -> dict:
     print(f'Parameter - Target Throughput - {TargetThroughput}')
-    payloadDefinitionDict = get_payload_definition(JsonFilePath)
+    payloadDefinitionList = get_payload_definition()
 
-    eventString = gen_payload(jsonAttributePathDict=copy.deepcopy(payloadDefinitionDict), maxValueFlag=True)
-    print(json.dumps(eventString))
+    eventString = gen_payload(jsonAttributePathList=payloadDefinitionList, maxValueFlag=True)
 
     # print(f'EventString with max values - {eventString}')
     print(f'Message size (bytes) - {sys.getsizeof(eventString)}')
@@ -253,9 +227,9 @@ def get_batch_specs(TargetThroughput:int, JsonFilePath:str=None) -> dict:
     MaxNodeThroughput = math.ceil(int(TargetThroughput) / (NumberOfNodes/4))
     for node in range(NumberOfNodes):
         if node%(NumberOfNodes/4) < NodesAboveAverage:
-            NodeMessageSpecList.append({'NodeNum': str(int(node)+1), 'NodeSec': str(math.floor(node/(NumberOfNodes/4))), 'NodeThroughput': str(int(NodeThroughput)+1)})
+            NodeMessageSpecList.append({'NodeNum': str(node+1), 'NodeSec': str(math.floor(node/(NumberOfNodes/4))), 'NodeThroughput': str(NodeThroughput)+1})
         else:
-            NodeMessageSpecList.append({'NodeNum': str(int(node)+1), 'NodeSec': str(math.floor(node/(NumberOfNodes/4))), 'NodeThroughput': str(NodeThroughput)})
+            NodeMessageSpecList.append({'NodeNum': str(node+1), 'NodeSec': str(math.floor(node/(NumberOfNodes/4))), 'NodeThroughput': str(NodeThroughput)})
 
 
     nodeBuckets = dict()
@@ -267,7 +241,7 @@ def get_batch_specs(TargetThroughput:int, JsonFilePath:str=None) -> dict:
     print(f'Node Buckets (Node, Throughput) - {nodeBuckets}')
 
     batchSpecDict = {
-                    'PayloadDefinitionDict': payloadDefinitionDict
+                    'PayloadDefinitionList': payloadDefinitionList
                     ,'NumberOfNodes': NumberOfNodes
                     ,'MinNodeThroughput': MinNodeThroughput
                     ,'MaxNodeThroughput': MaxNodeThroughput
@@ -282,14 +256,14 @@ if __name__ == '__main__':
 
     batchSpecDict = get_batch_specs(TargetThroughput=TargetThroughput)
 
-    print(json.dumps(batchSpecDict))
+    print(batchSpecDict)
 
     # #Speed Test
     # import time
     # start = time.time()
     # batchList = list()
     # for _ in range(batchSpecDict['NodeThroughput']):
-    #     batchList.append(gen_payload(jsonAttributePathList=[_ for _ in batchSpecDict['payloadDefinitionList']], maxValueFlag=False))
+    #     batchList.append(gen_payload(jsonAttributePathList=[_ for _ in batchSpecDict['PayloadDefinitionList']], maxValueFlag=False))
     # print(f'Duration to generate payload (sec) - {str(round(time.time() - start, 2))}')
     # # print(len(batchList))
     # # print(batchList)
