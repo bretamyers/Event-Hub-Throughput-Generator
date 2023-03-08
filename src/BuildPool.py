@@ -87,12 +87,13 @@ def execute_batch_build(config_user:dict, config_global:dict, node_spec_dict:dic
     # Code used to monitor and reboot a node if it fails to start
     # This is here due to a locking issue with ubuntu when to update 
     # and install the required applications.
+    # Set to wait for 30 minutes for all the pools to start
     pool = batch_client.pool.get(my_pool_id)
     startTime = time.time()
     nodeReadyCnt = 0
-    retryCnt = 2
+    retryCnt = 30
     attemptCnt = 0
-    while int(nodeReadyCnt) < int(pool_vm_count) and retryCnt < attemptCnt:
+    while attemptCnt <= retryCnt:
         nodes = list(batch_client.compute_node.list(pool.id))
         nodeReadyCnt = 0
         for node in nodes:
@@ -102,10 +103,11 @@ def execute_batch_build(config_user:dict, config_global:dict, node_spec_dict:dic
             #https://docs.microsoft.com/en-us/python/api/azure-batch/azure.batch.models.computenodestate?view=azure-python
             if node.state in [batchmodels.ComputeNodeState.idle, batchmodels.ComputeNodeState.running]:
                 nodeReadyCnt += 1
-        print(f'{my_pool_id} - waiting for nodes to start... total duration - {int(time.time() - startTime)} seconds - {nodeReadyCnt} out of {pool_vm_count} are ready')
-        if int(nodeReadyCnt) < int(pool_vm_count):
-            attemptCnt += 1
-            time.sleep(30)
+        print(f'{my_pool_id} - waiting for nodes to start... total duration - {int(time.time() - startTime)} seconds - {nodeReadyCnt} out of {pool_vm_count} are ready - attempt - {attemptCnt}')
+        if int(nodeReadyCnt) == int(pool_vm_count):
+            break
+        attemptCnt += 1
+        time.sleep(60)
 
         
     pool_info = batchmodels.PoolInformation(pool_id=my_pool_id)
@@ -127,7 +129,7 @@ def execute_batch_build(config_user:dict, config_global:dict, node_spec_dict:dic
         ,job_release_task=batchmodels.JobReleaseTask(
             id=f'JobReleaseTask-DeletePool-{my_pool_id}'
             ,command_line=f"""/bin/bash -c 'set -e; set -o pipefail ; export PYTHONPATH={config_global['PythonCommands']['PythonRepoPath']} ; python3.11 {config_global['PythonCommands']['PythonRepoPath']}/Batch/BatchDropPool.py \"{my_pool_id}\" \"{batch_account_key}\" \"{batch_account_name}\" \"{batch_service_url}\"
-                ; wait '""" if drop_pool_on_completion_flag == 'true' else f"""/bin/bash echo ''"""
+                ; wait '""" if drop_pool_on_completion_flag == 'true' else f"""/bin/bash -c 'echo '' '"""
          ) 
     )
     batch_client.job.add(job)
