@@ -12,7 +12,7 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 
 # Run the throughput generator
-python main/BuildGen.py
+python src/BuildPool.py
 
 # Deactivate virtual environment
 deactivate .genvenv
