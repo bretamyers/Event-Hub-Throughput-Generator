@@ -163,12 +163,8 @@ def get_payload_definition(JsonFilePath:str=None) -> list:
     if JsonFilePath is None:
         JsonFilePath = 'SampleJSON.json'
 
-    print(os.path.split(os.path.join(os.path.dirname(os.path.abspath(__file__))))[0])
-    print(os.path.join(os.path.dirname(os.path.abspath(__file__))))
-    print(sys.path[1])
-
     # with open(os.path.join(os.path.split(os.path.join(os.path.dirname(os.path.abspath(__file__))))[0], JsonFilePath)) as file:
-    with open(os.path.join(sys.path[1], JsonFilePath)) as file:
+    with open(os.path.join(os.path.abspath(os.path.join(__file__, "../../..")), JsonFilePath)) as file:
         samplePayloadDict = json.load(file)
 
     jsonAttributePathDict = dict()

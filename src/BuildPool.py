@@ -57,7 +57,7 @@ def execute_batch_build(config_user:dict, config_global:dict, node_spec_dict:dic
     )
     
     #https://docs.microsoft.com/en-us/azure/batch/quick-run-python
-    my_pool_id = f'{pool_name}-{"".join(random.choices(string.ascii_lowercase + string.digits, k=4)) if unique_pool_name_flag == "true" else ""}-{pool_vm_sku}-{pool_vm_count}-{task_slots_per_task}'[:64] #limited to 64 characters
+    my_pool_id = f'{pool_name}{"-" + "".join(random.choices(string.ascii_lowercase + string.digits, k=4)) if unique_pool_name_flag == "true" else ""}-{pool_vm_sku}-{pool_vm_count}-{task_slots_per_task}'[:64] #limited to 64 characters
 
     user_admin = batchmodels.UserIdentity(
         auto_user=batchmodels.AutoUserSpecification(

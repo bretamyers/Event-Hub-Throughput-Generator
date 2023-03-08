@@ -75,8 +75,8 @@ CodeSetup.commandsGit = ['rm -rf /mnt/batch/tasks/shared/Event-Hub-Throughput-Ge
             ,'python3.11 -m pip install -r /mnt/batch/tasks/shared/Event-Hub-Throughput-Generator/requirements.txt'
         ]
 
-PythonRepoPath = '/mnt/batch/tasks/shared/Event-Hub-Throughput-Generator/Event-Hub-Throughput-Generator-main'
-PythonProgramFilePath = 'main/GenerateData.py'
+PythonRepoPath = '/mnt/batch/tasks/shared/Event-Hub-Throughput-Generator/Event-Hub-Throughput-Generator-main/src'
+PythonProgramFilePath = 'EventHubProducer/GenerateData.py'
 
 
 
