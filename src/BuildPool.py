@@ -84,30 +84,30 @@ def execute_batch_build(config_user:dict, config_global:dict, node_spec_dict:dic
             )
         batch_client.pool.add(new_pool)
 
-    # Code used to monitor and reboot a node if it fails to start
-    # This is here due to a locking issue with ubuntu when to update 
-    # and install the required applications.
-    # Set to wait for 30 minutes for all the pools to start
-    pool = batch_client.pool.get(my_pool_id)
-    startTime = time.time()
-    nodeReadyCnt = 0
-    retryCnt = 30
-    attemptCnt = 0
-    while attemptCnt <= retryCnt:
-        nodes = list(batch_client.compute_node.list(pool.id))
-        nodeReadyCnt = 0
-        for node in nodes:
-            if node.state in batchmodels.ComputeNodeState.start_task_failed:            
-                print(f'Node Rebooting - {node.id} - {int(time.time() - startTime)}')
-                batch_client.compute_node.reboot(pool_id=my_pool_id, node_id=node.id)
-            #https://docs.microsoft.com/en-us/python/api/azure-batch/azure.batch.models.computenodestate?view=azure-python
-            if node.state in [batchmodels.ComputeNodeState.idle, batchmodels.ComputeNodeState.running]:
-                nodeReadyCnt += 1
-        print(f'{my_pool_id} - waiting for nodes to start... total duration - {int(time.time() - startTime)} seconds - {nodeReadyCnt} out of {pool_vm_count} are ready - attempt - {attemptCnt}')
-        if int(nodeReadyCnt) == int(pool_vm_count):
-            break
-        attemptCnt += 1
-        time.sleep(60)
+    # # Code used to monitor and reboot a node if it fails to start
+    # # This is here due to a locking issue with ubuntu when to update 
+    # # and install the required applications.
+    # # Set to wait for 30 minutes for all the pools to start
+    # pool = batch_client.pool.get(my_pool_id)
+    # startTime = time.time()
+    # nodeReadyCnt = 0
+    # retryCnt = 30
+    # attemptCnt = 0
+    # while attemptCnt <= retryCnt:
+    #     nodes = list(batch_client.compute_node.list(pool.id))
+    #     nodeReadyCnt = 0
+    #     for node in nodes:
+    #         if node.state in batchmodels.ComputeNodeState.start_task_failed:            
+    #             print(f'Node Rebooting - {node.id} - {int(time.time() - startTime)}')
+    #             batch_client.compute_node.reboot(pool_id=my_pool_id, node_id=node.id)
+    #         #https://docs.microsoft.com/en-us/python/api/azure-batch/azure.batch.models.computenodestate?view=azure-python
+    #         if node.state in [batchmodels.ComputeNodeState.idle, batchmodels.ComputeNodeState.running]:
+    #             nodeReadyCnt += 1
+    #     print(f'{my_pool_id} - waiting for nodes to start... total duration - {int(time.time() - startTime)} seconds - {nodeReadyCnt} out of {pool_vm_count} are ready - attempt - {attemptCnt}')
+    #     if int(nodeReadyCnt) == int(pool_vm_count):
+    #         break
+    #     attemptCnt += 1
+    #     time.sleep(60)
 
         
     pool_info = batchmodels.PoolInformation(pool_id=my_pool_id)
@@ -136,7 +136,7 @@ def execute_batch_build(config_user:dict, config_global:dict, node_spec_dict:dic
 
     #Add tasks to job to generate the data
     python_run_file_path = config_global['PythonCommands']['PythonProgramFilePath']
-    batch_add_app_tasks(batch_client, job_id, python_run_file_path, config_global, config_user, node_spec_dict)
+    batch_add_app_tasks(batch_client, job_id, python_run_file_path, config_global, config_user, node_spec_dict, my_pool_id=my_pool_id)
 
     # # time.sleep(1)
 
@@ -163,7 +163,7 @@ def execute_batch_build(config_user:dict, config_global:dict, node_spec_dict:dic
     # batch_client.task.add(job_id=job_id, task=task)
 
     
-def batch_add_app_tasks(batch_client, job_id, python_run_file_path, config_global, config_user, node_spec_dict):
+def batch_add_app_tasks(batch_client, job_id, python_run_file_path, config_global, config_user, node_spec_dict, my_pool_id):
 
     print(f'Adding Tasks to Job job_id={job_id}')
     tasks = list()
@@ -180,6 +180,7 @@ def batch_add_app_tasks(batch_client, job_id, python_run_file_path, config_globa
             ,'BatchAccountKey': config_user['AzureBatch']['BatchAccountKey']
             ,'BatchAccountName': config_user['AzureBatch']['BatchAccountName']
             ,'BatchServiceUrl': config_user['AzureBatch']['BatchServiceUrl']
+            ,'PoolId': my_pool_id
             }
         tasks.append(batchmodels.TaskAddParameter(
             id=f'Task-{str(nodeSpec["NodeNum"]).zfill(4)}',

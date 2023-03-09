@@ -1,5 +1,6 @@
 import time
 import Batch.DetermineNodes
+import Batch.BatchPoolWait
 from azure.eventhub import EventHubProducerClient, EventData
 import json
 import os, sys
@@ -11,6 +12,13 @@ def sync_time():
     time.sleep(1-(time.time()%1)) #time.time() = epoch time
 
 def gen_data(NodeSpecDict:dict) -> None:
+
+    #sleep to the until the nearest minute.
+    time.sleep(60-(time.time()%60)) 
+
+    #wait until all nodes are ready before generating the data
+    Batch.BatchPoolWait.wait_until_pool_is_ready_state(NodeSpecDict=NodeSpecDict)
+
     producer = EventHubProducerClient.from_connection_string(
         conn_str=NodeSpecDict['EventHubConnection'],
         eventhub_name=NodeSpecDict['EventHubName']
@@ -42,7 +50,7 @@ def gen_data(NodeSpecDict:dict) -> None:
             print(f"Batch Count {len(event_data_batch)} - Start {start_send_time} - End {time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime())} - Message Details {event_data_batch} messagess - Data Gen Duration - {str(round(end_datagen_time - start_datagen_time, 4))} - Total Duration {str(round(time.time() - start_message_time, 2))}")
             event_data_batch = producer.create_batch()
             sync_time() #sync time to the next nearest sec to avoid double sending
-        
+
 
 # def regression_test():
 #     config = TomlHelper.read_toml_file('main/config_uers.toml')
