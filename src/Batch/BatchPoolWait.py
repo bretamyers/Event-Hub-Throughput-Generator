@@ -49,7 +49,7 @@ def wait_until_pool_is_ready_state(NodeSpecDict: dict) -> None:
         if PoolReadyTotalNodes == PoolTargetTotalNodes:
             break
         else:
-            time.sleep(60)
+            time.sleep(time.sleep(60-(time.time()%60))) #sleep until the nearest minute
 
 
 if __name__ == '__main__':
