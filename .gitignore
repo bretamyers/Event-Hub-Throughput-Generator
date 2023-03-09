@@ -17,3 +17,4 @@ main/DetermineNodes_old.py
 main/DetermineNodes_test.py
 src/Batch/BatchDeleteJobs.py
 src/Batch/test.py
+config_global_local.toml
