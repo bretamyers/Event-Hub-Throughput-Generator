@@ -23,7 +23,8 @@ def wait_until_pool_is_ready_state(NodeSpecDict: dict) -> None:
         )
 
     poolInfo = batch_client.pool.get(pool_id=NodeSpecDict['PoolId'])
-    # PoolTargetTotalNodes = poolInfo.target_dedicated_nodes + poolInfo.target_low_priority_nodes
+    # print(poolInfo)
+    PoolTargetTotalNodes = poolInfo.target_dedicated_nodes + poolInfo.target_low_priority_nodes
     # PoolCurrentTotalNodes = poolInfo.current_dedicated_nodes + poolInfo.current_low_priority_nodes
     # PoolAllocationState = poolInfo.allocation_state.value
     # PoolState = poolInfo.state.value
@@ -37,11 +38,17 @@ def wait_until_pool_is_ready_state(NodeSpecDict: dict) -> None:
 
     attemptCnt = 0
     startTime = time.time()
-    while poolInfo.state.value != 'active' and poolInfo.allocation_state.value != 'steady':
-        PoolTargetTotalNodes = poolInfo.target_dedicated_nodes + poolInfo.target_low_priority_nodes
-        PoolCurrentTotalNodes = poolInfo.current_dedicated_nodes + poolInfo.current_low_priority_nodes
-        print(f'{NodeSpecDict["PoolId"]} - waiting for nodes to start... total duration - {int(time.time() - startTime)} seconds - {PoolCurrentTotalNodes} out of {PoolTargetTotalNodes} are ready - check count - {attemptCnt}')
-        time.sleep(60)
+    while True:
+        PoolReadyTotalNodes = 0
+        nodes = list(batch_client.compute_node.list(NodeSpecDict['PoolId']))
+        for node in nodes:
+            if node.state.value == 'idle':
+                PoolReadyTotalNodes += 1
+        print(f'{NodeSpecDict["PoolId"]} - waiting for nodes to start... total duration - {int(time.time() - startTime)} seconds - {PoolReadyTotalNodes} out of {PoolTargetTotalNodes} are ready - check count - {attemptCnt}')
+        if PoolReadyTotalNodes == PoolTargetTotalNodes:
+            break
+        else:
+            time.sleep(60)
 
 
 if __name__ == '__main__':
@@ -66,7 +73,7 @@ if __name__ == '__main__':
             ,'BatchAccountKey': config_user['AzureBatch']['BatchAccountKey']
             ,'BatchAccountName': config_user['AzureBatch']['BatchAccountName']
             ,'BatchServiceUrl': config_user['AzureBatch']['BatchServiceUrl']
-            ,'PoolId': 'pl-ev2d-STANDARD_A2_V2-4-1'
+            ,'PoolId': 'pl-lolt-STANDARD_A2_V2-4-1'
             }
     
     wait_until_pool_is_ready_state(NodeSpecDict)
