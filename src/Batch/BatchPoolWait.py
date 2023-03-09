@@ -42,7 +42,8 @@ def wait_until_pool_is_ready_state(NodeSpecDict: dict) -> None:
         PoolReadyTotalNodes = 0
         nodes = list(batch_client.compute_node.list(NodeSpecDict['PoolId']))
         for node in nodes:
-            if node.state.value == 'idle':
+            # https://learn.microsoft.com/en-us/python/api/azure-batch/azure.batch.models.computenodestate?view=azure-python
+            if node.state.value in ['idle', 'running']:
                 PoolReadyTotalNodes += 1
         print(f'{NodeSpecDict["PoolId"]} - waiting for nodes to start... total duration - {int(time.time() - startTime)} seconds - {PoolReadyTotalNodes} out of {PoolTargetTotalNodes} are ready - check count - {attemptCnt}')
         if PoolReadyTotalNodes == PoolTargetTotalNodes:

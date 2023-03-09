@@ -13,9 +13,11 @@ def sync_time():
 
 def gen_data(NodeSpecDict:dict) -> None:
 
+    print('Starting sync time to nearest minute')
     #sleep to the until the nearest minute.
     time.sleep(60-(time.time()%60)) 
 
+    print('Starting wait for nodes to be ready')
     #wait until all nodes are ready before generating the data
     Batch.BatchPoolWait.wait_until_pool_is_ready_state(NodeSpecDict=NodeSpecDict)
 
