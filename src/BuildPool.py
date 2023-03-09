@@ -177,6 +177,9 @@ def batch_add_app_tasks(batch_client, job_id, python_run_file_path, config_globa
             ,'NodeSec': nodeSpec['NodeSec']
             ,'NodeThroughput': nodeSpec['NodeThroughput']
             ,'PayloadDefinitionDict': node_spec_dict['PayloadDefinitionDict']
+            ,'BatchAccountKey': config_user['AzureBatch']['BatchAccountKey']
+            ,'BatchAccountName': config_user['AzureBatch']['BatchAccountName']
+            ,'BatchServiceUrl': config_user['AzureBatch']['BatchServiceUrl']
             }
         tasks.append(batchmodels.TaskAddParameter(
             id=f'Task-{str(nodeSpec["NodeNum"]).zfill(4)}',
