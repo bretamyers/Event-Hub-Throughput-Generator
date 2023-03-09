@@ -194,7 +194,7 @@ if __name__ == '__main__':
 
     os_path_base = os.path.split(os.path.join(os.path.dirname(os.path.abspath(__file__))))[0]
 
-    config_global = Helpers.TomlHelper.read_toml_file(FileName=os.path.join(os_path_base, 'config_global.toml'))
+    config_global = Helpers.TomlHelper.read_toml_file(FileName=os.path.join(os_path_base, 'config_global_local.toml'))
 
     config_user = Helpers.TomlHelper.read_toml_file(FileName=os.path.join(os_path_base, config_global['DataGeneration']['ConfigFilePath']))
 
