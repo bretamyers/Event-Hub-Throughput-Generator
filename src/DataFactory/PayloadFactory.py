@@ -24,7 +24,9 @@ def gen_string_faker_text(low=10, high=200, seed=0, maxValueFlag=False) -> strin
     if maxValueFlag:
         value = fake.text(max_nb_chars=high)
     else:
-        value = fake.text(max_nb_chars=random.randint(low, high))
+        max_nb_chars = random.randint(low, high)
+        print(max_nb_chars)
+        value = fake.text(max_nb_chars=max_nb_chars)
 
     return value
 
