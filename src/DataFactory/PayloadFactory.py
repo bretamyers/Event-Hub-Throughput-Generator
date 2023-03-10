@@ -17,14 +17,14 @@ def gen_string(low=5, high=100, maxValueFlag=False) -> string:
 
     return value
 
-def gen_string_faker_text(low=5, high=100, seed=0, maxValueFlag=False) -> string:
+def gen_string_faker_text(low=10, high=200, seed=0, maxValueFlag=False) -> string:
     fake = faker.Faker()
     faker.Faker.seed(seed)
     value = ''
     if maxValueFlag:
         value = fake.text(max_nb_chars=high)
     else:
-        value = fake.text(max_nb_chars=random.randint(low+1, high))
+        value = fake.text(max_nb_chars=random.randint(low, high))
 
     return value
 

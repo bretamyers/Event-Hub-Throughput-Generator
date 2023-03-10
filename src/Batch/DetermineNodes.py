@@ -211,7 +211,7 @@ def get_defined_datatype_value(dataType:str, maxValueFlag=False):
 
 
 def gen_payload(jsonAttributePathDict, seed=0, maxValueFlag=False) -> dict:
-    print(jsonAttributePathDict)
+    # print(jsonAttributePathDict)
     for key, item in jsonAttributePathDict.items():
         if len(item) > 0:
             firstCharacter = item[0]
