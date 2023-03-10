@@ -8,47 +8,56 @@ import datetime
 import os
 import copy
 import Helpers.TomlHelper
+import DataFactory
 
-def gen_string(low=5, high=100, maxValueFlag=False) -> string:
-    value = ''
-    if maxValueFlag:
-        value = ''.join(random.choices(string.ascii_letters + string.digits, k=100))
-    else:
-        value = ''.join(random.choices(string.ascii_letters + string.digits, k=random.randint(low, high)))
+# def gen_string(low=5, high=100, maxValueFlag=False) -> string:
+#     value = ''
+#     if maxValueFlag:
+#         value = ''.join(random.choices(string.ascii_letters + string.digits, k=100))
+#     else:
+#         value = ''.join(random.choices(string.ascii_letters + string.digits, k=random.randint(low, high)))
 
-    return value
+#     return value
 
+# def gen_string_faker_text(low=5, high=100, seed=0, maxValueFlag=False) -> string:
+#     fake = faker.Faker()
+#     fake.seed(seed)
+#     value = ''
+#     if maxValueFlag:
+#         value = fake.text(max_nb_chars=high)
+#     else:
+#         value = fake.text(max_nb_chars=random.randint(low, high))
 
-def gen_float(maxValueFlag=False) -> float:
-    if not maxValueFlag:
-        value = round(random.uniform(100.0, 100.0), 2)
-    else:
-        value = round(random.uniform(0, 100.0), 2)
-    return value
-
-
-def gen_integer(maxValueFlag=False) -> int:
-    if maxValueFlag:
-        value = random.randint(100, 100)
-    else:
-        value = random.randint(0, 100)
-    return value
-
-
-#https://gist.github.com/rg3915/db907d7455a4949dbe69
-def gen_date(min_year=1900, max_year=datetime.datetime.now().year) -> string:
-    start = datetime.datetime(min_year, 1, 1, 00, 00, 00)
-    years = max_year - min_year + 1
-    end = start + datetime.timedelta(days=365 * years)
-    return datetime.datetime.strftime(start + (end - start) * random.random(), '%Y-%m-%d')
+# def gen_float(maxValueFlag=False) -> float:
+#     if not maxValueFlag:
+#         value = round(random.uniform(100.0, 100.0), 2)
+#     else:
+#         value = round(random.uniform(0, 100.0), 2)
+#     return value
 
 
-#https://gist.github.com/rg3915/db907d7455a4949dbe69
-def gen_datetime(min_year=1900, max_year=datetime.datetime.now().year) -> string:
-    start = datetime.datetime(min_year, 1, 1, 00, 00, 00)
-    years = max_year - min_year + 1
-    end = start + datetime.timedelta(days=365 * years)
-    return datetime.datetime.strftime(start + (end - start) * random.random(), '%Y-%m-%d %H:%M:%S')
+# def gen_integer(maxValueFlag=False) -> int:
+#     if maxValueFlag:
+#         value = random.randint(100, 100)
+#     else:
+#         value = random.randint(0, 100)
+#     return value
+
+
+# #https://gist.github.com/rg3915/db907d7455a4949dbe69
+# def gen_date(min_year=1900, max_year=datetime.datetime.now().year) -> string:
+#     start = datetime.datetime(min_year, 1, 1, 00, 00, 00)
+#     years = max_year - min_year + 1
+#     end = start + datetime.timedelta(days=365 * years)
+#     return datetime.datetime.strftime(start + (end - start) * random.random(), '%Y-%m-%d')
+
+
+# #https://gist.github.com/rg3915/db907d7455a4949dbe69
+# def gen_datetime(min_year=1900, max_year=datetime.datetime.now().year) -> string:
+#     start = datetime.datetime(min_year, 1, 1, 00, 00, 00)
+#     years = max_year - min_year + 1
+#     end = start + datetime.timedelta(days=365 * years)
+#     return datetime.datetime.strftime(start + (end - start) * random.random(), '%Y-%m-%d %H:%M:%S')
 
 
 #https://stackoverflow.com/questions/38397285/iterate-over-all-items-in-json-object
@@ -183,17 +192,19 @@ def get_payload_definition(JsonFilePath:str=None) -> list:
 
 def get_defined_datatype_value(dataType:str, maxValueFlag=False):
     if dataType == 'string':
-        value = gen_string(maxValueFlag)
+        value = DataFactory.gen_string(maxValueFlag)
+    elif dataType == 'string_faker_text':
+        value = DataFactory.gen_string_faker_text(maxValueFlag)
     elif dataType == "guid":
         value = str(uuid.uuid4())
     elif dataType == "float":
-        value = gen_float(maxValueFlag)
+        value = DataFactory.gen_float(maxValueFlag)
     elif dataType == "integer":
-        value = gen_integer(maxValueFlag)
+        value = DataFactory.gen_integer(maxValueFlag)
     elif dataType == "date":
-        value = gen_date(min_year=2020)
+        value = DataFactory.gen_date(min_year=2020)
     elif dataType == 'datetime':
-        value = gen_datetime(min_year=2020)
+        value = DataFactory.gen_datetime(min_year=2020)
     else:
         value = dataType
     return value

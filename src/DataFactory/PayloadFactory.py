@@ -19,7 +19,7 @@ def gen_string(low=5, high=100, maxValueFlag=False) -> string:
 
 def gen_string_faker_text(low=5, high=100, seed=0, maxValueFlag=False) -> string:
     fake = faker.Faker()
-    fake.seed(0)
+    fake.seed(seed)
     value = ''
     if maxValueFlag:
         value = fake.text(max_nb_chars=high)
