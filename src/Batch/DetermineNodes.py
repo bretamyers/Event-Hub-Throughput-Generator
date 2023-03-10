@@ -200,18 +200,23 @@ def get_defined_datatype_value(dataType:str, maxValueFlag=False):
 
 
 def gen_payload(jsonAttributePathDict, seed=0, maxValueFlag=False) -> dict:
+    print(jsonAttributePathDict)
     for key, item in jsonAttributePathDict.items():
-        firstCharacter = item[0]
-        if firstCharacter == '{':
-            dataType = item[1:-1]
-            value = get_defined_datatype_value(dataType, maxValueFlag=maxValueFlag)
-        elif firstCharacter == '[':
-            dataType = None
-            value = random.choice([x.strip() for x in item[1:-1].split(',')])
+        if len(item) > 0:
+            firstCharacter = item[0]
+            if firstCharacter == '{':
+                dataType = item[1:-1]
+                value = get_defined_datatype_value(dataType, maxValueFlag=maxValueFlag)
+            elif firstCharacter == '[':
+                dataType = None
+                value = random.choice([x.strip() for x in item[1:-1].split(',')])
+            else:
+                dataType = None
+                value = item
         else:
             dataType = None
             value = item
-
+        
         jsonAttributePathDict[key] = value
 
     jsonPayload = build_json_from_blueprint(jsonAttributePathDict)

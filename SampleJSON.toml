@@ -2,34 +2,79 @@
 # Sample json payload
 # This defines what each message will look like
 # 
+# SampleJSON = '''{
+#     "ID": "{guid}"
+#     ,"Sales": [
+#         {"name": "{string}"
+#             ,"a": 
+#                 {
+#                     "b": "{string}"
+#                 }
+#         }
+#         ,{"name": "{string}"}
+#     ]
+#     ,"Quantity": "{integer}"
+#     ,"LocationObj": 
+#         {
+#             "Coordinates": 
+#                 {
+#                     "Latitude": "{float}"
+#                     ,"Longitude": "{float}"
+#                 }
+#             ,"Altitude": "{float}"
+#         }
+#     ,"test": "static value"
+#     ,"testOptions": "[bret, nicole, aiden, jack]"
+#     ,"testList": [
+#         "pizza"
+#         ,"ice cream"
+#         ,"cake"
+#         ,"cheese"
+#         ,"[bret, nicole, aiden, jack]"
+#     ]
+# }'''
 SampleJSON = '''{
-    "ID": "{guid}"
-    ,"Sales": [
-        {"name": "{string}"
-            ,"a": 
-                {
-                    "b": "{string}"
-                }
-        }
-        ,{"name": "{string}"}
-    ]
-    ,"Quantity": "{integer}"
-    ,"LocationObj": 
-        {
-            "Coordinates": 
-                {
-                    "Latitude": "{float}"
-                    ,"Longitude": "{float}"
-                }
-            ,"Altitude": "{float}"
-        }
-    ,"test": "static value"
-    ,"testOptions": "[bret, nicole, aiden, jack]"
-    ,"testList": [
-        "pizza"
-        ,"ice cream"
-        ,"cake"
-        ,"cheese"
-        ,"[bret, nicole, aiden, jack]"
-    ]
+  "metadata": "{string}",
+  "Event": {
+    "System": {
+      "Provider": "",
+      "EventID": "{int}",
+      "Version": "[0, 1, 2]",
+      "Level": "[0, 1]",
+      "Task": "{int}",
+      "Opcode": "0",
+      "Keywords": "{int}",
+      "TimeCreated": "",
+      "EventRecordID": "{int}",
+      "Correlation": "",
+      "Execution": "",
+      "Channel": "Security",
+      "Computer": "{string}",
+      "Security": "[low, high]"
+    },
+    "EventData": {
+      "Data": [
+        "Network Configuration Operators",
+        "Builtin",
+        "{string}",
+        "{string}",
+        "{string}",
+        "{string}",
+        "{int}",
+        "{int}",
+        "C:\\Program Files\\CrowdStrike\\CSFalconService.exe"
+      ]
+    },
+    "RenderingInfo": {
+      "Message": "{string}",
+      "Level": "Information",
+      "Task": "Security Group Management",
+      "Opcode": "Info",
+      "Channel": "Security",
+      "Provider": "Microsoft Windows security auditing.",
+      "Keywords": {
+        "Keyword": "[Audit Success, Audit Fail]"
+      }
+    }
+  }
 }'''
