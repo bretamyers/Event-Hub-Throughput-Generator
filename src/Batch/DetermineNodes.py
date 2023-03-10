@@ -7,6 +7,7 @@ import uuid
 import datetime
 import os
 import copy
+import Helpers.TomlHelper
 
 def gen_string(low=5, high=100, maxValueFlag=False) -> string:
     value = ''
@@ -161,11 +162,10 @@ def build_json_from_blueprint(field_dict):
 def get_payload_definition(JsonFilePath:str=None) -> list:
 
     if JsonFilePath is None:
-        JsonFilePath = 'SampleJSON.json'
+        JsonFilePath = 'SampleJSON.toml'
 
-    # with open(os.path.join(os.path.split(os.path.join(os.path.dirname(os.path.abspath(__file__))))[0], JsonFilePath)) as file:
-    with open(os.path.join(os.path.abspath(os.path.join(__file__, "../../..")), JsonFilePath)) as file:
-        samplePayloadDict = json.load(file)
+    samplePayloadDict = json.loads(Helpers.TomlHelper.read_toml_file(os.path.join(os.path.abspath(os.path.join(__file__, "../../..")), JsonFilePath))['SampleJSON'])
+    
 
     jsonAttributePathDict = dict()
     for keys, item in recursive_iter(samplePayloadDict):

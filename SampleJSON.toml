@@ -1,4 +1,8 @@
-{
+# 
+# Sample json payload
+# This defines what each message will look like
+# 
+SampleJSON = '''{
     "ID": "{guid}"
     ,"Sales": [
         {"name": "{string}"
@@ -28,4 +32,4 @@
         ,"cheese"
         ,"[bret, nicole, aiden, jack]"
     ]
-}
+}'''

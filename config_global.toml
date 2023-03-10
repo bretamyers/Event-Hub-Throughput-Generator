@@ -6,6 +6,7 @@ PoolVMSku = 'STANDARD_A2_V2' #BASIC_A2 https://azure.microsoft.com/en-us/pricing
 Publisher="microsoft-azure-batch"
 Offer="ubuntu-server-container"
 Sku="20-04-lts"
+NodeAgentSkuId="batch.node.ubuntu 20.04"
 DropPoolOnCompletionFlag = 'false'
 
 
@@ -14,6 +15,8 @@ ConfigFilePath = 'config_user_local.toml'
 
 
 [PythonCommands]
+PythonRepoPath = '/mnt/batch/tasks/shared/Event-Hub-Throughput-Generator/Event-Hub-Throughput-Generator-main/src'
+PythonProgramFilePath = 'EventHubProducer/GenerateData.py'
 NodeSetup.commands = ['echo "sudo apt update && sudo apt upgrade -y"'
             ,'sudo apt update && sudo apt upgrade -y'
             ,'sudo apt install unzip'
@@ -75,8 +78,6 @@ CodeSetup.commandsGit = ['rm -rf /mnt/batch/tasks/shared/Event-Hub-Throughput-Ge
             ,'python3.11 -m pip install -r /mnt/batch/tasks/shared/Event-Hub-Throughput-Generator/requirements.txt'
         ]
 
-PythonRepoPath = '/mnt/batch/tasks/shared/Event-Hub-Throughput-Generator/Event-Hub-Throughput-Generator-main/src'
-PythonProgramFilePath = 'EventHubProducer/GenerateData.py'
 
 
 

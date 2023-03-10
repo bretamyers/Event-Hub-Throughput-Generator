@@ -8,7 +8,7 @@ import Batch.DetermineNodes
 import Helpers.TomlHelper
 
 def execute_batch_build(config_user:dict, config_global:dict, node_spec_dict:dict) -> None:
-    """Executes the sample with the specified configurations.
+    """Builds the Azure Batch pool and defines the job and tasks of the job.
     :param config_user: The user configuration to use.
     :param config_global: The global configuration to use.
     :param node_spec_dict: The node spec dictionary that contains the info on the request like on how many nodes need to be created.
@@ -23,6 +23,7 @@ def execute_batch_build(config_user:dict, config_global:dict, node_spec_dict:dic
     pool_os_publisher = config_global['AzureBatch']['Publisher']
     pool_os_offer = config_global['AzureBatch']['Offer']
     pool_os_sku = config_global['AzureBatch']['Sku']
+    pool_node_agent_os_sku = config_global['AzureBatch']['NodeAgentSkuId']
 
 
     node_spec_dict = Batch.DetermineNodes.get_batch_specs(config_user['GeneratorInput']['ThroughputMessagesPerSec'])
@@ -53,7 +54,7 @@ def execute_batch_build(config_user:dict, config_global:dict, node_spec_dict:dic
             offer=pool_os_offer,
             sku=pool_os_sku
         ),
-        node_agent_sku_id="batch.node.ubuntu 20.04"
+        node_agent_sku_id=pool_node_agent_os_sku
     )
     
     #https://docs.microsoft.com/en-us/azure/batch/quick-run-python
@@ -84,32 +85,7 @@ def execute_batch_build(config_user:dict, config_global:dict, node_spec_dict:dic
             )
         batch_client.pool.add(new_pool)
 
-    # # Code used to monitor and reboot a node if it fails to start
-    # # This is here due to a locking issue with ubuntu when to update 
-    # # and install the required applications.
-    # # Set to wait for 30 minutes for all the pools to start
-    # pool = batch_client.pool.get(my_pool_id)
-    # startTime = time.time()
-    # nodeReadyCnt = 0
-    # retryCnt = 30
-    # attemptCnt = 0
-    # while attemptCnt <= retryCnt:
-    #     nodes = list(batch_client.compute_node.list(pool.id))
-    #     nodeReadyCnt = 0
-    #     for node in nodes:
-    #         if node.state in batchmodels.ComputeNodeState.start_task_failed:            
-    #             print(f'Node Rebooting - {node.id} - {int(time.time() - startTime)}')
-    #             batch_client.compute_node.reboot(pool_id=my_pool_id, node_id=node.id)
-    #         #https://docs.microsoft.com/en-us/python/api/azure-batch/azure.batch.models.computenodestate?view=azure-python
-    #         if node.state in [batchmodels.ComputeNodeState.idle, batchmodels.ComputeNodeState.running]:
-    #             nodeReadyCnt += 1
-    #     print(f'{my_pool_id} - waiting for nodes to start... total duration - {int(time.time() - startTime)} seconds - {nodeReadyCnt} out of {pool_vm_count} are ready - attempt - {attemptCnt}')
-    #     if int(nodeReadyCnt) == int(pool_vm_count):
-    #         break
-    #     attemptCnt += 1
-    #     time.sleep(60)
-
-        
+    
     pool_info = batchmodels.PoolInformation(pool_id=my_pool_id)
 
     job_id = Batch.common.helpers.generate_unique_resource_name(f"{my_pool_id}-{python_run_file.split('/')[-1].split('.py')[0]}")[:64]
@@ -137,30 +113,6 @@ def execute_batch_build(config_user:dict, config_global:dict, node_spec_dict:dic
     #Add tasks to job to generate the data
     python_run_file_path = config_global['PythonCommands']['PythonProgramFilePath']
     batch_add_app_tasks(batch_client, job_id, python_run_file_path, config_global, config_user, node_spec_dict, my_pool_id=my_pool_id)
-
-    # # time.sleep(1)
-
-    # #Add job to delete the pool
-    # job_id = Batch.common.helpers.generate_unique_resource_name(f"{my_pool_id}-DROP-{python_run_file.split('/')[-1].split('.py')[0]}")[:64]
-    # print(f'Adding Job job_id={job_id}')
-    # job = batchmodels.JobAddParameter(
-    #     id=job_id
-    #     ,pool_info=pool_info
-    #     # A task that runs before other tasks that downloads the github artifacts
-    #     ,job_preparation_task=batchmodels.JobPreparationTask( 
-    #         id='JobPreparationTask_DeletePool'
-    #         ,user_identity=user_admin
-    #         ,command_line=f"""/bin/bash echo 'Delete Job'"""
-    #     )
-    #     ,on_all_tasks_complete=batchmodels.OnAllTasksComplete.terminate_job
-    # )
-    # batch_client.job.add(job)
-    # task = batchmodels.TaskAddParameter(
-    #         id=f'Task-Delete-Pool-{my_pool_id}',
-    #         command_line=f"""/bin/bash -c 'PYTHONPATH=/mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main python3.11 /mnt/batch/tasks/shared/EventHub-Throughput-Generator/EventHub-Throughput-Generator-main/main/BatchDropPool.py \"{my_pool_id}\"
-    #             '"""
-    #         )
-    # batch_client.task.add(job_id=job_id, task=task)
 
     
 def batch_add_app_tasks(batch_client, job_id, python_run_file_path, config_global, config_user, node_spec_dict, my_pool_id):
