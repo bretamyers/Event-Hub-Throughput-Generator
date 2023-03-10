@@ -194,7 +194,7 @@ def get_defined_datatype_value(dataType:str, maxValueFlag=False):
     if dataType == 'string':
         value = DataFactory.PayloadFactory.gen_string(maxValueFlag)
     elif dataType == 'string_faker_text':
-        value = DataFactory.PayloadFactory.gen_string_faker_text(maxValueFlag)
+        value = DataFactory.PayloadFactory.gen_string_faker_text(maxValueFlag=maxValueFlag)
     elif dataType == "guid":
         value = str(uuid.uuid4())
     elif dataType == "float":
