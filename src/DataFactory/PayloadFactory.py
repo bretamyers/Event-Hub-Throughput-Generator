@@ -17,6 +17,7 @@ def gen_string(low=5, high=100, maxValueFlag=False) -> string:
 
     return value
 
+
 def gen_string_faker_text(low=10, high=200, seed=0, maxValueFlag=False, fake=faker.Faker()) -> string:
     value = ''
     if maxValueFlag:
@@ -25,6 +26,7 @@ def gen_string_faker_text(low=10, high=200, seed=0, maxValueFlag=False, fake=fak
         value = fake.text(max_nb_chars=random.randint(low, high))
 
     return value
+
 
 def gen_float(maxValueFlag=False) -> float:
     if not maxValueFlag:

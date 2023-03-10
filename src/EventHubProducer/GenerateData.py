@@ -28,7 +28,7 @@ def gen_data(NodeSpecDict:dict) -> None:
     )
 
     fake = faker.Faker()
-    faker.Facker.seed(NodeSpecDict['NodeNum'])
+    faker.Faker.seed(NodeSpecDict['NodeNum'])
 
     sync_time()
     gen_start_time = time.time()
