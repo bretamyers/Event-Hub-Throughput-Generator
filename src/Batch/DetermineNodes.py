@@ -244,10 +244,10 @@ def get_batch_specs(TargetThroughput:int, JsonFilePath:str=None) -> dict:
     print(eventString)
 
     # print(f'EventString with max values - {eventString}')
-    print(f'Message size (bytes) - {sys.getsizeof(eventString)}')
     MaxMessageSizeBytes = sys.getsizeof(eventString)
+    print(f'Message size (bytes) - {MaxMessageSizeBytes}')
 
-    MaxThroughputPerNode = round(((1*1000*1000) / MaxMessageSizeBytes) * 0.8) #multiplying by 0.8 just to give a little headroom
+    MaxThroughputPerNode = round(((1*1000*1000) / MaxMessageSizeBytes) * 0.9) #multiplying by 0.8 just to give a little headroom
 
     if TargetThroughput < MaxThroughputPerNode:
         NodeThroughput = TargetThroughput
