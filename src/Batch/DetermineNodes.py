@@ -1,10 +1,9 @@
 import sys
 import math
 import json
-import string
 import random
 import uuid
-import datetime
+import faker
 import os
 import copy
 import Helpers.TomlHelper
@@ -190,11 +189,11 @@ def get_payload_definition(JsonFilePath:str=None) -> list:
     return jsonAttributePathDict
 
 
-def get_defined_datatype_value(dataType:str, maxValueFlag=False):
+def get_defined_datatype_value(dataType:str, maxValueFlag=False, fake=faker.Faker()):
     if dataType == 'string':
         value = DataFactory.PayloadFactory.gen_string(maxValueFlag)
     elif dataType == 'string_faker_text':
-        value = DataFactory.PayloadFactory.gen_string_faker_text(maxValueFlag=maxValueFlag)
+        value = DataFactory.PayloadFactory.gen_string_faker_text(maxValueFlag=maxValueFlag, fake=fake)
     elif dataType == "guid":
         value = str(uuid.uuid4())
     elif dataType == "float":
@@ -210,14 +209,14 @@ def get_defined_datatype_value(dataType:str, maxValueFlag=False):
     return value
 
 
-def gen_payload(jsonAttributePathDict, seed=0, maxValueFlag=False) -> dict:
+def gen_payload(jsonAttributePathDict, seed=0, maxValueFlag=False, fake=faker.Faker()) -> dict:
     # print(jsonAttributePathDict)
     for key, item in jsonAttributePathDict.items():
         if len(item) > 0:
             firstCharacter = item[0]
             if firstCharacter == '{':
                 dataType = item[1:-1]
-                value = get_defined_datatype_value(dataType, maxValueFlag=maxValueFlag)
+                value = get_defined_datatype_value(dataType, maxValueFlag=maxValueFlag, fake=fake)
             elif firstCharacter == '[':
                 dataType = None
                 value = random.choice([x.strip() for x in item[1:-1].split(',')])

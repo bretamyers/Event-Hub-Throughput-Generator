@@ -4,6 +4,7 @@ import Batch.BatchPoolWait
 from azure.eventhub import EventHubProducerClient, EventData
 import json
 import os, sys
+import faker
 import copy
 
 
@@ -26,6 +27,9 @@ def gen_data(NodeSpecDict:dict) -> None:
         eventhub_name=NodeSpecDict['EventHubName']
     )
 
+    fake = faker.Faker()
+    faker.Facker.seed(NodeSpecDict['NodeNum'])
+
     sync_time()
     gen_start_time = time.time()
     while int(time.time() - gen_start_time) < NodeSpecDict['RunDurationMin']*60:
@@ -37,7 +41,7 @@ def gen_data(NodeSpecDict:dict) -> None:
 
             start_datagen_time = time.time()
             for _ in range(int(NodeSpecDict['NodeThroughput'])):
-                eventString = json.dumps(Batch.DetermineNodes.gen_payload(jsonAttributePathDict=copy.deepcopy(NodeSpecDict['PayloadDefinitionDict']), maxValueFlag=False))
+                eventString = json.dumps(Batch.DetermineNodes.gen_payload(jsonAttributePathDict=copy.deepcopy(NodeSpecDict['PayloadDefinitionDict']), maxValueFlag=False, faker=fake))
                 # eventString = DetermineNodes.gen_payload(jsonAttributePathDict=[_ for _ in NodeSpecDict['PayloadDefinitionDict']], maxValueFlag=False)
                 event_data = EventData(eventString)
                 event_data_batch.add(event_data)
