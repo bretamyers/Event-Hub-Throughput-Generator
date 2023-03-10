@@ -8,7 +8,7 @@ import datetime
 import os
 import copy
 import Helpers.TomlHelper
-import DataFactory
+import DataFactory.PayloadFactory
 
 # def gen_string(low=5, high=100, maxValueFlag=False) -> string:
 #     value = ''
@@ -192,19 +192,19 @@ def get_payload_definition(JsonFilePath:str=None) -> list:
 
 def get_defined_datatype_value(dataType:str, maxValueFlag=False):
     if dataType == 'string':
-        value = DataFactory.gen_string(maxValueFlag)
+        value = DataFactory.PayloadFactory.gen_string(maxValueFlag)
     elif dataType == 'string_faker_text':
-        value = DataFactory.gen_string_faker_text(maxValueFlag)
+        value = DataFactory.PayloadFactory.gen_string_faker_text(maxValueFlag)
     elif dataType == "guid":
         value = str(uuid.uuid4())
     elif dataType == "float":
-        value = DataFactory.gen_float(maxValueFlag)
+        value = DataFactory.PayloadFactory.gen_float(maxValueFlag)
     elif dataType == "integer":
-        value = DataFactory.gen_integer(maxValueFlag)
+        value = DataFactory.PayloadFactory.gen_integer(maxValueFlag)
     elif dataType == "date":
-        value = DataFactory.gen_date(min_year=2020)
+        value = DataFactory.PayloadFactory.gen_date(min_year=2020)
     elif dataType == 'datetime':
-        value = DataFactory.gen_datetime(min_year=2020)
+        value = DataFactory.PayloadFactory.gen_datetime(min_year=2020)
     else:
         value = dataType
     return value
