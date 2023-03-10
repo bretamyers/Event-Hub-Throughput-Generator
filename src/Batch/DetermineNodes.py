@@ -190,16 +190,17 @@ def get_payload_definition(JsonFilePath:str=None) -> list:
 
 
 def get_defined_datatype_value(dataType:str, maxValueFlag=False, fake=faker.Faker()):
+    # print('get_defined_datatype_value', maxValueFlag)
     if dataType == 'string':
-        value = DataFactory.PayloadFactory.gen_string(maxValueFlag)
+        value = DataFactory.PayloadFactory.gen_string(maxValueFlag=maxValueFlag)
     elif dataType == 'string_faker_text':
         value = DataFactory.PayloadFactory.gen_string_faker_text(maxValueFlag=maxValueFlag, fake=fake)
     elif dataType == "guid":
         value = str(uuid.uuid4())
     elif dataType == "float":
-        value = DataFactory.PayloadFactory.gen_float(maxValueFlag)
+        value = DataFactory.PayloadFactory.gen_float(maxValueFlag=maxValueFlag)
     elif dataType == "integer":
-        value = DataFactory.PayloadFactory.gen_integer(maxValueFlag)
+        value = DataFactory.PayloadFactory.gen_integer(maxValueFlag=maxValueFlag)
     elif dataType == "date":
         value = DataFactory.PayloadFactory.gen_date(min_year=2020)
     elif dataType == 'datetime':
@@ -211,6 +212,7 @@ def get_defined_datatype_value(dataType:str, maxValueFlag=False, fake=faker.Fake
 
 def gen_payload(jsonAttributePathDict, seed=0, maxValueFlag=False, fake=faker.Faker()) -> dict:
     # print(jsonAttributePathDict)
+    # print('gen_payload', maxValueFlag)
     for key, item in jsonAttributePathDict.items():
         if len(item) > 0:
             firstCharacter = item[0]
@@ -238,8 +240,8 @@ def get_batch_specs(TargetThroughput:int, JsonFilePath:str=None) -> dict:
     print(f'Parameter - Target Throughput - {TargetThroughput}')
     payloadDefinitionDict = get_payload_definition(JsonFilePath)
 
-    eventString = gen_payload(jsonAttributePathDict=copy.deepcopy(payloadDefinitionDict), maxValueFlag=True)
-    print(json.dumps(eventString))
+    eventString = json.dumps(gen_payload(jsonAttributePathDict=copy.deepcopy(payloadDefinitionDict), maxValueFlag=True))
+    print(eventString)
 
     # print(f'EventString with max values - {eventString}')
     print(f'Message size (bytes) - {sys.getsizeof(eventString)}')
