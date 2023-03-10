@@ -21,3 +21,4 @@ config_global_local.toml
 src/Batch/__pycache__/DetermineNodes.cpython-311.pyc
 src/DataFactory/__pycache__/PayloadFactory.cpython-311.pyc
 *.pyc
+src/DataFactory/__pycache__/PayloadFactory.cpython-311.pyc
