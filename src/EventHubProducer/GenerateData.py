@@ -45,6 +45,7 @@ def gen_data(NodeSpecDict:dict) -> None:
                 # eventString = DetermineNodes.gen_payload(jsonAttributePathDict=[_ for _ in NodeSpecDict['PayloadDefinitionDict']], maxValueFlag=False)
                 event_data = EventData(eventString)
                 event_data_batch.add(event_data)
+                print(f'Event data batch size in bytes = {event_data_batch.size_in_bytes}')
             end_datagen_time = time.time()
 
             while int(time.time())%4 != int(NodeSpecDict['NodeSec']):
