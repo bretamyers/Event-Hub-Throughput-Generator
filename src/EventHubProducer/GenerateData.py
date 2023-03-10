@@ -41,7 +41,7 @@ def gen_data(NodeSpecDict:dict) -> None:
 
             start_datagen_time = time.time()
             for _ in range(int(NodeSpecDict['NodeThroughput'])):
-                eventString = json.dumps(Batch.DetermineNodes.gen_payload(jsonAttributePathDict=copy.deepcopy(NodeSpecDict['PayloadDefinitionDict']), maxValueFlag=False, faker=fake))
+                eventString = json.dumps(Batch.DetermineNodes.gen_payload(jsonAttributePathDict=copy.deepcopy(NodeSpecDict['PayloadDefinitionDict']), maxValueFlag=False, fake=fake))
                 # eventString = DetermineNodes.gen_payload(jsonAttributePathDict=[_ for _ in NodeSpecDict['PayloadDefinitionDict']], maxValueFlag=False)
                 event_data = EventData(eventString)
                 event_data_batch.add(event_data)
