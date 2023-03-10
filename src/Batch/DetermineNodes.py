@@ -277,7 +277,7 @@ def get_batch_specs(TargetThroughput:int, JsonFilePath:str=None) -> dict:
     nodeBuckets = dict()
     for nodespec in NodeMessageSpecList:
         if nodespec['NodeSec'] in nodeBuckets.keys():
-            nodeBuckets[nodespec['NodeSec']] += nodespec['NodeThroughput']
+            nodeBuckets[nodespec['NodeSec']] = int(nodeBuckets[nodespec['NodeSec']]) + int(nodespec['NodeThroughput'])
         else:
             nodeBuckets[nodespec['NodeSec']] = nodespec['NodeThroughput']
     print(f'Node Buckets (Node, Throughput) - {nodeBuckets}')
