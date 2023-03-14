@@ -26,7 +26,7 @@ def execute_batch_build(config_user:dict, config_global:dict, node_spec_dict:dic
     pool_node_agent_os_sku = config_global['AzureBatch']['NodeAgentSkuId']
 
 
-    node_spec_dict = Batch.DetermineNodes.get_batch_specs(config_user['GeneratorInput']['ThroughputMessagesPerSec'])
+    # node_spec_dict = Batch.DetermineNodes.get_batch_specs(config_user['GeneratorInput']['ThroughputMessagesPerSec'])
     task_slots_per_task = config_global['AzureBatch']['TaskSlotsPerTask']
     pool_vm_sku = config_global['AzureBatch']['PoolVMSku']
     pool_vm_spot_count = 0
@@ -144,20 +144,26 @@ def batch_add_app_tasks(batch_client, job_id, python_run_file_path, config_globa
 
 if __name__ == '__main__':
 
-    os_path_base = os.path.split(os.path.join(os.path.dirname(os.path.abspath(__file__))))[0]
+    while True:
+        os_path_base = os.path.split(os.path.join(os.path.dirname(os.path.abspath(__file__))))[0]
 
-    config_global = Helpers.TomlHelper.read_toml_file(FileName=os.path.join(os_path_base, 'config_global_local.toml'))
+        config_global = Helpers.TomlHelper.read_toml_file(FileName=os.path.join(os_path_base, 'config_global_local.toml'))
 
-    config_user = Helpers.TomlHelper.read_toml_file(FileName=os.path.join(os_path_base, config_global['DataGeneration']['ConfigFilePath']))
+        config_user = Helpers.TomlHelper.read_toml_file(FileName=os.path.join(os_path_base, config_global['DataGeneration']['ConfigFilePath']))
 
-    node_spec_dict = Batch.DetermineNodes.get_batch_specs(TargetThroughput=config_user['GeneratorInput']['ThroughputMessagesPerSec'], JsonFilePath=config_user['GeneratorInput']['JsonTemplate'])
-    
-    
-    # print(json.dumps(config_global, indent=4))
-    # print(json.dumps(config_user, indent=4))
-    # print(json.dumps(node_spec_dict, indent=4))
+        node_spec_dict = Batch.DetermineNodes.get_batch_specs(TargetThroughput=config_user['GeneratorInput']['ThroughputMessagesPerSec'], JsonFilePath=config_user['GeneratorInput']['JsonTemplate'])
+        
+        
+        # print(json.dumps(config_global, indent=4))
+        # print(json.dumps(config_user, indent=4))
+        print(json.dumps(node_spec_dict, indent=4))
+        break
+        # print(node_spec_dict)
 
-    # execute_batch_build(config_user=config_user, config_global=config_global, node_spec_dict=node_spec_dict)
-
+        # if node_spec_dict['NumberOfNodes'] == 708:
+        #     # print(json.dumps(node_spec_dict, indent=4))
+        #     # print(node_spec_dict['NumberOfNodes'])
+        #     execute_batch_build(config_user=config_user, config_global=config_global, node_spec_dict=node_spec_dict)
+        #     break
 
     

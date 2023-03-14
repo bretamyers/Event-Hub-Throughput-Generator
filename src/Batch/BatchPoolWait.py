@@ -11,6 +11,29 @@ def get_node_list(NodeSpecDict: dict) -> None:
     # nodes = list(batch_client.compute_node.list(pool.id))
     pass
 
+
+def reboot_nodes_with_startup_error(NodeSpecDict: dict) -> None:
+
+    credentials = SharedKeyCredentials(
+        NodeSpecDict['BatchAccountName'],
+        NodeSpecDict['BatchAccountKey']
+        )
+
+    batch_client = BatchServiceClient(
+        credentials,
+        batch_url=NodeSpecDict['BatchServiceUrl']
+        )
+    
+    nodes = list(batch_client.compute_node.list(NodeSpecDict['PoolId']))
+    for node in nodes:
+        # https://learn.microsoft.com/en-us/python/api/azure-batch/azure.batch.models.computenodestate?view=azure-python
+        if node.state.value == 'starttaskfailed':
+            print(f'Rebooting node {node.id}')
+            batch_client.compute_node.reboot(pool_id=NodeSpecDict['PoolId'], node_id=node.id)
+
+    # print(PoolReadyTotalNodes)
+
+
 def wait_until_pool_is_ready_state(NodeSpecDict: dict) -> None:
     credentials = SharedKeyCredentials(
         NodeSpecDict['BatchAccountName'],
@@ -39,6 +62,7 @@ def wait_until_pool_is_ready_state(NodeSpecDict: dict) -> None:
     attemptCnt = 0
     startTime = time.time()
     while True:
+        attemptCnt += 1
         PoolReadyTotalNodes = 0
         nodes = list(batch_client.compute_node.list(NodeSpecDict['PoolId']))
         for node in nodes:
@@ -49,7 +73,19 @@ def wait_until_pool_is_ready_state(NodeSpecDict: dict) -> None:
         if PoolReadyTotalNodes == PoolTargetTotalNodes:
             break
         else:
-            time.sleep(60-(time.time()%60)) #sleep until the nearest minute
+            while True:
+                if NodeSpecDict['NodeNum']*4 == time.time()%(NodeSpecDict['NumberOfNodes']*4):
+                    reboot_nodes_with_startup_error(NodeSpecDict=NodeSpecDict)
+                else:
+                    # Every 60 seconds, break and check if all nodes are ready
+                    if int(time.time()%60) == 0:
+                        break
+                    else:
+                        time.sleep(1-(time.time()%1)) #sleep until the next nearest second
+                
+            # time.sleep(60-(time.time()%60)) #sleep until the nearest minute
+
+    time.sleep(60-(time.time()%60)) #sleep until the nearest minute
 
 
 if __name__ == '__main__':
