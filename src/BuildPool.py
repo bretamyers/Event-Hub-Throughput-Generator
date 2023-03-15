@@ -161,9 +161,9 @@ if __name__ == '__main__':
         # print(node_spec_dict)
 
         # if node_spec_dict['NumberOfNodes'] == 708:
-        print(json.dumps(node_spec_dict, indent=4))
+        # print(json.dumps(node_spec_dict, indent=4))
         # print(node_spec_dict['NumberOfNodes'])
-        # execute_batch_build(config_user=config_user, config_global=config_global, node_spec_dict=node_spec_dict)
+        execute_batch_build(config_user=config_user, config_global=config_global, node_spec_dict=node_spec_dict)
         break
 
     
