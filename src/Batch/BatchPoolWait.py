@@ -75,6 +75,7 @@ def wait_until_pool_is_ready_state(NodeSpecDict: dict) -> None:
         else:
             while True:
                 if NodeSpecDict['NodeNum']*4 == time.time()%(NodeSpecDict['NumberOfNodes']*4):
+                    print(f'{NodeSpecDict["PoolId"]} - Attempting to reboot failed nodes.')
                     reboot_nodes_with_startup_error(NodeSpecDict=NodeSpecDict)
                 else:
                     # Every 60 seconds, break and check if all nodes are ready
