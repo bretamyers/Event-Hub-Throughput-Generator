@@ -80,8 +80,10 @@ def wait_until_pool_is_ready_state(NodeSpecDict: dict) -> None:
                 else:
                     # Every 60 seconds, break and check if all nodes are ready
                     if int(time.time()%60) == 59:
+                        print('In reboot loop - breaking out of loop')
                         break
                     else:
+                        print('In reboot loop - sleeping to the nearest second')
                         time.sleep(1-(time.time()%1)) #sleep until the next nearest second
                 
             # time.sleep(60-(time.time()%60)) #sleep until the nearest minute
