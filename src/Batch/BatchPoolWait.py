@@ -5,7 +5,7 @@ import time
 import Helpers.TomlHelper
 import os
 import Batch.DetermineNodes
-import json
+
 
 def get_node_list(NodeSpecDict: dict) -> None:
     # nodes = list(batch_client.compute_node.list(pool.id))
@@ -79,7 +79,7 @@ def wait_until_pool_is_ready_state(NodeSpecDict: dict) -> None:
                     reboot_nodes_with_startup_error(NodeSpecDict=NodeSpecDict)
                 else:
                     # Every 60 seconds, break and check if all nodes are ready
-                    if int(time.time()%60) == 0:
+                    if int(time.time()%60) == 59:
                         break
                     else:
                         time.sleep(1-(time.time()%1)) #sleep until the next nearest second
@@ -93,7 +93,7 @@ if __name__ == '__main__':
 
     os_path_base = os.path.abspath(os.path.join(__file__, "../../.."))
 
-    config_global = Helpers.TomlHelper.read_toml_file(FileName=os.path.join(os_path_base, 'config_global.toml'))
+    config_global = Helpers.TomlHelper.read_toml_file(FileName=os.path.join(os_path_base, 'config_global_local.toml'))
 
     config_user = Helpers.TomlHelper.read_toml_file(FileName=os.path.join(os_path_base, config_global['DataGeneration']['ConfigFilePath']))
 
@@ -114,7 +114,7 @@ if __name__ == '__main__':
             ,'PoolId': 'pl-lolt-STANDARD_A2_V2-4-1'
             }
     
-    wait_until_pool_is_ready_state(NodeSpecDict)
+    # wait_until_pool_is_ready_state(NodeSpecDict)
 
 
 # import os
