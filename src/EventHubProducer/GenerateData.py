@@ -3,6 +3,7 @@ import time
 import src.DataFactory.PayloadFactory as DataFactory_PayloadFactory
 import src.Helpers.TomlHelper as Helpers_TomlHelper
 import src.Batch.BatchPoolWait as Batch_BatchPoolWait
+import src.Batch.DetermineNodes as Batch_DetermineNodes
 from azure.eventhub import EventHubProducerClient, EventData
 import json
 import os, sys
@@ -86,55 +87,35 @@ def gen_data(NodeSpecDict:dict) -> None:
         
 if __name__ == '__main__':
 
-    # print(sys.argv[1])
+    project_name = 'Event-Hub-Throughput-Generator'
+    os_path_base = os.path.abspath(__file__).split(project_name)[0]
 
-    # NodeSpecDict = json.loads(sys.argv[1])
+    config_global = Helpers_TomlHelper.read_toml_file(FileName=os.path.join(os_path_base, project_name, 'config_global_local.toml'))
 
+    config_user = Helpers_TomlHelper.read_toml_file(FileName=os.path.join(os_path_base, project_name, config_global['DataGeneration']['ConfigFilePath']))
 
-    # myNodeNum = nodeSpec['NodeMessageSpecList']['NodeNum'] 
-    # myNodeNum = 1
-
-    project_name = 'EventHub-Throughput-Generator'
-    os_path_base = os.path.abspath(__file__).split(project_name)[-1]
-    print(os_path_base)
-
-    # config_global = Helpers_TomlHelper.read_toml_file(FileName=os.path.join(os_path_base, 'config_global_local.toml'))
-
-    # config_user = Helpers.TomlHelper.read_toml_file(FileName=os.path.join(os_path_base, config_global['DataGeneration']['ConfigFilePath']))
-
-    # baseMetrics = DetermineNodes.get_batch_specs(TargetThroughput=config_user['GeneratorInput']['ThroughputMessagesPerSec'])
+    node_spec_dict = Batch_DetermineNodes.get_batch_specs(TargetThroughput=config_user['GeneratorInput']['ThroughputMessagesPerSec'], JsonFilePath=config_user['GeneratorInput']['JsonTemplate'])
     
-    # NodeSpecDict = {'EventHubConnection': nodeSpec['EventHubConnection']
-    #             ,'EventHubName': nodeSpec['EventHubName']
-    #             ,'RunDurationMin': nodeSpec['RunDurationMin']
-    #             }
-    # for key, value in baseMetrics.items():
-    #     if key in ['NodeMessageSpecList', 'PayloadDefinitionDict', 'NumberOfNodes']:
-    #         if key == 'NodeMessageSpecList':
-    #             for nodeSpec in value:
-    #                 if nodeSpec['NodeNum'] == str(myNodeNum):
-    #                     NodeSpecDict.update(nodeSpec)
-    #         else:
-    #             NodeSpecDict[key] = value
-    # print(f'{json.dumps(NodeSpecDict, indent=4)}')
-    
+    nodeSpec = node_spec_dict['NodeMessageSpecList'][0]
 
-    # NodeSpecDict = {'EventHubConnection': config_user['AzureEventHub']['EventHubConnection']
-    #         ,'EventHubName': config_user['AzureEventHub']['EventHubName']
-    #         ,'RunDurationMin': config_user['GeneratorInput']['RunDurationMin']
-    #         ,'NumberOfNodes': node_spec_dict['NumberOfNodes']
-    #         ,'NodeNum': nodeSpec['NodeNum']
-    #         ,'NodeSec': nodeSpec['NodeSec']
-    #         ,'NodeThroughput': nodeSpec['NodeThroughput']
-    #         ,'PayloadDefinitionDict': node_spec_dict['PayloadDefinitionDict']
-    #         ,'BatchAccountKey': config_user['AzureBatch']['BatchAccountKey']
-    #         ,'BatchAccountName': config_user['AzureBatch']['BatchAccountName']
-    #         ,'BatchServiceUrl': config_user['AzureBatch']['BatchServiceUrl']
-    #         ,'PoolId': my_pool_id
-    #         }
+    my_pool_id = 'pl_testing'
+
+    NodeSpecDict = {'EventHubConnection': config_user['AzureEventHub']['EventHubConnection']
+            ,'EventHubName': config_user['AzureEventHub']['EventHubName']
+            ,'RunDurationMin': config_user['GeneratorInput']['RunDurationMin']
+            ,'NumberOfNodes': node_spec_dict['NumberOfNodes']
+            ,'NodeNum': nodeSpec['NodeNum']
+            ,'NodeSec': nodeSpec['NodeSec']
+            ,'NodeThroughput': nodeSpec['NodeThroughput']
+            ,'PayloadDefinitionDict': node_spec_dict['PayloadDefinitionDict']
+            ,'BatchAccountKey': config_user['AzureBatch']['BatchAccountKey']
+            ,'BatchAccountName': config_user['AzureBatch']['BatchAccountName']
+            ,'BatchServiceUrl': config_user['AzureBatch']['BatchServiceUrl']
+            ,'PoolId': my_pool_id
+            }
 
     # print(NodeSpecDict)
     
-    # gen_data(NodeSpecDict)
+    gen_data(NodeSpecDict)
         
     
