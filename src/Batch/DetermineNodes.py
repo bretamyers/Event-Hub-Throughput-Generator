@@ -6,8 +6,8 @@ import uuid
 import faker
 import os
 import copy
-import Helpers.TomlHelper
-import DataFactory.PayloadFactory
+# import src.Helpers.TomlHelper as Helpers_TomlHelper
+import src.DataFactory.PayloadFactory as DataFactory_PayloadFactory
 
 # def gen_string(low=5, high=100, maxValueFlag=False) -> string:
 #     value = ''
@@ -238,9 +238,9 @@ def recursive_iter(obj, keys=()) -> tuple[set, str]:
 
 def get_batch_specs(TargetThroughput:int, JsonFilePath:str=None) -> dict:
     print(f'Parameter - Target Throughput - {TargetThroughput}')
-    payloadDefinitionDict = DataFactory.PayloadFactory.get_payload_definition(JsonFilePath)
+    payloadDefinitionDict = DataFactory_PayloadFactory.get_payload_definition(JsonFilePath)
 
-    eventString = json.dumps(DataFactory.PayloadFactory.gen_payload(jsonAttributePathDict=copy.deepcopy(payloadDefinitionDict), maxValueFlag=True))
+    eventString = json.dumps(DataFactory_PayloadFactory.gen_payload(jsonAttributePathDict=copy.deepcopy(payloadDefinitionDict), maxValueFlag=True))
     print(eventString)
 
     # print(f'EventString with max values - {eventString}')

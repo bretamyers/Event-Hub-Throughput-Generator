@@ -1,7 +1,8 @@
 import time
 # import Batch.DetermineNodes
-import Batch.DataFactory
-import Batch.BatchPoolWait
+import src.DataFactory.PayloadFactory as DataFactory_PayloadFactory
+import src.Helpers.TomlHelper as Helpers_TomlHelper
+import src.Batch.BatchPoolWait as Batch_BatchPoolWait
 from azure.eventhub import EventHubProducerClient, EventData
 import json
 import os, sys
@@ -21,7 +22,7 @@ def gen_data(NodeSpecDict:dict) -> None:
 
     print('Starting wait for nodes to be ready')
     #wait until all nodes are ready before generating the data
-    Batch.BatchPoolWait.wait_until_pool_is_ready_state(NodeSpecDict=NodeSpecDict)
+    Batch_BatchPoolWait.wait_until_pool_is_ready_state(NodeSpecDict=NodeSpecDict)
 
     producer = EventHubProducerClient.from_connection_string(
         conn_str=NodeSpecDict['EventHubConnection'],
@@ -42,7 +43,7 @@ def gen_data(NodeSpecDict:dict) -> None:
 
             start_datagen_time = time.time()
             for _ in range(int(NodeSpecDict['NodeThroughput'])):
-                eventString = json.dumps(Batch.DataFactory.gen_payload(jsonAttributePathDict=copy.deepcopy(NodeSpecDict['PayloadDefinitionDict']), maxValueFlag=False, fake=fake))
+                eventString = json.dumps(DataFactory_PayloadFactory.gen_payload(jsonAttributePathDict=copy.deepcopy(NodeSpecDict['PayloadDefinitionDict']), maxValueFlag=False, fake=fake))
                 # eventString = DetermineNodes.gen_payload(jsonAttributePathDict=[_ for _ in NodeSpecDict['PayloadDefinitionDict']], maxValueFlag=False)
                 event_data = EventData(eventString)
                 event_data_batch.add(event_data)
@@ -93,7 +94,13 @@ if __name__ == '__main__':
     # myNodeNum = nodeSpec['NodeMessageSpecList']['NodeNum'] 
     # myNodeNum = 1
 
-    # config = TomlHelper.read_toml_file(FileName=os.path.join(os.path.split(os.path.join(os.path.dirname(os.path.abspath(__file__))))[0], 'config_user.toml'))
+    project_name = 'EventHub-Throughput-Generator'
+    os_path_base = os.path.abspath(__file__).split(project_name)[-1]
+    print(os_path_base)
+
+    # config_global = Helpers_TomlHelper.read_toml_file(FileName=os.path.join(os_path_base, 'config_global_local.toml'))
+
+    # config_user = Helpers.TomlHelper.read_toml_file(FileName=os.path.join(os_path_base, config_global['DataGeneration']['ConfigFilePath']))
 
     # baseMetrics = DetermineNodes.get_batch_specs(TargetThroughput=config_user['GeneratorInput']['ThroughputMessagesPerSec'])
     
@@ -112,23 +119,22 @@ if __name__ == '__main__':
     # print(f'{json.dumps(NodeSpecDict, indent=4)}')
     
 
-    # NodeSpecDict = {
-    #     'RunDurationMin': config['GeneratorInput']['RunDurationMin']
-    #     ,'EventHubConnection': config['AzureEventHub']['EventHubConnection']
-    #     ,'EventHubName': config['AzureEventHub']['EventHubName']
-    #     ,'NumberOfNodes': batchSpecMasterDict['NumberOfNodes']
-    #     ,'PayloadDefinitionDict': batchSpecMasterDict['PayloadDefinitionDict']
-    #     ,'NodeSec': nodeSpec['NodeSec']
-    #     ,'NodeThroughput': nodeSpec['NodeThroughput']
-    # }
+    # NodeSpecDict = {'EventHubConnection': config_user['AzureEventHub']['EventHubConnection']
+    #         ,'EventHubName': config_user['AzureEventHub']['EventHubName']
+    #         ,'RunDurationMin': config_user['GeneratorInput']['RunDurationMin']
+    #         ,'NumberOfNodes': node_spec_dict['NumberOfNodes']
+    #         ,'NodeNum': nodeSpec['NodeNum']
+    #         ,'NodeSec': nodeSpec['NodeSec']
+    #         ,'NodeThroughput': nodeSpec['NodeThroughput']
+    #         ,'PayloadDefinitionDict': node_spec_dict['PayloadDefinitionDict']
+    #         ,'BatchAccountKey': config_user['AzureBatch']['BatchAccountKey']
+    #         ,'BatchAccountName': config_user['AzureBatch']['BatchAccountName']
+    #         ,'BatchServiceUrl': config_user['AzureBatch']['BatchServiceUrl']
+    #         ,'PoolId': my_pool_id
+    #         }
 
-    NodeSpecDict = {
-
-
-    }
-
-    print(NodeSpecDict)
+    # print(NodeSpecDict)
     
-    gen_data(NodeSpecDict)
+    # gen_data(NodeSpecDict)
         
     

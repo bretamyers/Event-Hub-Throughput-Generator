@@ -5,8 +5,8 @@ import uuid
 import datetime
 import os
 import faker
-import Helpers.TomlHelper
-import DataFactory.DataTypeFactory
+import src.Helpers.TomlHelper as Helpers_TomlHelper
+import src.DataFactory.DataTypeFactory as DataFactory_DataTypeFactory
 
 
 
@@ -123,7 +123,7 @@ def get_payload_definition(JsonFilePath:str=None) -> list:
     if JsonFilePath is None:
         JsonFilePath = 'SampleJSON.toml'
 
-    samplePayloadDict = json.loads(Helpers.TomlHelper.read_toml_file(os.path.join(os.path.abspath(os.path.join(__file__, "../../..")), JsonFilePath))['SampleJSON'])
+    samplePayloadDict = json.loads(Helpers_TomlHelper.read_toml_file(os.path.join(os.path.abspath(os.path.join(__file__, "../../..")), JsonFilePath))['SampleJSON'])
     
 
     jsonAttributePathDict = dict()
@@ -143,19 +143,19 @@ def get_payload_definition(JsonFilePath:str=None) -> list:
 def get_defined_datatype_value(dataType:str, maxValueFlag=False, fake=faker.Faker()):
     # print('get_defined_datatype_value', maxValueFlag)
     if dataType == 'string':
-        value = DataFactory.DataTypeFactory.gen_string(maxValueFlag=maxValueFlag)
+        value = DataFactory_DataTypeFactory.gen_string(maxValueFlag=maxValueFlag)
     elif dataType == 'string_faker_text':
-        value = DataFactory.DataTypeFactory.gen_string_faker_text(maxValueFlag=maxValueFlag, fake=fake)
+        value = DataFactory_DataTypeFactory.gen_string_faker_text(maxValueFlag=maxValueFlag, fake=fake)
     elif dataType == "guid":
         value = str(uuid.uuid4())
     elif dataType == "float":
-        value = DataFactory.DataTypeFactory.gen_float(maxValueFlag=maxValueFlag)
+        value = DataFactory_DataTypeFactory.gen_float(maxValueFlag=maxValueFlag)
     elif dataType == "integer":
-        value = DataFactory.DataTypeFactory.gen_integer(maxValueFlag=maxValueFlag)
+        value = DataFactory_DataTypeFactory.gen_integer(maxValueFlag=maxValueFlag)
     elif dataType == "date":
-        value = DataFactory.DataTypeFactory.gen_date(min_year=2020)
+        value = DataFactory_DataTypeFactory.gen_date(min_year=2020)
     elif dataType == 'datetime':
-        value = DataFactory.DataTypeFactory.gen_datetime(min_year=2020)
+        value = DataFactory_DataTypeFactory.gen_datetime(min_year=2020)
     else:
         value = dataType
     return value

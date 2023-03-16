@@ -2,9 +2,9 @@ from azure.batch import BatchServiceClient
 from azure.batch.batch_auth import SharedKeyCredentials
 import azure.batch.models as batchmodels
 import time
-import Helpers.TomlHelper
+import src.Helpers.TomlHelper as Helpers_TomlHelper
 import os
-import Batch.DetermineNodes
+import src.Batch.DetermineNodes as Batch_DetermineNodes
 
 
 def get_node_list(NodeSpecDict: dict) -> None:
@@ -97,11 +97,11 @@ if __name__ == '__main__':
 
     os_path_base = os.path.abspath(os.path.join(__file__, "../../.."))
 
-    config_global = Helpers.TomlHelper.read_toml_file(FileName=os.path.join(os_path_base, 'config_global_local.toml'))
+    config_global = Helpers_TomlHelper.read_toml_file(FileName=os.path.join(os_path_base, 'config_global_local.toml'))
 
-    config_user = Helpers.TomlHelper.read_toml_file(FileName=os.path.join(os_path_base, config_global['DataGeneration']['ConfigFilePath']))
+    config_user = Helpers_TomlHelper.read_toml_file(FileName=os.path.join(os_path_base, config_global['DataGeneration']['ConfigFilePath']))
 
-    node_spec_dict = Batch.DetermineNodes.get_batch_specs(TargetThroughput=config_user['GeneratorInput']['ThroughputMessagesPerSec'], JsonFilePath=config_user['GeneratorInput']['JsonTemplate'])
+    node_spec_dict = Batch_DetermineNodes.get_batch_specs(TargetThroughput=config_user['GeneratorInput']['ThroughputMessagesPerSec'], JsonFilePath=config_user['GeneratorInput']['JsonTemplate'])
     
 
     NodeSpecDict = {'EventHubConnection': config_user['AzureEventHub']['EventHubConnection']
