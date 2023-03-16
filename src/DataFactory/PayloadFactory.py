@@ -191,41 +191,52 @@ def get_payload_definition(JsonFilePath:str=None) -> list:
     return jsonAttributePathDict
 
 
-def get_defined_datatype_value(dataType:str, maxValueFlag=False):
+def get_defined_datatype_value(dataType:str, maxValueFlag=False, fake=faker.Faker()):
+    # print('get_defined_datatype_value', maxValueFlag)
     if dataType == 'string':
-        value = gen_string(maxValueFlag)
+        value = DataFactory.PayloadFactory.gen_string(maxValueFlag=maxValueFlag)
+    elif dataType == 'string_faker_text':
+        value = DataFactory.PayloadFactory.gen_string_faker_text(maxValueFlag=maxValueFlag, fake=fake)
     elif dataType == "guid":
         value = str(uuid.uuid4())
     elif dataType == "float":
-        value = gen_float(maxValueFlag)
+        value = DataFactory.PayloadFactory.gen_float(maxValueFlag=maxValueFlag)
     elif dataType == "integer":
-        value = gen_integer(maxValueFlag)
+        value = DataFactory.PayloadFactory.gen_integer(maxValueFlag=maxValueFlag)
     elif dataType == "date":
-        value = gen_date(min_year=2020)
+        value = DataFactory.PayloadFactory.gen_date(min_year=2020)
     elif dataType == 'datetime':
-        value = gen_datetime(min_year=2020)
+        value = DataFactory.PayloadFactory.gen_datetime(min_year=2020)
     else:
         value = dataType
     return value
 
 
-def gen_payload(jsonAttributePathDict, seed=0, maxValueFlag=False) -> dict:
+def gen_payload(jsonAttributePathDict, seed=0, maxValueFlag=False, fake=faker.Faker()) -> dict:
+    # print(jsonAttributePathDict)
+    # print('gen_payload', maxValueFlag)
     for key, item in jsonAttributePathDict.items():
-        firstCharacter = item[0]
-        if firstCharacter == '{':
-            dataType = item[1:-1]
-            value = get_defined_datatype_value(dataType, maxValueFlag=maxValueFlag)
-        elif firstCharacter == '[':
-            dataType = None
-            value = random.choice([x.strip() for x in item[1:-1].split(',')])
+        if len(item) > 0:
+            firstCharacter = item[0]
+            if firstCharacter == '{':
+                dataType = item[1:-1]
+                value = get_defined_datatype_value(dataType, maxValueFlag=maxValueFlag, fake=fake)
+            elif firstCharacter == '[':
+                dataType = None
+                value = random.choice([x.strip() for x in item[1:-1].split(',')])
+            else:
+                dataType = None
+                value = item
         else:
             dataType = None
             value = item
-
+        
         jsonAttributePathDict[key] = value
 
     jsonPayload = build_json_from_blueprint(jsonAttributePathDict)
     return jsonPayload
+
+
 
 if __name__ == '__main__':
 
