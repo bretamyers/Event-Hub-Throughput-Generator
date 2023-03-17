@@ -240,7 +240,7 @@ def get_batch_specs(TargetThroughput:int, JsonFilePath:str=None) -> dict:
     print(f'Parameter - Target Throughput - {TargetThroughput}')
     payloadDefinitionDict = DataFactory_PayloadFactory.get_payload_definition(JsonFilePath)
 
-    eventString = json.dumps(DataFactory_PayloadFactory.gen_payload(jsonAttributePathDict=copy.deepcopy(payloadDefinitionDict), maxValueFlag=True))
+    eventString = json.dumps(DataFactory_PayloadFactory.gen_payload(jsonAttributePathDict=copy.deepcopy(payloadDefinitionDict), keyTuple=0, datasetDict=dict.fromkeys([_ for _ in range(1) ], dict()), maxValueFlag=True))
     print(eventString)
 
     # print(f'EventString with max values - {eventString}')

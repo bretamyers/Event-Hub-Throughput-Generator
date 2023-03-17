@@ -44,7 +44,7 @@ SampleJSON = '''{
       "Task": "{integer}",
       "Opcode": "0",
       "Keywords": "{integer}",
-      "TimeCreated": "",
+      "TimeCreated": "{datetime} 2020-01-01 increasing",
       "EventRecordID": "{integer}",
       "Correlation": "",
       "Execution": "",

@@ -9,6 +9,7 @@ import json
 import os, sys
 import faker
 import copy
+import random
 
 
 def sync_time():
@@ -33,6 +34,8 @@ def gen_data(NodeSpecDict:dict) -> None:
     fake = faker.Faker()
     faker.Faker.seed(NodeSpecDict['NodeNum'])
 
+    datasetDict = dict() #dict.fromkeys([_ for _ in range(int(NodeSpecDict['NodeThroughput'])) ], dict())
+    
     sync_time()
     gen_start_time = time.time()
     while int(time.time() - gen_start_time) < NodeSpecDict['RunDurationMin']*60:
@@ -44,11 +47,16 @@ def gen_data(NodeSpecDict:dict) -> None:
 
             start_datagen_time = time.time()
             for _ in range(int(NodeSpecDict['NodeThroughput'])):
-                eventString = json.dumps(DataFactory_PayloadFactory.gen_payload(jsonAttributePathDict=copy.deepcopy(NodeSpecDict['PayloadDefinitionDict']), maxValueFlag=False, fake=fake))
-                # eventString = DetermineNodes.gen_payload(jsonAttributePathDict=[_ for _ in NodeSpecDict['PayloadDefinitionDict']], maxValueFlag=False)
+                keyTuple = (_, ) # tuple
+                # datasetDict[keyTuple] = dic
+                eventString = json.dumps(DataFactory_PayloadFactory.gen_payload(jsonAttributePathDict=copy.deepcopy(NodeSpecDict['PayloadDefinitionDict']), keyTuple=keyTuple, datasetDict=datasetDict, maxValueFlag=False, fake=fake))
+                print(keyTuple, '-', eventString)
                 event_data = EventData(eventString)
                 event_data_batch.add(event_data)
                 # print(f'Event data batch size in bytes = {event_data_batch.size_in_bytes}')
+            print('\n')
+            print(datasetDict)
+            print('\n')
             end_datagen_time = time.time()
 
             while int(time.time())%4 != int(NodeSpecDict['NodeSec']):
@@ -98,7 +106,7 @@ if __name__ == '__main__':
     
     nodeSpec = node_spec_dict['NodeMessageSpecList'][0]
 
-    my_pool_id = 'pl_testing'
+    my_pool_id = f'{config_global["AzureBatch"]["PoolNameBase"]}-{config_global["AzureBatch"]["PoolVMSku"]}-{node_spec_dict["NumberOfNodes"]}-{config_global["AzureBatch"]["TaskSlotsPerTask"]}'[:64] #limited to 64 characters
 
     NodeSpecDict = {'EventHubConnection': config_user['AzureEventHub']['EventHubConnection']
             ,'EventHubName': config_user['AzureEventHub']['EventHubName']
@@ -116,6 +124,12 @@ if __name__ == '__main__':
 
     # print(NodeSpecDict)
     
+    item = '{datetime} 2020-01-01 increasing'
+    dataType = item[item.index('{')+1:item.index('}')]
+    properties = item[item.index('}')+1:].strip().split(' ')
+    print(dataType)
+    print(properties)
+
     gen_data(NodeSpecDict)
         
     

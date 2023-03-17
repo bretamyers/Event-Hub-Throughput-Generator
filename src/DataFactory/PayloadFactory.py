@@ -140,7 +140,7 @@ def get_payload_definition(JsonFilePath:str=None) -> list:
     return jsonAttributePathDict
 
 
-def get_defined_datatype_value(dataType:str, maxValueFlag=False, fake=faker.Faker()):
+def get_defined_datatype_value(keyTuple:tuple, elementName:str, datasetDict:dict, dataType:str, properties:list, maxValueFlag=False, fake=faker.Faker()):
     # print('get_defined_datatype_value', maxValueFlag)
     if dataType == 'string':
         value = DataFactory_DataTypeFactory.gen_string(maxValueFlag=maxValueFlag)
@@ -153,23 +153,24 @@ def get_defined_datatype_value(dataType:str, maxValueFlag=False, fake=faker.Fake
     elif dataType == "integer":
         value = DataFactory_DataTypeFactory.gen_integer(maxValueFlag=maxValueFlag)
     elif dataType == "date":
-        value = DataFactory_DataTypeFactory.gen_date(min_year=2020)
+        value = DataFactory_DataTypeFactory.gen_date(keyTuple=keyTuple, elementName=elementName, datasetDict=datasetDict, properties=properties)
     elif dataType == 'datetime':
-        value = DataFactory_DataTypeFactory.gen_datetime(min_year=2020)
+        value = DataFactory_DataTypeFactory.gen_datetime(keyTuple=keyTuple, elementName=elementName, datasetDict=datasetDict, properties=properties)
     else:
         value = dataType
     return value
 
 
-def gen_payload(jsonAttributePathDict, seed=0, maxValueFlag=False, fake=faker.Faker()) -> dict:
+def gen_payload(jsonAttributePathDict:dict, keyTuple:tuple, datasetDict:dict, seed=0, maxValueFlag:bool=False, fake=faker.Faker()) -> dict:
     # print(jsonAttributePathDict)
     # print('gen_payload', maxValueFlag)
     for key, item in jsonAttributePathDict.items():
         if len(item) > 0:
             firstCharacter = item[0]
             if firstCharacter == '{':
-                dataType = item[1:-1]
-                value = get_defined_datatype_value(dataType, maxValueFlag=maxValueFlag, fake=fake)
+                dataType = item[item.index('{')+1:item.index('}')]
+                properties = item[item.index('}')+1:].strip().split(' ')
+                value = get_defined_datatype_value(keyTuple, key, datasetDict, dataType, properties, maxValueFlag=maxValueFlag, fake=fake)
             elif firstCharacter == '[':
                 dataType = None
                 value = random.choice([x.strip() for x in item[1:-1].split(',')])

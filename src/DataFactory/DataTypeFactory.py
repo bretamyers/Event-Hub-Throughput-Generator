@@ -42,19 +42,44 @@ def gen_integer(maxValueFlag=False) -> int:
 
 
 #https://gist.github.com/rg3915/db907d7455a4949dbe69
-def gen_date(min_year=1900, max_year=datetime.datetime.now().year) -> string:
-    start = datetime.datetime(min_year, 1, 1, 00, 00, 00)
-    years = max_year - min_year + 1
-    end = start + datetime.timedelta(days=365 * years)
-    return datetime.datetime.strftime(start + (end - start) * random.random(), '%Y-%m-%d')
+def gen_date(keyTuple, elementName, datasetDict, properties=['2020-01-01', 'increasing']) -> string:
+    if keyTuple in datasetDict.keys():
+        day = random.randint(1,2)
+        myDate = datasetDict[keyTuple] + datetime.timedelta(days=day)
+    else:
+        myDate = datetime.datetime.strptime(f'{properties[0]}', '%Y-%m-%d' )
+
+    datasetDict[keyTuple] = myDate
+    
+    return datetime.datetime.strftime(myDate, '%Y-%m-%d')
 
 
 #https://gist.github.com/rg3915/db907d7455a4949dbe69
-def gen_datetime(min_year=1900, max_year=datetime.datetime.now().year) -> string:
-    start = datetime.datetime(min_year, 1, 1, 00, 00, 00)
-    years = max_year - min_year + 1
-    end = start + datetime.timedelta(days=365 * years)
-    return datetime.datetime.strftime(start + (end - start) * random.random(), '%Y-%m-%d %H:%M:%S')
+def gen_datetime(keyTuple, elementName, datasetDict, properties=['2020-01-01', 'increasing']) -> string:
+    print(keyTuple, elementName, datasetDict, properties)
+    # datasetDict = {"key": {"elementName1": value, "elementName2": value, etc}}
+
+    # Add the key if not found
+    if keyTuple not in datasetDict.keys():
+        datasetDict[keyTuple] = dict()
+
+    # If json element is found, take existing value and add min/sec to it.
+    # Else, default to the start datetime
+    if elementName in datasetDict[keyTuple].keys():
+        min = random.randint(0,1)
+        sec = random.randint(1,5) if min == 0 else random.randint(0,1)
+        myDateTime = datasetDict[keyTuple][elementName] + datetime.timedelta(minutes=min, seconds=sec)
+    else:
+        myDateTime = datetime.datetime.strptime(f'{properties[0]} 00:00:00', '%Y-%m-%d %H:%M:%S' )
+
+    # if elementName in datasetDict[keyTuple].keys():
+    #     datasetDict[keyTuple][elementName] = myDateTime
+    # else:
+    #     datasetDict[keyTuple][elementName] = myDateTime
+    
+    datasetDict[keyTuple][elementName] = myDateTime
+
+    return datetime.datetime.strftime(myDateTime, '%Y-%m-%d %H:%M:%S')
 
 
 
