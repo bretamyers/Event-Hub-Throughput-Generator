@@ -47,16 +47,17 @@ def gen_data(NodeSpecDict:dict) -> None:
 
             start_datagen_time = time.time()
             for _ in range(int(NodeSpecDict['NodeThroughput'])):
-                keyTuple = (_, ) # tuple
+                keyTuple = (_, ) 
                 # datasetDict[keyTuple] = dic
-                eventString = json.dumps(DataFactory_PayloadFactory.gen_payload(jsonAttributePathDict=copy.deepcopy(NodeSpecDict['PayloadDefinitionDict']), keyTuple=keyTuple, datasetDict=datasetDict, maxValueFlag=False, fake=fake))
-                print(keyTuple, '-', eventString)
+                eventString = json.dumps(DataFactory_PayloadFactory.gen_payload(jsonAttributePathDict=copy.deepcopy(NodeSpecDict['PayloadDefinitionDict'])
+                                                                                , keyTuple=keyTuple, datasetDict=datasetDict, maxValueFlag=False, fake=fake))
+                # print(keyTuple, '-', eventString)
                 event_data = EventData(eventString)
                 event_data_batch.add(event_data)
                 # print(f'Event data batch size in bytes = {event_data_batch.size_in_bytes}')
-            print('\n')
-            print(datasetDict)
-            print('\n')
+            # print('\n')
+            # print(datasetDict)
+            # print('\n')
             end_datagen_time = time.time()
 
             while int(time.time())%4 != int(NodeSpecDict['NodeSec']):
@@ -70,28 +71,6 @@ def gen_data(NodeSpecDict:dict) -> None:
             sync_time() #sync time to the next nearest sec to avoid double sending
 
 
-# def regression_test():
-#     config = TomlHelper.read_toml_file('main/config_uers.toml')
-#     print(json.dumps(config, indent=4))
-
-#     import DetermineNodes
-
-#     batchSpecMasterDict = DetermineNodes.get_batch_specs(TargetThroughput=config['GeneratorInput']['ThroughputMessagesPerSec'])
-
-#     #Create a job on the pool and use this loop to create tasks within the job
-#     for nodeSpec in batchSpecMasterDict['NodeMessageSpecList']:
-#         NodeSpecDict = {
-#             'RunDurationMin': config['GeneratorInput']['RunDurationMin']
-#             ,'EventHubConnection': config['AzureEventHub']['EventHubConnection']
-#             ,'EventHubName': config['AzureEventHub']['EventHubName']
-#             ,'NumberOfNodes': batchSpecMasterDict['NumberOfNodes']
-#             ,'PayloadDefinitionDict': batchSpecMasterDict['PayloadDefinitionDict']
-#             ,'NodeSec': nodeSpec['NodeSec']
-#             ,'NodeThroughput': nodeSpec['NodeThroughput']
-#         }
-
-#         print(f'Running Node Num {nodeSpec["NodeNum"]}')
-#         gen_data(NodeSpecDict)
         
 if __name__ == '__main__':
 

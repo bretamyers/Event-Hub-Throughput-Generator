@@ -1,0 +1,25 @@
+# https://dataedo.com/download/AdventureWorks.pdf
+AdventureWorksSales = '''{
+    "SalesOrderHeader": {
+            "SalesOrderID": "{guid}"
+            ,"OrderDate": "{datetime}"
+            ,"DueDate": "{datetime}"
+            ,"ShipDate": "{datetime}"
+            ,"Status": "[complete, pending, removed]"
+            ,"CustomerID": "{integer}"
+            ,"SalesPersonID": "{integer}"
+            ,"BillToAddressID": "{integer}"
+            ,"ShipToAddressID": "{integer}"
+            ,"SalesOrderDetail": [
+                "CarrierTrackingNumber": "{string}"
+                ,"OrderQty": "{integer}"
+                ,"ProductId": "{string}"
+                ,"SpecialOfferID": "{guid}"
+                ,"UnitPrice": "{float}"
+                ,"UnitPriceDiscount": "{float}"
+                ,"LineTotal": "{float}"
+            ]
+        }
+}
+'''
+

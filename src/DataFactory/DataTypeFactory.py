@@ -56,8 +56,9 @@ def gen_date(keyTuple, elementName, datasetDict, properties=['2020-01-01', 'incr
 
 #https://gist.github.com/rg3915/db907d7455a4949dbe69
 def gen_datetime(keyTuple, elementName, datasetDict, properties=['2020-01-01', 'increasing']) -> string:
-    print(keyTuple, elementName, datasetDict, properties)
-    # datasetDict = {"key": {"elementName1": value, "elementName2": value, etc}}
+    
+    # print(keyTuple, elementName, datasetDict, properties)
+    # datasetDict = {"keyTuple": {"elementName1||name||category": value, "elementName2||name": value, etc}}
 
     # Add the key if not found
     if keyTuple not in datasetDict.keys():
@@ -66,9 +67,11 @@ def gen_datetime(keyTuple, elementName, datasetDict, properties=['2020-01-01', '
     # If json element is found, take existing value and add min/sec to it.
     # Else, default to the start datetime
     if elementName in datasetDict[keyTuple].keys():
-        min = random.randint(0,1)
-        sec = random.randint(1,5) if min == 0 else random.randint(0,1)
-        myDateTime = datasetDict[keyTuple][elementName] + datetime.timedelta(minutes=min, seconds=sec)
+        # min = random.randint(0,1)
+        # sec = random.randint(1,5) if min == 0 else random.randint(0,1)
+        # myDateTime = datasetDict[keyTuple][elementName] + datetime.timedelta(minutes=min, seconds=sec)
+        sec = random.randint(1, 10)
+        myDateTime = datasetDict[keyTuple][elementName] + datetime.timedelta(seconds=sec)
     else:
         myDateTime = datetime.datetime.strptime(f'{properties[0]} 00:00:00', '%Y-%m-%d %H:%M:%S' )
 

@@ -1,0 +1,26 @@
+# https://github.com/microsoft/sql-server-samples/tree/master/samples/databases/wide-world-importers
+# https://dataedo.com/samples/html/WideWorldImporters/doc/WideWorldImporters_5/modules/Sales_110/module.html
+WideWorldImporters = '''{
+    "SalesOrderHeader": {
+            "SalesOrderID": "{guid}"
+            ,"OrderDate": "{datetime}"
+            ,"DueDate": "{datetime}"
+            ,"ShipDate": "{datetime}"
+            ,"Status": "[complete, pending, removed]"
+            ,"CustomerID": "{integer}"
+            ,"SalesPersonID": "{integer}"
+            ,"BillToAddressID": "{integer}"
+            ,"ShipToAddressID": "{integer}"
+            ,"SalesOrderDetail": [
+                "CarrierTrackingNumber": "{string}"
+                ,"OrderQty": "{integer}"
+                ,"ProductId": "{string}"
+                ,"SpecialOfferID": "{guid}"
+                ,"UnitPrice": "{float}"
+                ,"UnitPriceDiscount": "{float}"
+                ,"LineTotal": "{float}"
+            ]
+        }
+}
+'''
+
