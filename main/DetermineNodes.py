@@ -44,10 +44,11 @@ def gen_date(min_year=1900, max_year=datetime.datetime.now().year) -> string:
 
 #https://gist.github.com/rg3915/db907d7455a4949dbe69
 def gen_datetime(min_year=1900, max_year=datetime.datetime.now().year) -> string:
-    start = datetime.datetime(min_year, 1, 1, 00, 00, 00)
-    years = max_year - min_year + 1
-    end = start + datetime.timedelta(days=365 * years)
-    return datetime.datetime.strftime(start + (end - start) * random.random(), '%Y-%m-%d %H:%M:%S')
+    # start = datetime.datetime(min_year, 1, 1, 00, 00, 00)
+    # years = max_year - min_year + 1
+    # end = start + datetime.timedelta(days=365 * years)
+    # return datetime.datetime.strftime(start + (end - start) * random.random(), '%Y-%m-%d %H:%M:%S')
+    return f"{datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S.%f')[:-3]}Z"
 
 
 #https://stackoverflow.com/questions/38397285/iterate-over-all-items-in-json-object
