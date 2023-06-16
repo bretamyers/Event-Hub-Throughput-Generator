@@ -33,48 +33,65 @@
 #         ,"[bret, nicole, aiden, jack]"
 #     ]
 # }'''
+
+# SampleJSON = '''{
+#   "metadata": "{string}",
+#   "Event": {
+#     "System": {
+#       "Provider": "",
+#       "EventID": "{integer}",
+#       "Version": "[0, 1, 2]",
+#       "Level": "[0, 1]",
+#       "Task": "{integer}",
+#       "Opcode": "0",
+#       "Keywords": "{integer}",
+#       "TimeCreated": "{datetime} 2020-01-01 increasing",
+#       "EventRecordID": "{integer}",
+#       "Correlation": "",
+#       "Execution": "",
+#       "Channel": "Security",
+#       "Computer": "{string}",
+#       "Security": "[low, high]"
+#     },
+#     "EventData": {
+#       "Data": [
+#         "Network Configuration Operators",
+#         "Builtin",
+#         "{string}",
+#         "{string}",
+#         "{string}",
+#         "{string}",
+#         "{integer}",
+#         "{integer}",
+#         "C:\\Program Files\\CrowdStrike\\CSFalconService.exe"
+#       ]
+#     },
+#     "RenderingInfo": {
+#       "Message": "{string_faker_text}",
+#       "Level": "Information",
+#       "Task": "Security Group Management",
+#       "Opcode": "Info",
+#       "Channel": "Security",
+#       "Provider": "Microsoft Windows security auditing.",
+#       "Keywords": {
+#         "Keyword": "[Audit Success, Audit Fail]"
+#       }
+#     }
+#   }
+# }'''
+
 SampleJSON = '''{
-  "metadata": "{string}",
-  "Event": {
-    "System": {
-      "Provider": "",
-      "EventID": "{integer}",
-      "Version": "[0, 1, 2]",
-      "Level": "[0, 1]",
-      "Task": "{integer}",
-      "Opcode": "0",
-      "Keywords": "{integer}",
-      "TimeCreated": "{datetime} 2020-01-01 increasing",
-      "EventRecordID": "{integer}",
-      "Correlation": "",
-      "Execution": "",
-      "Channel": "Security",
-      "Computer": "{string}",
-      "Security": "[low, high]"
-    },
-    "EventData": {
-      "Data": [
-        "Network Configuration Operators",
-        "Builtin",
-        "{string}",
-        "{string}",
-        "{string}",
-        "{string}",
-        "{integer}",
-        "{integer}",
-        "C:\\Program Files\\CrowdStrike\\CSFalconService.exe"
-      ]
-    },
-    "RenderingInfo": {
-      "Message": "{string_faker_text}",
-      "Level": "Information",
-      "Task": "Security Group Management",
-      "Opcode": "Info",
-      "Channel": "Security",
-      "Provider": "Microsoft Windows security auditing.",
-      "Keywords": {
-        "Keyword": "[Audit Success, Audit Fail]"
-      }
+    "deviceId": "{product_code} unique 100000"
+    ,"messageProperties": {
+        "iothub-creation-time-utc": "{datetime} 2022-01-01 "
+        ,"deviceVersion": "[v1, v2, v3.1, v3.4, v4]"
     }
-  }
+    ,"messageSource": "Data Generator"
+    ,"measurementTime": "{epoch} now"
+    ,"metrics": {
+        "BatteryLevel": "{integer}"
+        ,"humidity": "{float}"
+        ,"temp": "{float}"
+    }
 }'''
+

@@ -1,6 +1,7 @@
 import time
 # import Batch.DetermineNodes
 import src.DataFactory.PayloadFactory as DataFactory_PayloadFactory
+import src.DataFactory.DataTypeFactory as DataFactory_DataTypeFactory
 import src.Helpers.TomlHelper as Helpers_TomlHelper
 import src.Batch.BatchPoolWait as Batch_BatchPoolWait
 import src.Batch.DetermineNodes as Batch_DetermineNodes
@@ -34,8 +35,22 @@ def gen_data(NodeSpecDict:dict) -> None:
     fake = faker.Faker()
     faker.Faker.seed(NodeSpecDict['NodeNum'])
 
-    datasetDict = dict() #dict.fromkeys([_ for _ in range(int(NodeSpecDict['NodeThroughput'])) ], dict())
-    
+    #Build the pool of unique values
+    # datasetDict = {("keyValue"): [{"element1": "1"}, {"element2": "1"}] }
+    # datasetDict = dict() #dict.fromkeys([_ for _ in range(int(NodeSpecDict['NodeThroughput'])) ], dict())
+    # for _ in range(int(NodeSpecDict['NodeThroughput'])):
+    datasetDict = dict()
+    while len(datasetDict.keys()) < int(NodeSpecDict['NodeThroughput']):
+        keyValue = list()
+        for key, value in NodeSpecDict['UniqueElements'][0].items():
+            print(key)
+            if value == '{product_code}':
+                elementValue = DataFactory_DataTypeFactory.gen_product_code()
+                keyValue.append(elementValue)
+        datasetDict[tuple(keyValue)] = dict()
+    # datasetDict = dict.fromkeys([(_,) for _ in range(int(NodeSpecDict['NodeThroughput'])) ], dict())
+    print(json.dumps(datasetDict, indent=4))
+
     sync_time()
     gen_start_time = time.time()
     while int(time.time() - gen_start_time) < NodeSpecDict['RunDurationMin']*60:
@@ -50,8 +65,8 @@ def gen_data(NodeSpecDict:dict) -> None:
                 keyTuple = (_, ) 
                 # datasetDict[keyTuple] = dic
                 eventString = json.dumps(DataFactory_PayloadFactory.gen_payload(jsonAttributePathDict=copy.deepcopy(NodeSpecDict['PayloadDefinitionDict'])
-                                                                                , keyTuple=keyTuple, datasetDict=datasetDict, maxValueFlag=False, fake=fake))
-                # print(keyTuple, '-', eventString)
+                                                                                ,keyTuple=keyTuple, datasetDict=datasetDict, maxValueFlag=False, fake=fake))
+                print(keyTuple, '-', eventString)
                 event_data = EventData(eventString)
                 event_data_batch.add(event_data)
                 # print(f'Event data batch size in bytes = {event_data_batch.size_in_bytes}')
@@ -99,16 +114,22 @@ if __name__ == '__main__':
             ,'BatchAccountName': config_user['AzureBatch']['BatchAccountName']
             ,'BatchServiceUrl': config_user['AzureBatch']['BatchServiceUrl']
             ,'PoolId': my_pool_id
+            ,'UniqueElements': ({'deviceId': '{product_code}'}, 100000)
             }
 
     # print(NodeSpecDict)
     
-    item = '{datetime} 2020-01-01 increasing'
+    # item = '{datetime} 2020-01-01 increasing'
+    item = '{product_code} unique 100000'
     dataType = item[item.index('{')+1:item.index('}')]
     properties = item[item.index('}')+1:].strip().split(' ')
     print(dataType)
     print(properties)
+    # print(json.dumps(NodeSpecDict, indent=4))
 
     gen_data(NodeSpecDict)
-        
+    
+
+
+
     

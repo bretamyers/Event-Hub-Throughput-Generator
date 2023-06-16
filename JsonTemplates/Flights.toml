@@ -1,0 +1,279 @@
+
+CrewAssignedRefined = '''
+{
+	"eventSource": "crew-assigned.CrewAssignmentLoader",
+	"eventDomain": "CREW",
+	"eventType": "ROSTER_CREW_ASSIGNMENT_REFINED",
+	"eventSchemaVersion": "1.0",
+	"eventTimeStampUTC": "2023-04-01T06:28:58.080643Z",
+	"eventBusinessKey": "ROSTER_CREW_ASSIGNMENT_REFINED/1234567_98765_AS_450_SEA_2023-03-30",
+	"eventData": {
+		"_id": "6427cf297289f6cac2a57487",
+		"businessKey": "1234567_98765_AS_450_SEA_2023-03-30",
+		"sourceSystemName": "JCTE",
+		"sourceSystemLastModifiedDateTime": "2023-04-01 06:28:12+00:00",
+		"schemaVersion": "1.0",
+		"lastEventType": "ROSTER",
+		"employeeID": "1234567",
+		"assignmentType": "FLIGHT",
+		"startDateTimeUTC": "2023-03-30 17:10:00+00:00",
+		"endDateTimeUTC": "2023-03-30 21:35:00+00:00",
+		"rosterStartDateTimeUTC": "2023-03-15 14:35:00+00:00",
+		"rosterEndDateTimeUTC": "2023-04-08 06:59:00+00:00",
+		"assignedRole": "FC",
+		"operatingAirlineCode": "AS",
+		"sourceAirlineCode": "AS",
+		"flightOriginationDateStnLocal": "2023-03-30 00:00:00",
+		"operatingFlightNumber": "450",
+		"scheduledDepartureStation": "SEA",
+		"scheduledArrivalStation": "CMH",
+		"scheduledDepartureDateTimeUTC": "2023-03-30 17:10:00+00:00",
+		"scheduledArrivalDateTimeUTC": "2023-03-30 21:35:00+00:00",
+		"meals": {
+			"crewCategory": "FC",
+			"mealCode": "L"
+		},
+		"trip": {
+			"assignedRole": "FC",
+			"assignedRoleName": "Flight Attendant Main Cabin",
+			"tripID": "98765",
+			"tripOriginationDateStnLocal": "2023-03-30 00:00:00",
+			"category": null,
+			"homeBaseStationCode": "SEA",
+			"scheduledStartStationCode": "SEA",
+			"scheduledEndStationCode": "SEA",
+			"scheduledReportDateTimeUTC": "2023-03-30 16:10:00+00:00",
+			"scheduledReleaseDateTimeUTC": "2023-04-01 06:26:00+00:00",
+			"scheduledReportDateTimeStnLocal": "2023-03-30 09:10:00",
+			"scheduledReleaseDateTimeStnLocal": "2023-04-01 02:26:00",
+			"totalBlockDurationMinutes": 262,
+			"totalDeadHeadMinutes": 467,
+			"scheduledTripStartDateTimeUTC": "2023-03-30 17:10:00+00:00",
+			"scheduledTripEndDateTimeUTC": "2023-04-01 03:50:00+00:00",
+			"timeAwayFromBaseMinutes": 2296,
+			"creditTFP": 11.2,
+			"sitTFP": 0.0,
+			"crewRoleFCCount": 1
+		},
+		"flight_id": "641d597d6184197c1cf98674",
+		"lastUpdateDate": "2023-04-01 06:28:57.984244",
+		"documentExpiresAtDateTime": "2026-03-31 06:28:12+00:00"
+	}
+}
+'''
+
+RelationalData = '''
+{
+    "EventType": "PAXGATEARRIVAL_REFINED"
+    ,"SourceInternalId": "{code}"
+    ,"FlightTableRowId": "{integer}"
+    ,"LastEventType": "PAXGATEARRIVAL"
+    ,"DepartureAirportCode": "{iata}"
+    ,"DepartureICAO": "{icao}"
+    ,"DepartureDate": "{datetime}"
+    ,"ArrivalAirportCode": "{iata}"
+    ,"ArrivalICAO": "{icao}"
+    ,"ArrivalDate": "{datetime}"
+    ,"FlightNumber": "{integer}"
+}
+'''
+
+FlightsRefined = '''
+{
+	"eventSource": "flight-aagops.FlightLoader",
+	"eventDomain": "FLIGHT",
+	"eventType": "PAXGATEARRIVAL_REFINED",
+	"eventSchemaVersion": "1.0",
+	"eventTimeStampUTC": "{FlightNumber}",
+	"eventBusinessKey": "PAXGATEARRIVAL_REFINED/{iata}_{FlightNumber}_{DepartureAirportCode}_{DepartureDate}_{sourceInternalId}",
+	"eventData": {
+		"_id": "{code}",
+		"businessKey": "{iata}_{FlightNumber}_{DepartureAirportCode}_{DepartureDate}_{sourceInternalId}",
+		"flight": {
+			"sourceSystemName": "VISOPS",
+			"sourceSystemLastModifiedDateTime": "2023-04-01 03:01:56.261000+00:00",
+			"schemaVersion": "1.0",
+			"lastEventType": "PAXGATEARRIVAL",
+			"eventBusinessKey": "{iata}/{FlightNumber}/{DepartureDate}/{icao}/{ArrivalAirportCode}/{LastEventType}",
+			"eventCorrelationID": "ID:414d5120514d4d465020202020202020c6870b6405079c2c",
+			"operatingFlightNumber": "{FlightNumber}",
+			"scheduledFlightOriginationDateStnLocal": "{datetime}",
+			"scheduledFlightOriginationDateUTC": "{datetime}",
+			"flightLegs": [
+				{
+					"legNumber": 1,
+					"codeShares": [
+						{
+							"marketingFlightNumber": "2307",
+							"marketingAirlineCode": "{iata}"
+						}
+					],
+					"aircraft": {
+						"aircraftRegistration": "N264AK",
+						"fleetType": "737-900R",
+						"fleetSeries": "737-900",
+						"manufacturer": "BOEING"
+					},
+					"dispatchData": {
+						"cargoCapacityWeightInPounds": "2000",
+						"dispatchDesk": "A"
+					},
+					"iataFlightServiceType": "SCHEDULED",
+					"isETOPSFlight": false,
+					"flightRangeCode": "PAX",
+					"sourceInternalId": "{FlightNumber}{icao}{yyMMdd}1",
+					"flightTableRowId": "{integer}",
+					"departureOccurrence": "1",
+					"scheduledDateTimeUTC": {
+						"out": "{datetime}",
+						"in": "{datetime}"
+					},
+					"estimatedDateTimeUTC": {
+						"out": "{datetime}",
+						"in": "{datetime}",
+						"isOpsInfoOnly": "false"
+					},
+					"actualDepartureStation": {
+						"zuluOffset": -8,
+						"gate": {
+							"podium": "C8",
+							"parkingSpot": "C8"
+						},
+						"countryCode2Letters": "US",
+						"countryCode3Letters": "USA",
+						"icaoCode": "{icao}",
+						"airportCode": {iata}
+					},
+					"actualArrivalStation": {
+						"zuluOffset": -7,
+						"gate": {
+							"podium": "N5",
+							"parkingSpot": "S4A",
+							"carousel": "13"
+						},
+						"countryCode2Letters": "US",
+						"countryCode3Letters": "USA",
+						"icaoCode": "{icao}",
+						"airportCode": "{iata}"
+					},
+					"scheduledArrivalStation": {
+						"icaoCode": "{icao}",
+						"airportCode": "{iata}"
+					},
+					"scheduledDepartureStation": {
+						"icaoCode": "{icao}",
+						"airportCode": "{iata}"
+					},
+					"operatingAirlineCode": "{iata}",
+					"operatingAirlineName": "{AirlineName}",
+					"scheduledDepartureDateStnLocal": "{FlightNumber}",
+					"isScheduledStarFlight": false,
+					"isActualStarFlight": false
+				}
+			]
+		},
+		"flightLookupKey": "{iata}_{FlightNumber}_{DepartureAirportCode}_{DepartureDate}",
+		"documentExpiresAtDateTime": "{datetime}"
+	}
+}
+'''
+
+# FlightsRefined = '''
+# {
+# 	"eventSource": "flight-aagops.FlightLoader",
+# 	"eventDomain": "FLIGHT",
+# 	"eventType": "PAXGATEARRIVAL_REFINED",
+# 	"eventSchemaVersion": "1.0",
+# 	"eventTimeStampUTC": "2023-04-01T03:02:13.450509Z",
+# 	"eventBusinessKey": "PAXGATEARRIVAL_REFINED/AS_102_ANC_2023-04-02_102ANC2304021",
+# 	"eventData": {
+# 		"_id": "63e47dd1ae1c275503e8c203",
+# 		"businessKey": "AS_102_ANC_2023-04-02_102ANC2304021",
+# 		"flight": {
+# 			"sourceSystemName": "VISOPS",
+# 			"sourceSystemLastModifiedDateTime": "2023-04-01 03:01:56.261000+00:00",
+# 			"schemaVersion": "1.0",
+# 			"lastEventType": "PAXGATEARRIVAL",
+# 			"eventBusinessKey": "AS/102/2023-04-02/ANC/SEA/PAXGATEARRIVAL",
+# 			"eventCorrelationID": "ID:414d5120514d4d465020202020202020c6870b6405079c2c",
+# 			"operatingFlightNumber": "102",
+# 			"scheduledFlightOriginationDateStnLocal": "2023-04-02 00:00:00",
+# 			"scheduledFlightOriginationDateUTC": "2023-04-02 00:00:00",
+# 			"flightLegs": [
+# 				{
+# 					"legNumber": 1,
+# 					"codeShares": [
+# 						{
+# 							"marketingFlightNumber": "2307",
+# 							"marketingAirlineCode": "TN"
+# 						}
+# 					],
+# 					"aircraft": {
+# 						"aircraftRegistration": "N264AK",
+# 						"fleetType": "737-900R",
+# 						"fleetSeries": "737-900",
+# 						"manufacturer": "BOEING"
+# 					},
+# 					"dispatchData": {
+# 						"cargoCapacityWeightInPounds": "2000",
+# 						"dispatchDesk": "A"
+# 					},
+# 					"iataFlightServiceType": "SCHEDULED",
+# 					"isETOPSFlight": false,
+# 					"flightRangeCode": "PAX",
+# 					"sourceInternalId": "102ANC2304021",
+# 					"flightTableRowId": "302154591",
+# 					"departureOccurrence": "1",
+# 					"scheduledDateTimeUTC": {
+# 						"out": "2023-04-02 10:55:00+00:00",
+# 						"in": "2023-04-02 14:20:00+00:00"
+# 					},
+# 					"estimatedDateTimeUTC": {
+# 						"out": "2023-04-02 10:55:00+00:00",
+# 						"in": "2023-04-02 14:20:00+00:00",
+# 						"isOpsInfoOnly": "false"
+# 					},
+# 					"actualDepartureStation": {
+# 						"zuluOffset": -8,
+# 						"gate": {
+# 							"podium": "C8",
+# 							"parkingSpot": "C8"
+# 						},
+# 						"countryCode2Letters": "US",
+# 						"countryCode3Letters": "USA",
+# 						"icaoCode": "PANC",
+# 						"airportCode": "ANC"
+# 					},
+# 					"actualArrivalStation": {
+# 						"zuluOffset": -7,
+# 						"gate": {
+# 							"podium": "N5",
+# 							"parkingSpot": "S4A",
+# 							"carousel": "13"
+# 						},
+# 						"countryCode2Letters": "US",
+# 						"countryCode3Letters": "USA",
+# 						"icaoCode": "KSEA",
+# 						"airportCode": "SEA"
+# 					},
+# 					"scheduledArrivalStation": {
+# 						"icaoCode": "KSEA",
+# 						"airportCode": "SEA"
+# 					},
+# 					"scheduledDepartureStation": {
+# 						"icaoCode": "PANC",
+# 						"airportCode": "ANC"
+# 					},
+# 					"operatingAirlineCode": "AS",
+# 					"operatingAirlineName": "Alaska Airlines",
+# 					"scheduledDepartureDateStnLocal": "2023-04-02 00:00:00",
+# 					"isScheduledStarFlight": false,
+# 					"isActualStarFlight": false
+# 				}
+# 			]
+# 		},
+# 		"flightLookupKey": "AS_102_ANC_2023-04-02",
+# 		"documentExpiresAtDateTime": "2030-03-30 03:02:12.285808"
+# 	}
+# }
+# '''

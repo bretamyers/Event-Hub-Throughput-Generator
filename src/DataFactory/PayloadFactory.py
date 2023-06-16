@@ -156,6 +156,12 @@ def get_defined_datatype_value(keyTuple:tuple, elementName:str, datasetDict:dict
         value = DataFactory_DataTypeFactory.gen_date(keyTuple=keyTuple, elementName=elementName, datasetDict=datasetDict, properties=properties)
     elif dataType == 'datetime':
         value = DataFactory_DataTypeFactory.gen_datetime(keyTuple=keyTuple, elementName=elementName, datasetDict=datasetDict, properties=properties)
+    elif dataType == 'epoch':
+        value = DataFactory_DataTypeFactory.gen_epoch(keyTuple=keyTuple, elementName=elementName, datasetDict=datasetDict, properties=properties)
+    elif dataType == 'base64':
+        value = DataFactory_DataTypeFactory.gen_base64(myString='')
+    elif dataType == 'product_code':
+        value = DataFactory_DataTypeFactory.gen_product_code(codeLength=9)
     else:
         value = dataType
     return value

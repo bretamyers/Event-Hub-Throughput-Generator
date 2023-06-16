@@ -133,6 +133,7 @@ def batch_add_app_tasks(batch_client, job_id, python_run_file_path, config_globa
             ,'BatchAccountName': config_user['AzureBatch']['BatchAccountName']
             ,'BatchServiceUrl': config_user['AzureBatch']['BatchServiceUrl']
             ,'PoolId': my_pool_id
+            ,'UniqueElements': ({'deviceId': '{product_code}'}, 100000)
             }
         tasks.append(batchmodels.TaskAddParameter(
             id=f'Task-{str(nodeSpec["NodeNum"]).zfill(4)}',

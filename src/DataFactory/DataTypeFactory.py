@@ -3,6 +3,7 @@ import random
 import datetime
 import string
 import faker
+import base64
 
 def gen_string(low=5, high=10, maxValueFlag=False) -> string:
     # print('gen_string', maxValueFlag)
@@ -60,9 +61,9 @@ def gen_datetime(keyTuple, elementName, datasetDict, properties=['2020-01-01', '
     # print(keyTuple, elementName, datasetDict, properties)
     # datasetDict = {"keyTuple": {"elementName1||name||category": value, "elementName2||name": value, etc}}
 
-    # Add the key if not found
-    if keyTuple not in datasetDict.keys():
-        datasetDict[keyTuple] = dict()
+    # # Add the key if not found
+    # if keyTuple not in datasetDict.keys():
+    #     datasetDict[keyTuple] = dict()
 
     # If json element is found, take existing value and add min/sec to it.
     # Else, default to the start datetime
@@ -70,7 +71,7 @@ def gen_datetime(keyTuple, elementName, datasetDict, properties=['2020-01-01', '
         # min = random.randint(0,1)
         # sec = random.randint(1,5) if min == 0 else random.randint(0,1)
         # myDateTime = datasetDict[keyTuple][elementName] + datetime.timedelta(minutes=min, seconds=sec)
-        sec = random.randint(1, 10)
+        sec = random.randint(1, 4)
         myDateTime = datasetDict[keyTuple][elementName] + datetime.timedelta(seconds=sec)
     else:
         myDateTime = datetime.datetime.strptime(f'{properties[0]} 00:00:00', '%Y-%m-%d %H:%M:%S' )
@@ -80,11 +81,48 @@ def gen_datetime(keyTuple, elementName, datasetDict, properties=['2020-01-01', '
     # else:
     #     datasetDict[keyTuple][elementName] = myDateTime
     
+    #Add the new value to the datasetDict
     datasetDict[keyTuple][elementName] = myDateTime
 
     return datetime.datetime.strftime(myDateTime, '%Y-%m-%d %H:%M:%S')
 
 
+def gen_epoch(keyTuple, elementName, datasetDict, properties=['now']) -> string:
+
+    # Add the key if not found
+    if keyTuple not in datasetDict.keys():
+        datasetDict[keyTuple] = dict()
+
+    # If json element is found, take existing value and add min/sec to it.
+    # Else, default to the start datetime
+    if elementName in datasetDict[keyTuple].keys():
+        sec = random.randint(1, 4)
+        myDateTime = datasetDict[keyTuple][elementName] + datetime.timedelta(seconds=sec)
+    else:
+        if properties[0] == 'now':
+            myDateTime = datetime.datetime.utcnow()
+        else:
+            myDateTime = datetime.datetime.strptime(f'{properties[0]} 00:00:00', '%Y-%m-%d %H:%M:%S' )
+        
+    datasetDict[keyTuple][elementName] = myDateTime
+
+    return datetime.datetime.timestamp(myDateTime)
+
+
+def gen_base64(myString:str) -> string:
+
+    return base64.b64encode(myString.encode('ascii'))
+
+
+def gen_product_code(codeLength=9) -> string:
+    charLen = random.randint(2, codeLength-2)
+    digLen = codeLength - charLen
+
+    return ''.join(random.choices(string.ascii_uppercase, k=charLen)) + ''.join(random.choices(string.digits, k=digLen))
+
 
 if __name__ == '__main__':
     pass
+
+
+

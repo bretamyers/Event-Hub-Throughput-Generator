@@ -1,0 +1,15 @@
+
+IoTSensor = '''{
+    "deviceId": "{product_code} unique 100000"
+    ,"messageProperties": {
+        "iothub-creation-time-utc": "{datetime} 2022-01-01 "
+        ,"deviceVersion": "[v1, v2, v3.1, v3.4, v4]"
+    }
+    ,"messageSource": "Data Generator"
+    ,"measurementTime": "{epoch} now"
+    ,"metrics": {
+        "BatteryLevel": "{integer}"
+        ,"humidity": "{float}"
+        ,"temp": "{float}"
+    }
+}'''
