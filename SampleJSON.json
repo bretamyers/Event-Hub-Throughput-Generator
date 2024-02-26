@@ -1,0 +1,31 @@
+{
+    "ID": "{guid}"
+    ,"Sales": [
+        {"name": "{string}"
+            ,"a": 
+                {
+                    "b": "{string}"
+                }
+        }
+        ,{"name": "{string}"}
+    ]
+    ,"Quantity": "{integer}"
+    ,"LocationObj": 
+        {
+            "Coordinates": 
+                {
+                    "Latitude": "{float}"
+                    ,"Longitude": "{float}"
+                }
+            ,"Altitude": "{float}"
+        }
+    ,"test": "static value"
+    ,"testOptions": "[bret, nicole, aiden, jack]"
+    ,"testList": [
+        "pizza"
+        ,"ice cream"
+        ,"cake"
+        ,"cheese"
+        ,"[bret, nicole, aiden, jack]"
+    ]
+}
